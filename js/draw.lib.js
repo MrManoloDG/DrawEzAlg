@@ -1,4 +1,5 @@
-
+var JCanvas = require( './js/jcanvas.js' );
+require('./js/classes/code_struct.js');
 
 function dibujar_inicio(x,y,canvas) {
 	canvas.drawText({
@@ -44,19 +45,19 @@ function dibujar_fin(x,y,canvas) {
 	});
 }
 
-function dibujar_cuadrado(x,y,i,canvas) {
+function dibujar_cuadrado(x,y,i,canvas, o) {
 	canvas.drawRect({
 		layer:true,
 		fillStyle: '#FFF',
 		strokeStyle: '#000',
 		strokeWidth: 2,
-		name: 'o'+i,
+		name: o.parent+'o'+i,
 		i: i,
 		x: x, y: y + (100+20)/2,
 		width: 200,
 		height: 100,
 		click: function(layer) {
-			alert("Click on: " + layer.name);
+			alert("Click on: Assing" + layer.name);
 		}
 	});
 }
@@ -126,18 +127,18 @@ function dibujar_if(x,y,i,canvas,o) {
 		name: o.parent+'o'+i,
 	  strokeStyle: '#000',
 	  strokeWidth: 2,
-		height: (canvas.measureText('t'+i).width),
+		height: (canvas.measureText(o.parent+'t'+i).width),
 		closed:true,
 	  p1: {
 	    type: 'line',
-	    x1: x, y1: y - canvas.measureText('t'+i).width/2,
-	    x2: x + 30 + canvas.measureText('t'+i).width, y2: y,
-	    x3: x, y3: y + canvas.measureText('t'+i).width/2,
-	    x4: x - 30 - canvas.measureText('t'+i).width, y4: y,
-			x5: x, y5: y - canvas.measureText('t'+i).width/2,
+	    x1: x, y1: y - canvas.measureText(o.parent+'t'+i).width/2,
+	    x2: x + 30 + canvas.measureText(o.parent+'t'+i).width, y2: y,
+	    x3: x, y3: y + canvas.measureText(o.parent+'t'+i).width/2,
+	    x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
+			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).width/2,
 	  },
 	  click: function(layer) {
-			alert("Click on: " + layer.name);
+			alert("Click on: if " + layer.name);
 		}
 	})
 	.drawLine({
@@ -145,38 +146,48 @@ function dibujar_if(x,y,i,canvas,o) {
 		strokeStyle: '#000',
 		strokeWidth: 2,
 		name: 'lh1if'+i,
-		x1: x + 30 + canvas.measureText('t'+i).width, y1: y,
-		x2: x + 130 + canvas.measureText('t'+i).width, y2: y
+		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
+		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: y
 	}).drawLine({
 			layer: true,
 			strokeStyle: '#000',
 			strokeWidth: 2,
 			name: 'lh2if'+i,
-			x1: x - 30 - canvas.measureText('t'+i).width, y1: y,
-			x2: x - 130 - canvas.measureText('t'+i).width, y2: y
+			x1: x - 30 - canvas.measureText(o.parent+'t'+i).width, y1: y,
+			x2: x - 130 - canvas.measureText(o.parent+'t'+i).width, y2: y
 	});
+	var arrow = false;
 	//Array SI
 	var arr_yes = o.yes;
-	xh2 = (x - 130 - canvas.measureText('t'+i).width);
+	xh2 = (x - 130 - canvas.measureText(o.parent+'t'+i).width);
 	yh2 = y;
-	dibujar_linea(xh2,yh2,xh2,yh2+100,0,canvas,arr_yes,false,'if'+i+'yes-');
+
+	if(arr_yes.length>0)  arrow = true;
+	dibujar_linea(xh2,yh2,xh2,yh2+100,0,canvas,arr_yes,arrow,o.parent+'if'+i+'yes-');
 	yh2 += 100;
-	for (var j = 0; i < arr_yes.length; j++) {
+	console.log(arr_yes.length);
+
+	for (var j = 0; j < arr_yes.length; j++) {
+		console.log(j);
 		arr_yes[j].dibujar(xh2,yh2,j,canvas);
-		y += canvas.getLayer(o.parent+'o'+j).height + 10;
-		dibujar_linea(xh2,yh2,xh2,yh2+100,j+1,canvas,arr_yes,false,'if'+i+'yes-');
+		console.log(o.parent+'if'+i+'yes-'+'o'+j);
+		yh2 += canvas.getLayer(o.parent+'if'+i+'yes-'+'o'+j).height + 10;
+		if(j >= arr_yes.length-1) arrow = false;
+		dibujar_linea(xh2,yh2,xh2,yh2+100,j+1,canvas,arr_yes, arrow,o.parent+'if'+i+'yes-');
 		yh2 += 100;
 	}
 	//Array No
 	var arr_no = o.no;
-	xh1 = (x + 130 + canvas.measureText('t'+i).width);
+	xh1 = (x + 130 + canvas.measureText(o.parent+'t'+i).width);
 	yh1 = y;
-	dibujar_linea(xh1,yh1,xh1,yh1+100,0,canvas,arr_no,false,'if'+i+'no-');
+	if(arr_no.length>0)  arrow = true;
+	dibujar_linea(xh1,yh1,xh1,yh1+100,0,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
 	yh1 += 100;
 	for (var j = 0; j < arr_no.length; j++) {
 		arr_no[j].dibujar(xh1,yh1,j,canvas);
-		y += canvas.getLayer(o.parent+'o'+j).height + 10;
-		dibujar_linea(xh1,yh1,xh1,yh1+100,j+1,canvas,arr_no,false,'if'+i+'no-');
+		yh1 += canvas.getLayer(o.parent+'if'+i+'no-'+'o'+j).height + 10;
+		if(j >= arr_no.length-1) arrow = false;
+		dibujar_linea(xh1,yh1,xh1,yh1+100,j+1,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
 		yh1 += 100;
 	}
 	canvas.drawLine({
@@ -187,8 +198,6 @@ function dibujar_if(x,y,i,canvas,o) {
 		x1: x - 130 - canvas.measureText(o.parent+'t'+i).width, y1: yh2,
 		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: yh2
 	});
-	console.log(i);
-	console.log('o'+i);
 	canvas.getLayer(o.parent+'o'+i).height = yh2 - (y - canvas.measureText(o.parent+'t'+i).width/2);
 	//
 }

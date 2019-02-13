@@ -38,7 +38,7 @@ class Assing_Struct extends Code_Struct{
 		this.list = new Array();
 	}
 	dibujar(x,y,i,canvas) {
-		dibujar_cuadrado(x,y,i,canvas);
+		dibujar_cuadrado(x,y,i,canvas, this);
 	}
 }
 
