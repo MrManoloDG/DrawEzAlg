@@ -1,0 +1,16 @@
+#canvas
+{
+
+		display: block;
+}
+
+#contenedor {
+		
+		height: 650px;
+		width: 1000px;
+		overflow: auto;
+}
+
+.btn {
+	width: 70px;
+}
