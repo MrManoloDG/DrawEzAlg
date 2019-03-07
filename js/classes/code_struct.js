@@ -15,8 +15,8 @@ class If_Struct extends Code_Struct{
 		super('if', parent);
 		this.parent = parent;
 		this.condition = "condition";
-		this.yes = new Array();
-		this.no  = new Array();
+		this.yes = [];
+		this.no  = [];
 	}
 	dibujar(x,y,i,canvas){
 		dibujar_if(x,y,i,canvas,this);
@@ -28,14 +28,22 @@ class While_Struct extends Code_Struct{
 		super('while', parent);
 
 		this.condition = "condition";
-		this.loop = new Array();
+		this.loop = [];
+	}
+}
+
+class For_Struct extends While_Struct{
+	constructor(parent){
+		super(parent);
+		this.variable = "i";
+		this.incremental = "i++";
 	}
 }
 
 class Assing_Struct extends Code_Struct{
 	constructor(parent){
 		super('assing', parent);
-		this.list = new Array();
+		this.list = [];
 	}
 	dibujar(x,y,i,canvas) {
 		dibujar_cuadrado(x,y,i,canvas, this);
