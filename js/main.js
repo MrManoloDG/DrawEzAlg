@@ -2,8 +2,7 @@
 
 var JCanvas = require( './js/jcanvas.js' );
 require('./js/classes/code_struct.js');
-
-
+var array_main;
 var active = null;
 function btn_struct(str) {
 	active = str;
@@ -12,14 +11,13 @@ function btn_struct(str) {
 
 
 $(document).ready(function() {
-	var $canvas = $('#canvas');
-	var array = new Array();
+	var canvas = $('#canvas');
+	array_main = new Array();
 	JCanvas( $, window);
 	//Codigo para probar
-
-
+	dibujar(canvas);
 	//fin codigo para prueba
-
+	/*
 	function dibujar(){
 		//console.log("Funcion dibujar()********");
 		var x = 500,y = 150;
@@ -57,7 +55,7 @@ $(document).ready(function() {
 		//console.log(array);
 		dibujar();
 	}, 500);
-
+	*/
 
 
 

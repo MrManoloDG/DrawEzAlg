@@ -54,10 +54,17 @@ class Out_Struct extends Code_Struct{
 	constructor(parent){
 		super('out', parent);
 	}
+
+	dibujar(x, y, i, canvas) {
+		dibujar_escritura(x,y,i,canvas,this);
+	}
 }
 
 class In_Struct extends Code_Struct{
 	constructor(parent){
 		super('in', parent);
+	}
+	dibujar(x,y,i,canvas){
+		dibujar_lectura(x,y,i,canvas,this);
 	}
 }

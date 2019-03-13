@@ -9,7 +9,6 @@
   "dependencies": {
     "highlight.js": "^9.14.2",
     "jcanvas": "15.2.7",
-    "jquery": "^3.3.1",
     "jsdom": "^13.2.0",
     "pretty-bytes": "^2.0.1"
   },
