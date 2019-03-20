@@ -117,23 +117,27 @@ function dibujar_linea(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 			switch(active){
 				case 'if':
 					array.splice(i,0,new If_Struct(struct));
-				break;
+					break;
 
 				case 'while':
 					array.splice(i,0,new While_Struct(struct));
-				break;
+					break;
 
 				case 'assing':
 					array.splice(i,0,new Assing_Struct(struct));
-				break;
+					break;
 
 				case 'out':
 					array.splice(i,0,new Out_Struct(struct));
-				break;
+					break;
 
 				case 'in':
 					array.splice(i,0,new In_Struct(struct));
-				break;
+					break;
+
+				case 'for':
+					array.splice(i,0,new For_Struct(struct));
+					break;
 
 				default:
 					array.splice(i,0,new Code_Struct('default',struct));
@@ -392,6 +396,100 @@ function dibujar_while(x,y,i,canvas,o) {
 		strokeStyle: '#000',
 		strokeWidth: 2,
 		name: o.parent + 'lhwhile'+i+'-h1',
+		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
+		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: y,
+		x3: x + 130 + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,
+		x4: x, y4: yloop + canvas.measureText(o.parent+'t'+i).width
+	});
+
+	canvas.getLayer(o.parent+'o'+i).height = (yloop + canvas.measureText(o.parent+'t'+i).width) - (y - canvas.measureText(o.parent+'t'+i).width/2);
+
+}
+
+function dibujar_for(x,y,i,canvas,o) {
+	y+=canvas.measureText('inicio').width;
+	canvas.drawText({
+		layer: true,
+		name: o.parent+'t'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x, y: y,
+		fontSize: '11pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: o.condition
+	})
+		.drawPath({
+			layer: true,
+			name: o.parent+'o'+i,
+			strokeStyle: '#000',
+			strokeWidth: 2,
+			height: (canvas.measureText(o.parent+'t'+i).width),
+			closed:true,
+			p1: {
+				type: 'line',
+				x1: x, y1: y - canvas.measureText(o.parent+'t'+i).width/2,
+				x2: x + 30 + canvas.measureText(o.parent+'t'+i).width, y2: y,
+				x3: x, y3: y + canvas.measureText(o.parent+'t'+i).width/2,
+				x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
+				x5: x, y5: y - canvas.measureText(o.parent+'t'+i).width/2,
+			},
+			click: function(layer) {
+				alert("Click on: for " + layer.name);
+			}
+		}).drawLine({
+			layer: true,
+			strokeStyle: '#000',
+			strokeWidth: 2,
+			name: o.parent + 'lhfor'+i+'romb',
+			x1: x - 30 - canvas.measureText(o.parent+'t'+i).width + 10, y1: y +5,
+			x2: x + 10, y2: y - canvas.measureText(o.parent+'t'+i).width/2 + 5
+		})
+		.drawText({
+			layer: true,
+			name: o.parent+'t-no'+i,
+			fillStyle: '#36c',
+			strokeWidth: 1,
+			x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
+			fontSize: '11pt',
+			fontFamily: 'Verdana, sans-serif',
+			text: "No"
+		});
+
+	let arr = o.loop;
+	let yloop = y + canvas.measureText(o.parent+'t'+i).width/2;
+	let arrow = false;
+	if(arr.length>0)  arrow = true;
+	dibujar_linea(x,yloop,x,yloop+100,0,canvas,arr,arrow,o.parent+'for'+i+'loop');
+	yloop += 100;
+
+	for (var j = 0; j < arr.length; j++) {
+		arr[j].dibujar(x,yloop,j,canvas);
+		yloop += canvas.getLayer(o.parent+'while'+i+'loop'+'o'+j).height + 10;
+		if(j >= arr.length-1) arrow = false;
+		dibujar_linea(x,yloop,x,yloop+100,j+1,canvas,arr, arrow,o.parent+'for'+i+'loop');
+		yloop += 100;
+	}
+	//Draw Return back
+	canvas.drawLine({
+		layer: true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		rounded: true,
+		endArrow: true,
+		arrowRadius: 15,
+		arrowAngle: 90,
+		name: o.parent + 'lhfor'+i+'-return',
+		x1: x, y1: yloop,
+		x2: x - 130 - canvas.measureText(o.parent+'t'+i).width, y2: yloop,
+		x3: x - 130 - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).width,
+		x4: x -10, y4: y - canvas.measureText(o.parent+'t'+i).width
+	});
+	//Draw no lines
+	canvas.drawLine({
+		layer: true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent + 'lhfor'+i+'-h1',
 		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
 		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: y,
 		x3: x + 130 + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,

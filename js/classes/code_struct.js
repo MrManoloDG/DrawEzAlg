@@ -42,6 +42,10 @@ class For_Struct extends While_Struct{
 		this.variable = "i";
 		this.incremental = "i++";
 	}
+
+	dibujar(x, y, i, canvas) {
+		dibujar_for(x,y,i,canvas,this);
+	}
 }
 
 class Assing_Struct extends Code_Struct{
