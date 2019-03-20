@@ -30,6 +30,10 @@ class While_Struct extends Code_Struct{
 		this.condition = "condition";
 		this.loop = [];
 	}
+
+	dibujar(x, y, i, canvas) {
+		dibujar_while(x,y,i,canvas,this);
+	}
 }
 
 class For_Struct extends While_Struct{
