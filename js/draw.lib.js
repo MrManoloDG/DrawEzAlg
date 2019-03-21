@@ -181,6 +181,24 @@ function dibujar_if(x,y,i,canvas,o) {
 	  click: function(layer) {
 			alert("Click on: if " + layer.name);
 		}
+	}).drawText({
+		layer: true,
+		name: o.parent+'t-no'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
+		fontSize: '11pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: "No"
+	}).drawText({
+		layer: true,
+		name: o.parent+'t-yes'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x - 60 - canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
+		fontSize: '11pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: "Yes"
 	})
 	.drawLine({
 		layer: true,
@@ -197,17 +215,19 @@ function dibujar_if(x,y,i,canvas,o) {
 			x1: x - 30 - canvas.measureText(o.parent+'t'+i).width, y1: y,
 			x2: x - 130 - canvas.measureText(o.parent+'t'+i).width, y2: y
 	});
-	var arrow = false;
+	let arrow = false;
+	let arr_yes = o.yes;
+	let arr_no = o.no;
+
 	//Array SI
-	var arr_yes = o.yes;
-	xh2 = (x - 130 - canvas.measureText(o.parent+'t'+i).width);
-	yh2 = y;
+	let xh2 = (x - 130 - canvas.measureText(o.parent+'t'+i).width);
+	let yh2 = y;
 
 	if(arr_yes.length>0)  arrow = true;
 	dibujar_linea(xh2,yh2,xh2,yh2+100,0,canvas,arr_yes,arrow,o.parent+'if'+i+'yes-');
 	yh2 += 100;
 
-	for (var j = 0; j < arr_yes.length; j++) {
+	for (let j = 0; j < arr_yes.length; j++) {
 		console.log(j);
 		arr_yes[j].dibujar(xh2,yh2,j,canvas);
 		console.log(o.parent+'if'+i+'yes-'+'o'+j);
@@ -217,19 +237,29 @@ function dibujar_if(x,y,i,canvas,o) {
 		yh2 += 100;
 	}
 	//Array No
-	var arr_no = o.no;
-	xh1 = (x + 130 + canvas.measureText(o.parent+'t'+i).width);
-	yh1 = y;
+	let xh1 = (x + 130 + canvas.measureText(o.parent+'t'+i).width);
+	let yh1 = y;
 	if(arr_no.length>0)  arrow = true;
 	dibujar_linea(xh1,yh1,xh1,yh1+100,0,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
 	yh1 += 100;
-	for (var j = 0; j < arr_no.length; j++) {
+	for (let j = 0; j < arr_no.length; j++) {
 		arr_no[j].dibujar(xh1,yh1,j,canvas);
 		yh1 += canvas.getLayer(o.parent+'if'+i+'no-'+'o'+j).height + 10;
 		if(j >= arr_no.length-1) arrow = false;
 		dibujar_linea(xh1,yh1,xh1,yh1+100,j+1,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
 		yh1 += 100;
 	}
+
+	//Completar lado desigual
+	if(yh1 > yh2){
+		console.log("igualando si");
+		dibujar_linea(xh2,yh2,xh2,yh1,arr_yes.length + 1,canvas,arr_yes, arrow,o.parent+'if'+i+'yes-');
+		yh2 = yh1;
+	}else if( yh2 > yh1){
+		console.log("igualando no");
+		dibujar_linea(xh1,yh1,xh1,yh2,arr_no.length +1,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
+	}
+
 	canvas.drawLine({
 		layer: true,
 		strokeStyle: '#000',
