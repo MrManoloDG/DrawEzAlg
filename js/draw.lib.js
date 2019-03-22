@@ -97,6 +97,31 @@ function dibujar_cuadrado(x,y,i,canvas, o) {
 	});
 }
 
+function dibujar_assing(x,y,i,canvas, o) {
+	canvas.drawText({
+		layer: true,
+		name: o.parent+'t'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x, y:  y + canvas.measureText('inicio').width,
+		fontSize: '11pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: 'assing'
+	}).drawRect({
+		layer:true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent+'o'+i,
+		x: x, y: y + canvas.measureText('inicio').width,
+		width: (canvas.measureText(o.parent+'t'+i).width + 20)*2,
+		height: (canvas.measureText(o.parent+'t'+i).height + 20)*2,
+		click: function(layer) {
+			alert("Click on: Assing" + layer.name);
+		}
+	});
+
+}
+
 function dibujar_linea(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 	canvas.drawLine({
 		layer: true,
