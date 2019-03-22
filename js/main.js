@@ -4,14 +4,26 @@ var JCanvas = require( './js/jcanvas.js' );
 require('./js/classes/code_struct.js');
 var array_main;
 var active = null;
+var canvas;
 function btn_struct(str) {
 	active = str;
 	console.log(active);
 }
 
+function zoom_in(){
+	canvas.scaleCanvas({
+		scale: 1.2
+	});
+}
+
+function zoom_out(){
+	canvas.scaleCanvas({
+		scale: 0.8
+	});
+}
 
 $(document).ready(function() {
-	var canvas = $('#canvas');
+	canvas = $('#canvas');
 	array_main = new Array();
 	JCanvas( $, window);
 	//Codigo para probar
