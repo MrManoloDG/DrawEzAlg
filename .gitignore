@@ -5,3 +5,5 @@
 package-lock\.json
 
 dist/win-unpacked/
+
+dist/mac/

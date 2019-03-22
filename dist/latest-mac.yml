@@ -1,0 +1,12 @@
+version: 1.0.0
+files:
+  - url: prueba_tfg-1.0.0-mac.zip
+    sha512: 3IJAzq2euxCIJUfsoQT+3eptNxwp8MMfAJHQbN5TspfIBpahujhwSmW3Wb66jyWxW7lwBxYCRn3v6La9ZO6Yuw==
+    size: 65994012
+    blockMapSize: 70033
+  - url: prueba_tfg-1.0.0.dmg
+    sha512: W5OsvxFAgCwHH8qNnLAqOqW5qmiFzYz2kid/FX+319YQJji5i+LeihBJSXSm5uWB8QQbmSZWF69L87v9H79mwA==
+    size: 68101554
+path: prueba_tfg-1.0.0-mac.zip
+sha512: 3IJAzq2euxCIJUfsoQT+3eptNxwp8MMfAJHQbN5TspfIBpahujhwSmW3Wb66jyWxW7lwBxYCRn3v6La9ZO6Yuw==
+releaseDate: '2019-03-22T11:55:00.648Z'
