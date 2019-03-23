@@ -5,6 +5,9 @@ require('./js/classes/code_struct.js');
 var array_main;
 var active = null;
 var canvas;
+
+
+
 function btn_struct(str) {
 	active = str;
 	console.log(active);
@@ -23,11 +26,30 @@ function zoom_out(){
 }
 
 $(document).ready(function() {
+
+
+
 	canvas = $('#canvas');
 	array_main = new Array();
 	JCanvas( $, window);
 	//Codigo para probar
 	dibujar(canvas);
+
+	let width = window.innerWidth - 20; // ancho
+	let height = window.innerHeight - $('#buttons').height() - 10; // alto
+	$('#contenedor').css("width", width + "px");
+	$('#contenedor').css("height", height + "px");
+
+	$( window ).resize(function() {
+		let width = window.innerWidth - 20; // ancho
+		let height = window.innerHeight - $('#buttons').height() - 10; // alto
+		$('#contenedor').css("width", width + "px");
+		$('#contenedor').css("height", height + "px");
+	});
+
+	$('#contenedor').animate({
+		scrollLeft: 2000
+	}, 100);
 	//fin codigo para prueba
 	/*
 	function dibujar(){

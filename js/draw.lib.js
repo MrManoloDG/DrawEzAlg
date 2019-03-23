@@ -20,7 +20,7 @@ function limpiar(canvas) {
 
 function dibujar(canvas) {
 
-	var x = 500,y = 150;
+	var x = 2500 ,y = 150;
 	// Draw text
 	dibujar_inicio(x,y,canvas);
 	y += canvas.measureText('inicio').width+5 / 2;

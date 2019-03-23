@@ -30,50 +30,53 @@
 	</head>
 	<body class="container-fluid">
 		<!-- Botonera -->
-		<nav class="navbar navbar-expand-lg navbar-light">
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbarNav">
-		    <ul class="navbar-nav">
-				<li class="nav-item m-1">
-						<button type="button" name="asignación" class="btn btn-primary" onclick="btn_struct('assing')"><i class="far fa-square"></i></button>
-				</li>
-				<li class="nav-item m-1">
-						<button type="button" name="if" class="btn btn-primary text-white" onclick="btn_struct('if')">If</button>
-				</li>
-				<li class="nav-item m-1">
-						<button type="button" name="while" class="btn btn-primary text-white" onclick="btn_struct('while')">While</button>
-				</li>
-				<li class="nav-item m-1">
-						<button type="button" name="for" class="btn btn-primary text-white" onclick="btn_struct('for')">For</button>
-				</li>
-				<li class="nav-item m-1">
-						<button type="button" name="out" class="btn btn-primary text-white" onclick="btn_struct('out')">Out</button>
-				</li>
-				<li class="nav-item m-1">
-						<button type="button" name="in" class="btn btn-primary text-white" onclick="btn_struct('in')">In</button>
-				</li>
-				<li class="nav-item m-1">
-					<button type="button" name="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus"></i></button>
-				</li>
-				<li class="nav-item m-1">
-					<button type="button" name="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus"></i></button>
-				</li>
-		    </ul>
-		  </div>
-		</nav>
+		<div id="buttons">
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav">
+						<li class="nav-item m-1">
+							<button type="button" name="asignación" class="btn btn-primary" onclick="btn_struct('assing')"><i class="far fa-square"></i></button>
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="if" class="btn btn-primary text-white" onclick="btn_struct('if')">If</button>
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="while" class="btn btn-primary text-white" onclick="btn_struct('while')">While</button>
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="for" class="btn btn-primary text-white" onclick="btn_struct('for')">For</button>
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="out" class="btn btn-primary text-white" onclick="btn_struct('out')">Out</button>
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="in" class="btn btn-primary text-white" onclick="btn_struct('in')">In</button>
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus"></i></button>
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus"></i></button>
+						</li>
+					</ul>
+				</div>
+			</nav>
 
-		<nav>
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Diagrama</a>
-				<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Codigo</a>
-			</div>
-		</nav>
+			<nav>
+				<div class="nav nav-tabs" id="nav-tab" role="tablist">
+					<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Diagrama</a>
+					<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Codigo</a>
+				</div>
+			</nav>
+		</div>
+
 		<div class="tab-content" id="nav-tabContent">
 			<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 				<div id="contenedor" class="mx-auto">
-					<canvas id="canvas" width="1000" height="5000">Tu navegador no soporta Canvas</canvas>
+					<canvas id="canvas" width="5000" height="5000">Tu navegador no soporta Canvas</canvas>
 				</div>
 			</div>
 			<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
