@@ -1,8 +1,8 @@
 version: 1.0.0
 files:
   - url: prueba_tfg-setup-1.0.0.exe
-    sha512: ZZITs0Kg0b3214atatomoJV2Zy0lkUWT0d64kR8UHyLw0qx+1zZcjSTD+Zq2heGOwTt7hpM+meTjAk+X2U6/MQ==
-    size: 54811595
+    sha512: gqIOQlKeqxgbIf5dZiA0btUZPm38q2MRMU3O/XQuILcSqD3TQLnzg0JtSLPUj4XUx3OCcgmmOxqCgV5kwU6IlA==
+    size: 54812810
 path: prueba_tfg-setup-1.0.0.exe
-sha512: ZZITs0Kg0b3214atatomoJV2Zy0lkUWT0d64kR8UHyLw0qx+1zZcjSTD+Zq2heGOwTt7hpM+meTjAk+X2U6/MQ==
-releaseDate: '2019-03-22T11:01:09.060Z'
+sha512: gqIOQlKeqxgbIf5dZiA0btUZPm38q2MRMU3O/XQuILcSqD3TQLnzg0JtSLPUj4XUx3OCcgmmOxqCgV5kwU6IlA==
+releaseDate: '2019-03-24T11:26:19.347Z'
