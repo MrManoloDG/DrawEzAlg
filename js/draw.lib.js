@@ -1,4 +1,53 @@
 
+function get_mult_width_repeat(arr) {
+	let arr_if = [];
+	let arr_repeat = [];
+	if(Array.isArray(arr)){
+		arr_if = arr.filter( e => e.type === 'if' );
+		arr_repeat = arr.filter( e => e.type === 'while' || e.type ==='for');
+	}
+	let max_arr = 0;
+	if(arr_if.length !== 0 ){
+		for(let i = 0; i < arr_if.length; i++){
+			max_arr = Math.max(get_mult_width_if(arr_if[i].yes,true),get_mult_width_if(arr_if[i].false,false),max_arr);
+		}
+		return 1 + max_arr*1.4;
+	} else if (arr_repeat.length !== 0){
+		for (let i = 0; i < arr_repeat.length ; i++) {
+			max_arr = Math.max(get_mult_width_repeat(arr_repeat[i].loop),max_arr);
+		}
+		return 1 + max_arr;
+	} else return 1;
+}
+
+function get_mult_width_if(arr, way) {
+	let arr_if = [];
+	let arr_repeat = [];
+	if(Array.isArray(arr)){
+		arr_if = arr.filter( e => e.type === 'if' );
+		arr_repeat = arr.filter( e => e.type === 'while' || e.type ==='for');
+	}
+	let max_arr = 0;
+	if(arr_if.length !== 0 ){
+		if(way){
+			for(let i = 0; i < arr_if.length; i++){
+				max_arr = Math.max(get_mult_width_if(arr_if[i].no,way),max_arr);
+			}
+		}else {
+			for(let i = 0; i < arr_if.length; i++){
+				max_arr = Math.max(get_mult_width_if(arr_if[i].yes,way),max_arr);
+			}
+		}
+		return 1 + max_arr*1.4;
+	}else if (arr_repeat.length !== 0){
+		for (let i = 0; i < arr_repeat.length ; i++) {
+			max_arr = Math.max(get_mult_width_repeat(arr_repeat[i].loop),max_arr);
+		}
+		return 1 + max_arr;
+	} else return 1;
+
+}
+
 function refrescar(canvas) {
 	const promise = new Promise(function (resolve) {
 		while(canvas.getLayers().length > 0){
@@ -224,28 +273,30 @@ function dibujar_if(x,y,i,canvas,o) {
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: "Yes"
-	})
-	.drawLine({
+	});
+
+	let arrow = false;
+	let arr_yes = o.yes;
+	let arr_no = o.no;
+	let multp_yes_width = get_mult_width_if(arr_yes,true);
+	let multp_no_width = get_mult_width_if(arr_no,false);
+	canvas.drawLine({
 		layer: true,
 		strokeStyle: '#000',
 		strokeWidth: 2,
 		name: o.parent+'lh1if'+i,
 		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
-		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: y
+		x2: x + (130 * multp_no_width) + canvas.measureText(o.parent+'t'+i).width, y2: y
 	}).drawLine({
-			layer: true,
-			strokeStyle: '#000',
-			strokeWidth: 2,
-			name: o.parent+'lh2if'+i,
-			x1: x - 30 - canvas.measureText(o.parent+'t'+i).width, y1: y,
-			x2: x - 130 - canvas.measureText(o.parent+'t'+i).width, y2: y
+		layer: true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent+'lh2if'+i,
+		x1: x - 30 - canvas.measureText(o.parent+'t'+i).width, y1: y,
+		x2: x - (130 * multp_yes_width) - canvas.measureText(o.parent+'t'+i).width, y2: y
 	});
-	let arrow = false;
-	let arr_yes = o.yes;
-	let arr_no = o.no;
-
 	//Array SI
-	let xh2 = (x - 130 - canvas.measureText(o.parent+'t'+i).width);
+	let xh2 = (x - (130 * multp_yes_width) - canvas.measureText(o.parent+'t'+i).width);
 	let yh2 = y;
 
 	if(arr_yes.length>0)  arrow = true;
@@ -262,7 +313,7 @@ function dibujar_if(x,y,i,canvas,o) {
 		yh2 += 100;
 	}
 	//Array No
-	let xh1 = (x + 130 + canvas.measureText(o.parent+'t'+i).width);
+	let xh1 = (x + (130 * multp_no_width) + canvas.measureText(o.parent+'t'+i).width);
 	let yh1 = y;
 	if(arr_no.length>0)  arrow = true;
 	dibujar_linea(xh1,yh1,xh1,yh1+100,0,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
@@ -290,8 +341,8 @@ function dibujar_if(x,y,i,canvas,o) {
 		strokeStyle: '#000',
 		strokeWidth: 2,
 		name: o.parent+'l_end_if'+i,
-		x1: x - 130 - canvas.measureText(o.parent+'t'+i).width, y1: yh2,
-		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: yh2
+		x1: xh1, y1: yh2,
+		x2: xh2, y2: yh2
 	});
 	canvas.getLayer(o.parent+'o'+i).height = yh2 - (y - canvas.measureText(o.parent+'t'+i).width/2);
 	//
@@ -417,6 +468,7 @@ function dibujar_while(x,y,i,canvas,o) {
 	});
 
 	let arr = o.loop;
+	let multp_width = get_mult_width_repeat(arr);
 	let yloop = y + canvas.measureText(o.parent+'t'+i).width/2;
 	let arrow = false;
 	if(arr.length>0)  arrow = true;
@@ -437,12 +489,13 @@ function dibujar_while(x,y,i,canvas,o) {
 		strokeWidth: 2,
 		rounded: true,
 		endArrow: true,
+		intangible: true,
 		arrowRadius: 15,
 		arrowAngle: 90,
 		name: o.parent + 'lhwhile'+i+'-return',
 		x1: x, y1: yloop,
-		x2: x - 130 - canvas.measureText(o.parent+'t'+i).width, y2: yloop,
-		x3: x - 130 - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).width,
+		x2: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y2: yloop,
+		x3: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).width,
 		x4: x -10, y4: y - canvas.measureText(o.parent+'t'+i).width
 	});
 	//Draw no lines
@@ -450,10 +503,11 @@ function dibujar_while(x,y,i,canvas,o) {
 		layer: true,
 		strokeStyle: '#000',
 		strokeWidth: 2,
+		intangible: true,
 		name: o.parent + 'lhwhile'+i+'-h1',
 		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
-		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: y,
-		x3: x + 130 + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,
+		x2: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y2: y,
+		x3: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,
 		x4: x, y4: yloop + canvas.measureText(o.parent+'t'+i).width
 	});
 
@@ -511,6 +565,7 @@ function dibujar_for(x,y,i,canvas,o) {
 		});
 
 	let arr = o.loop;
+	let multp_width = get_mult_width_repeat(arr);
 	let yloop = y + canvas.measureText(o.parent+'t'+i).width/2;
 	let arrow = false;
 	if(arr.length>0)  arrow = true;
@@ -519,7 +574,7 @@ function dibujar_for(x,y,i,canvas,o) {
 
 	for (var j = 0; j < arr.length; j++) {
 		arr[j].dibujar(x,yloop,j,canvas);
-		yloop += canvas.getLayer(o.parent+'while'+i+'loop'+'o'+j).height + 10;
+		yloop += canvas.getLayer(o.parent+'for'+i+'loop'+'o'+j).height + 10;
 		if(j >= arr.length-1) arrow = false;
 		dibujar_linea(x,yloop,x,yloop+100,j+1,canvas,arr, arrow,o.parent+'for'+i+'loop');
 		yloop += 100;
@@ -531,12 +586,13 @@ function dibujar_for(x,y,i,canvas,o) {
 		strokeWidth: 2,
 		rounded: true,
 		endArrow: true,
+		intangible: true,
 		arrowRadius: 15,
 		arrowAngle: 90,
 		name: o.parent + 'lhfor'+i+'-return',
 		x1: x, y1: yloop,
-		x2: x - 130 - canvas.measureText(o.parent+'t'+i).width, y2: yloop,
-		x3: x - 130 - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).width,
+		x2: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y2: yloop,
+		x3: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).width,
 		x4: x -10, y4: y - canvas.measureText(o.parent+'t'+i).width
 	});
 	//Draw no lines
@@ -544,10 +600,11 @@ function dibujar_for(x,y,i,canvas,o) {
 		layer: true,
 		strokeStyle: '#000',
 		strokeWidth: 2,
+		intangible: true,
 		name: o.parent + 'lhfor'+i+'-h1',
 		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
-		x2: x + 130 + canvas.measureText(o.parent+'t'+i).width, y2: y,
-		x3: x + 130 + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,
+		x2: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y2: y,
+		x3: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,
 		x4: x, y4: yloop + canvas.measureText(o.parent+'t'+i).width
 	});
 
