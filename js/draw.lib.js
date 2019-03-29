@@ -62,7 +62,6 @@ function refrescar(canvas) {
 function limpiar(canvas) {
 	canvas.clearCanvas();
 	canvas.getLayers().forEach(function(element) {
-		console.log(element.name);
 		canvas.removeLayer(element.name);
 	});
 }
@@ -83,6 +82,7 @@ function dibujar(canvas) {
 	}
 	y += canvas.measureText('inicio').width + 20 / 2;
 	dibujar_fin(x,y,canvas);
+	console.log("******** Dibujado Completo ********");
 }
 
 function dibujar_inicio(x,y,canvas) {
@@ -305,7 +305,7 @@ function dibujar_if(x,y,i,canvas,o) {
 	yh2 += 100;
 
 	for (let j = 0; j < arr_yes.length; j++) {
-		console.log(j);
+		arr_yes[j].parent = o.parent+'if'+i+'yes-';
 		arr_yes[j].dibujar(xh2,yh2,j,canvas);
 		console.log(o.parent+'if'+i+'yes-'+'o'+j);
 		yh2 += canvas.getLayer(o.parent+'if'+i+'yes-'+'o'+j).height + 10;
@@ -320,6 +320,7 @@ function dibujar_if(x,y,i,canvas,o) {
 	dibujar_linea(xh1,yh1,xh1,yh1+100,0,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
 	yh1 += 100;
 	for (let j = 0; j < arr_no.length; j++) {
+		arr_no[j].parent = o.parent+'if'+i+'no-';
 		arr_no[j].dibujar(xh1,yh1,j,canvas);
 		yh1 += canvas.getLayer(o.parent+'if'+i+'no-'+'o'+j).height + 10;
 		if(j >= arr_no.length-1) arrow = false;
@@ -476,7 +477,8 @@ function dibujar_while(x,y,i,canvas,o) {
 	dibujar_linea(x,yloop,x,yloop+100,0,canvas,arr,arrow,o.parent+'while'+i+'loop');
 	yloop += 100;
 
-	for (var j = 0; j < arr.length; j++) {
+	for (let j = 0; j < arr.length; j++) {
+		arr[j].parent = o.parent+'while'+i+'loop';
 		arr[j].dibujar(x,yloop,j,canvas);
 		yloop += canvas.getLayer(o.parent+'while'+i+'loop'+'o'+j).height + 10;
 		if(j >= arr.length-1) arrow = false;
@@ -573,7 +575,8 @@ function dibujar_for(x,y,i,canvas,o) {
 	dibujar_linea(x,yloop,x,yloop+100,0,canvas,arr,arrow,o.parent+'for'+i+'loop');
 	yloop += 100;
 
-	for (var j = 0; j < arr.length; j++) {
+	for (let j = 0; j < arr.length; j++) {
+		arr[j].parent = o.parent+'for'+i+'loop';
 		arr[j].dibujar(x,yloop,j,canvas);
 		yloop += canvas.getLayer(o.parent+'for'+i+'loop'+'o'+j).height + 10;
 		if(j >= arr.length-1) arrow = false;
