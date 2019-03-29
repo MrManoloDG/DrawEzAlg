@@ -142,6 +142,9 @@ function dibujar_cuadrado(x,y,i,canvas, o) {
 		height: 100,
 		click: function(layer) {
 			alert("Click on: Assing" + layer.name);
+			if(active === 'delete'){
+				delete o;
+			}
 		}
 	});
 }
@@ -212,9 +215,7 @@ function dibujar_linea(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 				case 'for':
 					array.splice(i,0,new For_Struct(struct));
 					break;
-
-				default:
-					array.splice(i,0,new Code_Struct('default',struct));
+					
 			}
 			refrescar(canvas).then(function () {
 				dibujar(canvas);

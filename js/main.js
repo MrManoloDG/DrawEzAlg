@@ -10,7 +10,7 @@ var canvas;
 
 function btn_struct(str) {
 	active = str;
-	console.log(active);
+
 }
 
 function zoom_in(){
