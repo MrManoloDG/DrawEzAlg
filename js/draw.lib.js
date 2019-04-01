@@ -174,6 +174,8 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 						dibujar(canvas);
 					});
 				}
+			}else{
+				$('#myModal').modal({show:true});
 			}
 		}
 	});
@@ -268,6 +270,18 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 					  dibujar(canvas);
 				  });
 			  }
+		  }else{
+		  	  $('.modal-title').text("If");
+			  $('.modal-body').load('modals/if_modal.html',function(){
+			  	  $('#condition').val(o.condition);
+				  $('#myModal').modal({show:true});
+				  $('#save').click(function () {
+					  o.condition = $('#condition').val();
+					  refrescar(canvas).then(function () {
+						  dibujar(canvas);
+					  });
+				  });
+			  });
 		  }
 		}
 	}).drawText({
@@ -493,6 +507,18 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 						dibujar(canvas);
 					});
 				}
+			}else{
+				$('.modal-title').text("While");
+				$('.modal-body').load('modals/while_modal.html',function(){
+					$('#condition').val(o.condition);
+					$('#myModal').modal({show:true});
+					$('#save').click(function () {
+						o.condition = $('#condition').val();
+						refrescar(canvas).then(function () {
+							dibujar(canvas);
+						});
+					});
+				});
 			}
 		}
 	})
