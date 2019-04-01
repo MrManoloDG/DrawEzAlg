@@ -75,7 +75,7 @@ function dibujar(canvas) {
 	dibujar_linea(x,y,x,y+100,0,canvas,array_main,true,'main');
 	y += 100;
 	for (var i = 0; i < array_main.length; i++) {
-		array_main[i].dibujar(x,y,i,canvas);
+		array_main[i].dibujar(x,y,i,canvas,array_main);
 		y += canvas.getLayer('maino'+i).height + 10;
 		dibujar_linea(x,y,x,y+100,i+1,canvas,array_main,true,'main');
 		y += 100;
@@ -142,14 +142,12 @@ function dibujar_cuadrado(x,y,i,canvas, o) {
 		height: 100,
 		click: function(layer) {
 			alert("Click on: Assing" + layer.name);
-			if(active === 'delete'){
-				delete o;
-			}
+
 		}
 	});
 }
 
-function dibujar_assing(x,y,i,canvas, o) {
+function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -169,6 +167,14 @@ function dibujar_assing(x,y,i,canvas, o) {
 		height: (canvas.measureText(o.parent+'t'+i).height + 20)*2,
 		click: function(layer) {
 			alert("Click on: Assing" + layer.name);
+			if(active === 'delete'){
+				if(confirm("Are you sure to delete?")){
+					parent_arr.splice(i,1);
+					refrescar(canvas).then(function () {
+						dibujar(canvas);
+					});
+				}
+			}
 		}
 	});
 
@@ -226,7 +232,7 @@ function dibujar_linea(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 }
 
 
-function dibujar_if(x,y,i,canvas,o) {
+function dibujar_if(x,y,i,canvas,o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
 	canvas.drawText({
 		layer: true,
@@ -254,7 +260,15 @@ function dibujar_if(x,y,i,canvas,o) {
 			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).width/2,
 	  },
 	  click: function(layer) {
-			alert("Click on: if " + layer.name);
+	  	  alert("Click on: if " + layer.name);
+		  if(active === 'delete'){
+			  if(confirm("Are you sure to delete?")){
+				  parent_arr.splice(i,1);
+				  refrescar(canvas).then(function () {
+					  dibujar(canvas);
+				  });
+			  }
+		  }
 		}
 	}).drawText({
 		layer: true,
@@ -306,7 +320,7 @@ function dibujar_if(x,y,i,canvas,o) {
 
 	for (let j = 0; j < arr_yes.length; j++) {
 		arr_yes[j].parent = o.parent+'if'+i+'yes-';
-		arr_yes[j].dibujar(xh2,yh2,j,canvas);
+		arr_yes[j].dibujar(xh2,yh2,j,canvas,arr_yes);
 		console.log(o.parent+'if'+i+'yes-'+'o'+j);
 		yh2 += canvas.getLayer(o.parent+'if'+i+'yes-'+'o'+j).height + 10;
 		if(j >= arr_yes.length-1) arrow = false;
@@ -321,7 +335,7 @@ function dibujar_if(x,y,i,canvas,o) {
 	yh1 += 100;
 	for (let j = 0; j < arr_no.length; j++) {
 		arr_no[j].parent = o.parent+'if'+i+'no-';
-		arr_no[j].dibujar(xh1,yh1,j,canvas);
+		arr_no[j].dibujar(xh1,yh1,j,canvas,arr_no);
 		yh1 += canvas.getLayer(o.parent+'if'+i+'no-'+'o'+j).height + 10;
 		if(j >= arr_no.length-1) arrow = false;
 		dibujar_linea(xh1,yh1,xh1,yh1+100,j+1,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
@@ -350,7 +364,7 @@ function dibujar_if(x,y,i,canvas,o) {
 	//
 }
 
-function dibujar_lectura(x,y,i,canvas, o) {
+function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
 	canvas.drawText({
 		layer: true,
@@ -381,11 +395,19 @@ function dibujar_lectura(x,y,i,canvas, o) {
 		},
 		click: function(layer) {
 			alert("Click on: lectura " + layer.name);
+			if(active === 'delete'){
+				if(confirm("Are you sure to delete?")){
+					parent_arr.splice(i,1);
+					refrescar(canvas).then(function () {
+						dibujar(canvas);
+					});
+				}
+			}
 		}
 	})
 }
 
-function dibujar_escritura(x,y,i,canvas,o) {
+function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
 	canvas.drawText({
 		layer: true,
@@ -423,11 +445,19 @@ function dibujar_escritura(x,y,i,canvas,o) {
 		},
 		click: function(layer) {
 			alert("Click on: escritura " + layer.name);
+			if(active === 'delete'){
+				if(confirm("Are you sure to delete?")){
+					parent_arr.splice(i,1);
+					refrescar(canvas).then(function () {
+						dibujar(canvas);
+					});
+				}
+			}
 		}
 	})
 }
 
-function dibujar_while(x,y,i,canvas,o) {
+function dibujar_while(x,y,i,canvas,o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
 	canvas.drawText({
 		layer: true,
@@ -456,6 +486,14 @@ function dibujar_while(x,y,i,canvas,o) {
 		},
 		click: function(layer) {
 			alert("Click on: while " + layer.name);
+			if(active === 'delete'){
+				if(confirm("Are you sure to delete?")){
+					parent_arr.splice(i,1);
+					refrescar(canvas).then(function () {
+						dibujar(canvas);
+					});
+				}
+			}
 		}
 	})
 	.drawText({
@@ -479,7 +517,7 @@ function dibujar_while(x,y,i,canvas,o) {
 
 	for (let j = 0; j < arr.length; j++) {
 		arr[j].parent = o.parent+'while'+i+'loop';
-		arr[j].dibujar(x,yloop,j,canvas);
+		arr[j].dibujar(x,yloop,j,canvas,arr);
 		yloop += canvas.getLayer(o.parent+'while'+i+'loop'+'o'+j).height + 10;
 		if(j >= arr.length-1) arrow = false;
 		dibujar_linea(x,yloop,x,yloop+100,j+1,canvas,arr, arrow,o.parent+'while'+i+'loop');
@@ -518,7 +556,7 @@ function dibujar_while(x,y,i,canvas,o) {
 
 }
 
-function dibujar_for(x,y,i,canvas,o) {
+function dibujar_for(x,y,i,canvas,o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
 	canvas.drawText({
 		layer: true,
@@ -547,6 +585,14 @@ function dibujar_for(x,y,i,canvas,o) {
 			},
 			click: function(layer) {
 				alert("Click on: for " + layer.name);
+				if(active === 'delete'){
+					if(confirm("Are you sure to delete?")){
+						parent_arr.splice(i,1);
+						refrescar(canvas).then(function () {
+							dibujar(canvas);
+						});
+					}
+				}
 			}
 		}).drawLine({
 			layer: true,
@@ -577,7 +623,7 @@ function dibujar_for(x,y,i,canvas,o) {
 
 	for (let j = 0; j < arr.length; j++) {
 		arr[j].parent = o.parent+'for'+i+'loop';
-		arr[j].dibujar(x,yloop,j,canvas);
+		arr[j].dibujar(x,yloop,j,canvas,arr);
 		yloop += canvas.getLayer(o.parent+'for'+i+'loop'+'o'+j).height + 10;
 		if(j >= arr.length-1) arrow = false;
 		dibujar_linea(x,yloop,x,yloop+100,j+1,canvas,arr, arrow,o.parent+'for'+i+'loop');
