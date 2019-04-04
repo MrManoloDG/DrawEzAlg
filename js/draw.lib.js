@@ -155,7 +155,7 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 		text += index + " <- " + o.list[index] + "\n";
 		n_lineas += 5;
 	}
-	text = text.slice(0,-2);
+	text = text.slice(0,-1);
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -175,7 +175,7 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 		width: (canvas.measureText(o.parent+'t'+i).width + 30),
 		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
 		click: function(layer) {
-			alert("Click on: Assing" + layer.name);
+			//alert("Click on: Assing" + layer.name);
 			if(active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
@@ -333,7 +333,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
 	  },
 	  click: function(layer) {
-	  	  alert("Click on: if " + layer.name);
+	  	  //alert("Click on: if " + layer.name);
 		  if(active === 'delete'){
 			  if(confirm("Are you sure to delete?")){
 				  parent_arr.splice(i,1);
@@ -482,7 +482,7 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 			x5: x - width/2, y5: y - height,
 		},
 		click: function(layer) {
-			alert("Click on: lectura " + layer.name);
+			//alert("Click on: lectura " + layer.name);
 			if(active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
@@ -547,7 +547,7 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 			x3: x - width, y3: y + height
 		},
 		click: function(layer) {
-			alert("Click on: escritura " + layer.name);
+			//alert("Click on: escritura " + layer.name);
 			if(active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
@@ -603,7 +603,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
 		},
 		click: function(layer) {
-			alert("Click on: while " + layer.name);
+			//alert("Click on: while " + layer.name);
 			if(active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
@@ -717,7 +717,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 				x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
 			},
 			click: function(layer) {
-				alert("Click on: for " + layer.name);
+				//alert("Click on: for " + layer.name);
 				if(active === 'delete'){
 					if(confirm("Are you sure to delete?")){
 						parent_arr.splice(i,1);
