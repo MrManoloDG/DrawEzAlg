@@ -148,23 +148,32 @@ function dibujar_cuadrado(x,y,i,canvas, o) {
 }
 
 function dibujar_assing(x,y,i,canvas, o,parent_arr) {
+	y+=canvas.measureText('inicio').width;
+	let text = "";
+	let n_lineas = 1;
+	for(let index  in  o.list){
+		text += index + " <- " + o.list[index] + "\n";
+		n_lineas += 5;
+	}
+	text = text.slice(0,-2);
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
-		x: x, y:  y + canvas.measureText('inicio').width,
+		x: x, y:  y - canvas.measureText('inicio').width/2 + n_lineas,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: 'assing'
+		text: text === "" ? 'Assing' : text
 	}).drawRect({
 		layer:true,
 		strokeStyle: '#000',
 		strokeWidth: 2,
 		name: o.parent+'o'+i,
-		x: x, y: y + canvas.measureText('inicio').width,
-		width: (canvas.measureText(o.parent+'t'+i).width + 20)*2,
-		height: (canvas.measureText(o.parent+'t'+i).height + 20)*2,
+		fromCenter: false,
+		x: x - canvas.measureText(o.parent+'t'+i).width/2 - 15 , y: y + 5 - canvas.measureText('inicio').width,
+		width: (canvas.measureText(o.parent+'t'+i).width + 30),
+		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
 		click: function(layer) {
 			alert("Click on: Assing" + layer.name);
 			if(active === 'delete'){
@@ -175,7 +184,69 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 					});
 				}
 			}else{
-				$('#myModal').modal({show:true});
+				$('.modal-title').text("Assing");
+				$('.modal-body').load('modals/assing_modal.html',function(){
+					$('#oID').val(layer.name);
+
+					let j_load = 0;
+					for(let index  in  o.list){
+						$('.list').append(
+							'<div class="form-group row">\n' +
+							'            <div class="col-sm-5">\n' +
+							'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="Variable" value="'+index+'">\n' +
+							'            </div>\n' +
+							'            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
+							'            <div class="col-sm-6">\n' +
+							'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="Assing" value="'+o.list[index]+'">\n' +
+							'            </div>\n' +
+							'        </div>'
+						);
+						j_load++;
+					}
+
+					for (let j = 0; j < o.list.length ; j++) {
+
+					}
+					$('#myModal').modal({show:true});
+					$('#asing_add').click(function () {
+						if($('#oID').val() === layer.name){
+							$('.list').append(
+								'<div class="form-group row">\n' +
+								'            <div class="col-sm-5">\n' +
+								'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="Variable">\n' +
+								'            </div>\n' +
+								'            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
+								'            <div class="col-sm-6">\n' +
+								'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="Assing">\n' +
+								'            </div>\n' +
+								'        </div>'
+							);
+							j_load++;
+						}
+					});
+					$('#save').click(function () {
+						if($('#oID').val() === layer.name){
+							o.list = [];
+							$('.list').find('.row').each(function() {
+								console.log("hola");
+								let key;
+								let val;
+								$(this).find('input').each(function() {
+									let id = $(this).attr('id').split("-");
+									if(id[0] === 'value'){
+										val = $(this).val();
+									}else if(id[0] === 'key'){
+										key = $(this).val();
+									}
+								});
+								if(key !== "" && val !== "") o.list[key] = val;
+							});
+							refrescar(canvas).then(function () {
+								dibujar(canvas);
+							});
+						}
+					});
+				});
 			}
 		}
 	});
@@ -255,11 +326,11 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 		closed:true,
 	  p1: {
 	    type: 'line',
-	    x1: x, y1: y - canvas.measureText(o.parent+'t'+i).width/2,
+	    x1: x, y1: y - canvas.measureText(o.parent+'t'+i).height*2,
 	    x2: x + 30 + canvas.measureText(o.parent+'t'+i).width, y2: y,
-	    x3: x, y3: y + canvas.measureText(o.parent+'t'+i).width/2,
+	    x3: x, y3: y + canvas.measureText(o.parent+'t'+i).height*2,
 	    x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
-			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).width/2,
+			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
 	  },
 	  click: function(layer) {
 	  	  alert("Click on: if " + layer.name);
@@ -274,12 +345,15 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 		  	  $('.modal-title').text("If");
 			  $('.modal-body').load('modals/if_modal.html',function(){
 			  	  $('#condition').val(o.condition);
+				  $('#oID').val(layer.name);
 				  $('#myModal').modal({show:true});
 				  $('#save').click(function () {
-					  o.condition = $('#condition').val();
-					  refrescar(canvas).then(function () {
-						  dibujar(canvas);
-					  });
+					  if($('#oID').val() === layer.name){
+						  o.condition = $('#condition').val();
+						  refrescar(canvas).then(function () {
+							  dibujar(canvas);
+						  });
+					  }
 				  });
 			  });
 		  }
@@ -374,7 +448,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 		x1: xh1, y1: yh2,
 		x2: xh2, y2: yh2
 	});
-	canvas.getLayer(o.parent+'o'+i).height = yh2 - (y - canvas.measureText(o.parent+'t'+i).width/2);
+	canvas.getLayer(o.parent+'o'+i).height = yh2 - (y - canvas.measureText(o.parent+'t'+i).height*2 - 2);
 	//
 }
 
@@ -388,7 +462,7 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: 'lectura'
+		text: o.variable
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -416,6 +490,21 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 						dibujar(canvas);
 					});
 				}
+			}else{
+				$('.modal-title').text("Input");
+				$('.modal-body').load('modals/in_modal.html',function(){
+					$('#variable').val(o.variable);
+					$('#oID').val(layer.name);
+					$('#myModal').modal({show:true});
+					$('#save').click(function () {
+						if($('#oID').val() === layer.name){
+							o.variable = $('#variable').val();
+							refrescar(canvas).then(function () {
+								dibujar(canvas);
+							});
+						}
+					});
+				});
 			}
 		}
 	})
@@ -431,7 +520,7 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: 'escritura'
+		text: o.buffer_out
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -466,6 +555,21 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 						dibujar(canvas);
 					});
 				}
+			}else{
+				$('.modal-title').text("Output");
+				$('.modal-body').load('modals/out_modal.html',function(){
+					$('#buffer_out').val(o.buffer_out);
+					$('#oID').val(layer.name);
+					$('#myModal').modal({show:true});
+					$('#save').click(function () {
+						if($('#oID').val() === layer.name){
+							o.buffer_out = $('#buffer_out').val();
+							refrescar(canvas).then(function () {
+								dibujar(canvas);
+							});
+						}
+					});
+				});
 			}
 		}
 	})
@@ -492,11 +596,11 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 		closed:true,
 		p1: {
 			type: 'line',
-			x1: x, y1: y - canvas.measureText(o.parent+'t'+i).width/2,
+			x1: x, y1: y - canvas.measureText(o.parent+'t'+i).height*2,
 			x2: x + 30 + canvas.measureText(o.parent+'t'+i).width, y2: y,
-			x3: x, y3: y + canvas.measureText(o.parent+'t'+i).width/2,
+			x3: x, y3: y + canvas.measureText(o.parent+'t'+i).height*2,
 			x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
-			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).width/2,
+			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
 		},
 		click: function(layer) {
 			alert("Click on: while " + layer.name);
@@ -511,12 +615,15 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 				$('.modal-title').text("While");
 				$('.modal-body').load('modals/while_modal.html',function(){
 					$('#condition').val(o.condition);
+					$('#oID').val(layer.name);
 					$('#myModal').modal({show:true});
 					$('#save').click(function () {
-						o.condition = $('#condition').val();
-						refrescar(canvas).then(function () {
-							dibujar(canvas);
-						});
+						if($('#oID').val() === layer.name){
+							o.condition = $('#condition').val();
+							refrescar(canvas).then(function () {
+								dibujar(canvas);
+							});
+						}
 					});
 				});
 			}
@@ -535,7 +642,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 
 	let arr = o.loop;
 	let multp_width = get_mult_width_repeat(arr);
-	let yloop = y + canvas.measureText(o.parent+'t'+i).width/2;
+	let yloop = y + canvas.measureText(o.parent+'t'+i).height*2;
 	let arrow = false;
 	if(arr.length>0)  arrow = true;
 	dibujar_linea(x,yloop,x,yloop+100,0,canvas,arr,arrow,o.parent+'while'+i+'loop');
@@ -562,8 +669,8 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 		name: o.parent + 'lhwhile'+i+'-return',
 		x1: x, y1: yloop,
 		x2: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y2: yloop,
-		x3: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).width,
-		x4: x -10, y4: y - canvas.measureText(o.parent+'t'+i).width
+		x3: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).height*4,
+		x4: x -10, y4: y - canvas.measureText(o.parent+'t'+i).height*4
 	});
 	//Draw no lines
 	canvas.drawLine({
@@ -574,11 +681,11 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 		name: o.parent + 'lhwhile'+i+'-h1',
 		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
 		x2: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y2: y,
-		x3: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,
-		x4: x, y4: yloop + canvas.measureText(o.parent+'t'+i).width
+		x3: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).height*4,
+		x4: x, y4: yloop + canvas.measureText(o.parent+'t'+i).height*4
 	});
 
-	canvas.getLayer(o.parent+'o'+i).height = (yloop + canvas.measureText(o.parent+'t'+i).width) - (y - canvas.measureText(o.parent+'t'+i).width/2);
+	canvas.getLayer(o.parent+'o'+i).height = (yloop + canvas.measureText(o.parent+'t'+i).height*4) - (y - canvas.measureText(o.parent+'t'+i).height*2 - 2);
 
 }
 
@@ -592,7 +699,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.condition
+		text: o.variable +"="+o.initialization +"; " + o.condition + "; " + o.incremental
 	})
 		.drawPath({
 			layer: true,
@@ -603,11 +710,11 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 			closed:true,
 			p1: {
 				type: 'line',
-				x1: x, y1: y - canvas.measureText(o.parent+'t'+i).width/2,
+				x1: x, y1: y - canvas.measureText(o.parent+'t'+i).height*2,
 				x2: x + 30 + canvas.measureText(o.parent+'t'+i).width, y2: y,
-				x3: x, y3: y + canvas.measureText(o.parent+'t'+i).width/2,
+				x3: x, y3: y + canvas.measureText(o.parent+'t'+i).height*2,
 				x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
-				x5: x, y5: y - canvas.measureText(o.parent+'t'+i).width/2,
+				x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
 			},
 			click: function(layer) {
 				alert("Click on: for " + layer.name);
@@ -618,6 +725,27 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 							dibujar(canvas);
 						});
 					}
+				}else{
+					$('.modal-title').text("For");
+					$('.modal-body').load('modals/for_modal.html',function(){
+						$('#condition').val(o.condition);
+						$('#incremental').val(o.incremental);
+						$('#initialization').val(o.initialization);
+						$('#variable').val(o.variable);
+						$('#oID').val(layer.name);
+						$('#myModal').modal({show:true});
+						$('#save').click(function () {
+							if($('#oID').val() === layer.name){
+								o.condition = $('#condition').val();
+								o.incremental = $('#incremental').val();
+								o.initialization = $('#initialization').val();
+								o.variable = $('#variable').val();
+								refrescar(canvas).then(function () {
+									dibujar(canvas);
+								});
+							}
+						});
+					});
 				}
 			}
 		}).drawLine({
@@ -625,9 +753,9 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 			strokeStyle: '#000',
 			strokeWidth: 2,
 			name: o.parent + 'lhfor'+i+'romb',
-			x1: x - 30 - canvas.measureText(o.parent+'t'+i).width + 10, y1: y +5,
-			x2: x + 10, y2: y - canvas.measureText(o.parent+'t'+i).width/2 + 5
-		})
+			x1: x - 30 - canvas.measureText(o.parent+'t'+i).width + 0.15*canvas.measureText(o.parent+'t'+i).width, y1: y + 0.03*canvas.measureText(o.parent+'t'+i).width,
+			x2: x + 0.15*canvas.measureText(o.parent+'t'+i).width, y2: y - canvas.measureText(o.parent+'t'+i).height*2 + 0.03*canvas.measureText(o.parent+'t'+i).width
+})
 		.drawText({
 			layer: true,
 			name: o.parent+'t-no'+i,
@@ -641,7 +769,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 
 	let arr = o.loop;
 	let multp_width = get_mult_width_repeat(arr);
-	let yloop = y + canvas.measureText(o.parent+'t'+i).width/2;
+	let yloop = y + canvas.measureText(o.parent+'t'+i).height*2;
 	let arrow = false;
 	if(arr.length>0)  arrow = true;
 	dibujar_linea(x,yloop,x,yloop+100,0,canvas,arr,arrow,o.parent+'for'+i+'loop');
@@ -668,8 +796,8 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 		name: o.parent + 'lhfor'+i+'-return',
 		x1: x, y1: yloop,
 		x2: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y2: yloop,
-		x3: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).width,
-		x4: x -10, y4: y - canvas.measureText(o.parent+'t'+i).width
+		x3: x - (130 * multp_width) - canvas.measureText(o.parent+'t'+i).width, y3: y - canvas.measureText(o.parent+'t'+i).height*4,
+		x4: x -10, y4: y - canvas.measureText(o.parent+'t'+i).height*4
 	});
 	//Draw no lines
 	canvas.drawLine({
@@ -680,10 +808,8 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 		name: o.parent + 'lhfor'+i+'-h1',
 		x1: x + 30 + canvas.measureText(o.parent+'t'+i).width, y1: y,
 		x2: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y2: y,
-		x3: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).width,
-		x4: x, y4: yloop + canvas.measureText(o.parent+'t'+i).width
+		x3: x + (130 * multp_width) + canvas.measureText(o.parent+'t'+i).width, y3: yloop + canvas.measureText(o.parent+'t'+i).height*4,
+		x4: x, y4: yloop + canvas.measureText(o.parent+'t'+i).height*4
 	});
-
-	canvas.getLayer(o.parent+'o'+i).height = (yloop + canvas.measureText(o.parent+'t'+i).width) - (y - canvas.measureText(o.parent+'t'+i).width/2);
-
+	canvas.getLayer(o.parent+'o'+i).height = (yloop + canvas.measureText(o.parent+'t'+i).height*4) - (y - canvas.measureText(o.parent+'t'+i).height*2 - 2);
 }

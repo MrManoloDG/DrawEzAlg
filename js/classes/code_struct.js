@@ -40,6 +40,7 @@ class For_Struct extends While_Struct{
 	constructor(parent){
 		super(parent);
 		this.variable = "i";
+		this.initialization = "0";
 		this.incremental = "i++";
 	}
 
@@ -61,6 +62,7 @@ class Assing_Struct extends Code_Struct{
 class Out_Struct extends Code_Struct{
 	constructor(parent){
 		super('out', parent);
+		this.buffer_out = '"Hello World!"';
 	}
 
 	dibujar(x, y, i, canvas,parent_arr) {
@@ -71,6 +73,7 @@ class Out_Struct extends Code_Struct{
 class In_Struct extends Code_Struct{
 	constructor(parent){
 		super('in', parent);
+		this.variable = " ";
 	}
 	dibujar(x,y,i,canvas,parent_arr){
 		dibujar_lectura(x,y,i,canvas,this,parent_arr);
