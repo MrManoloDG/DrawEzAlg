@@ -1,12 +1,12 @@
 version: 1.0.0
 files:
   - url: prueba_tfg-1.0.0-mac.zip
-    sha512: MjCuKbVY4ZeQtMinv0akKlYIpIACVysKDKy6qrYr7Q+c8rJCpk0Ew5X979D8VSsAqT2aYJWMxUnhFG5oBI3K3A==
-    size: 65993571
-    blockMapSize: 69961
+    sha512: DH0uhRfSXj9iFpgxeseR+XE+E/6KK8HbHUY56IH6iUJ9awBgwXrgnvOsgCbK4O+S6TvDZ4/ZG0MWhreF6AclqQ==
+    size: 66016185
+    blockMapSize: 69816
   - url: prueba_tfg-1.0.0.dmg
-    sha512: dx9XkM9C1fl7FIfed8tmg1UZtMjqw5/bNN/8cOkrkTsiebqR9BUI8TrkdR4Qs2h/2/sK+WO302zHfDF3u+gP3A==
-    size: 68102393
+    sha512: QFOYOqoc/8Q4ybDdocEEpPstZR6QVWr2gSDuC41gbq1QGHMZOKa002aeWAZ2SPUe0n95nG2pW2Itq1aD/n4MRw==
+    size: 68121575
 path: prueba_tfg-1.0.0-mac.zip
-sha512: MjCuKbVY4ZeQtMinv0akKlYIpIACVysKDKy6qrYr7Q+c8rJCpk0Ew5X979D8VSsAqT2aYJWMxUnhFG5oBI3K3A==
-releaseDate: '2019-03-27T17:33:14.360Z'
+sha512: DH0uhRfSXj9iFpgxeseR+XE+E/6KK8HbHUY56IH6iUJ9awBgwXrgnvOsgCbK4O+S6TvDZ4/ZG0MWhreF6AclqQ==
+releaseDate: '2019-04-05T09:34:25.574Z'
