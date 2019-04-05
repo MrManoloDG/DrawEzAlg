@@ -7,7 +7,6 @@ var active = null;
 var canvas;
 
 
-
 function btn_struct(str) {
 	active = str;
 
@@ -25,8 +24,55 @@ function zoom_out(){
 	});
 }
 
-$(document).ready(function() {
+function save(){
+	let FileSaver = require('file-saver');
+	let json = JSON.stringify(array_main);
+	let blob = new Blob([json], {type: "text/plain;charset=utf-8"});
+	FileSaver.saveAs(blob, "flow.json");
+}
 
+
+
+
+function open_file(){
+	// Check for the various File API support.
+	if (window.File && window.FileReader) {
+		let file = document.getElementById('file').files[0];
+		if(file){
+			getAsText(file);
+		}
+	} else {
+		alert('The File APIs are not fully supported in this browser.');
+	}
+}
+
+function getAsText(readFile) {
+
+	let reader = new FileReader();
+	// Read file into memory as UTF-8
+	reader.readAsText(readFile, "UTF-8");
+	// Closure to capture the file information.
+	reader.onload = (function(theFile) {
+		return function(e) {
+			let extension = theFile.name.split(".")[1];
+			if( extension === "json" || extension === "JSON"){
+				let json = JSON.parse(e.target.result);
+				array_main = [];
+				load_arr(json,array_main);
+				refrescar(canvas).then(function () {
+					dibujar(canvas);
+				});
+			}else{
+				alert("The file does not have json extension");
+			}
+
+		};
+	})(readFile);
+}
+
+
+
+$(document).ready(function() {
 
 
 	canvas = $('#canvas');
@@ -50,6 +96,10 @@ $(document).ready(function() {
 	$('#contenedor').animate({
 		scrollLeft: 2000
 	}, 100);
+
+	$('#file').change(function () {
+		open_file();
+	});
 	//fin codigo para prueba
 	/*
 	function dibujar(){

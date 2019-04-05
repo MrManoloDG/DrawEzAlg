@@ -20,10 +20,14 @@
 		<link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
 		<script src="./lib/bootstrap/js/bootstrap.min.js"></script>
 
+		<!-- FileSaver -->
+		<script src="./node_modules/file-saver/dist/FileSaver.js"></script>
+
     	<!-- Clases JavaScript -->
 		<script src="./js/classes/code_struct.js"></script>
 
 		<!-- Codigo propio -->
+		<script src="./js/load_file.js"></script>
 		<script src="./js/draw.lib.js"></script>
 		<script src="./js/main.js"></script>
 
@@ -54,13 +58,24 @@
 						</li>
 
 						<li class="nav-item m-1">
-							<button type="button" name="delete" class="btn btn-danger text-white" onclick="btn_struct('delete')"><i class="fas fa-backspace"></i></button>
+							<button type="button" name="delete" class="btn btn-danger text-white" onclick="btn_struct('delete')"><i class="fas fa-backspace fa-lg"></i></button>
 						</li>
 						<li class="nav-item m-1">
-							<button type="button" name="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus"></i></button>
+							<button type="button" name="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus fa-lg"></i></button>
 						</li>
 						<li class="nav-item m-1">
-							<button type="button" name="zoom_out" id="boton" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus"></i></button>
+							<button type="button" name="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus fa-lg"></i></button>
+						</li>
+
+						<li class="nav-item m-1">
+							<button type="button" name="save" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
+						</li>
+						<li class="nav-item m-1">
+
+							<button type="button" name="open" class="btn btn-primary text-white" onclick="$('#file').click()"><i class="far fa-folder-open fa-lg"></i></button>
+
+							<input type="file" id="file" class="d-none" name="files[]" multiple/>
+
 						</li>
 					</ul>
 
@@ -73,6 +88,7 @@
 			</nav>
 			-->
 		</div>
+		<output id="list"></output>
 		<div id="contenedor" class="mx-auto">
 			<canvas id="canvas" width="5000" height="5000">Tu navegador no soporta Canvas</canvas>
 		</div>
