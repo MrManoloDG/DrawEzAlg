@@ -82,13 +82,13 @@ $(document).ready(function() {
 	dibujar(canvas);
 
 	let width = window.innerWidth - 20; // ancho
-	let height = window.innerHeight - $('#buttons').height() - 10; // alto
+	let height = window.innerHeight - $('#buttons').height() - 30; // alto
 	$('#contenedor').css("width", width + "px");
 	$('#contenedor').css("height", height + "px");
 
 	$( window ).resize(function() {
 		let width = window.innerWidth - 20; // ancho
-		let height = window.innerHeight - $('#buttons').height() - 10; // alto
+		let height = window.innerHeight - $('#buttons').height() - 30; // alto
 		$('#contenedor').css("width", width + "px");
 		$('#contenedor').css("height", height + "px");
 	});
