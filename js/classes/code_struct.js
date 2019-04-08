@@ -39,6 +39,7 @@ class While_Struct extends Code_Struct{
 class For_Struct extends While_Struct{
 	constructor(parent){
 		super(parent);
+		this.type = 'for';
 		this.variable = "i";
 		this.initialization = "0";
 		this.incremental = "i++";

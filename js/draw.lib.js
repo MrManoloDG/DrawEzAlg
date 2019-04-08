@@ -152,7 +152,7 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 	let text = "";
 	let n_lineas = 1;
 	for(let index  in  o.list){
-		text += index + " <- " + o.list[index] + "\n";
+		text += o.list[index][0] + " <- " + o.list[index][1] + "\n";
 		n_lineas += 5;
 	}
 	text = text.slice(0,-1);
@@ -193,11 +193,11 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 						$('.list').append(
 							'<div class="form-group row">\n' +
 							'            <div class="col-sm-5">\n' +
-							'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="Variable" value="'+index+'">\n' +
+							'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="Variable" value="'+o.list[index][0]+'">\n' +
 							'            </div>\n' +
 							'            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
 							'            <div class="col-sm-6">\n' +
-							'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="Assing" value="'+o.list[index]+'">\n' +
+							'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="Assing" value="'+o.list[index][1]+'">\n' +
 							'            </div>\n' +
 							'        </div>'
 						);
@@ -239,7 +239,7 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 										key = $(this).val();
 									}
 								});
-								if(key !== "" && val !== "") o.list[key] = val;
+								if(key !== "" && val !== "") o.list.push([key,val]);
 							});
 							refrescar(canvas).then(function () {
 								dibujar(canvas);

@@ -1,6 +1,6 @@
 
 
-var JCanvas = require( './js/jcanvas.js' );
+
 require('./js/classes/code_struct.js');
 var array_main;
 var active = null;
@@ -22,6 +22,23 @@ function zoom_out(){
 	canvas.scaleCanvas({
 		scale: 0.8
 	});
+}
+
+function run_code() {
+	let $new_line = "\n";
+	let run = 'let $buffer_out = "";\n' +
+		run_arr(array_main) +
+		'alert($buffer_out);\n';
+	//alert(run);
+    try {
+        eval(run);
+    }
+    catch(error) {
+        alert(error);
+        console.error(error);
+        // expected output: ReferenceError: nonExistentFunction is not defined
+        // Note - error messages will vary depending on browser
+    }
 }
 
 function save(){
@@ -74,9 +91,9 @@ function getAsText(readFile) {
 
 $(document).ready(function() {
 
-
 	canvas = $('#canvas');
 	array_main = new Array();
+	let JCanvas = require( './js/jcanvas.js' );
 	JCanvas( $, window);
 	//Codigo para probar
 	dibujar(canvas);

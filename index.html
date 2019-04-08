@@ -23,11 +23,15 @@
 		<!-- FileSaver -->
 		<script src="./node_modules/file-saver/dist/FileSaver.js"></script>
 
+		<!-- Smalltalk -->
+		<script src="./node_modules/smalltalk/dist/smalltalk.min.js"></script>
+
     	<!-- Clases JavaScript -->
 		<script src="./js/classes/code_struct.js"></script>
 
 		<!-- Codigo propio -->
 		<script src="./js/load_file.js"></script>
+		<script src="./js/run.lib.js"></script>
 		<script src="./js/draw.lib.js"></script>
 		<script src="./js/main.js"></script>
 
@@ -76,6 +80,9 @@
 
 							<input type="file" id="file" class="d-none" name="files[]" multiple/>
 
+						</li>
+						<li class="nav-item m-1">
+							<button type="button" name="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
 						</li>
 					</ul>
 
