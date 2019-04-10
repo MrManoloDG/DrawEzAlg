@@ -1,5 +1,6 @@
 function run_arr(arr) {
     let str = '';
+    let input_then = 0;
     arr.forEach(function (element) {
         console.log(element);
         switch(element.type){
@@ -21,6 +22,7 @@ function run_arr(arr) {
 
             case 'in':
                 str += run_in(element) + '\n';
+                input_then++;
                 break;
 
             case 'for':
@@ -29,6 +31,9 @@ function run_arr(arr) {
 
         }
     });
+    for (let i = 0; i < input_then; i++) {
+        str += '});\n';
+    }
     return str;
 }
 
@@ -64,12 +69,18 @@ function run_assing(e) {
 }
 
 function run_out(e) {
-    let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
+    //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
+    let str = 'alert( ' + e.buffer_out +')';
     return str;
 }
 
+
+
 function run_in(e) {
-    let str = e.variable + ' = smalltalk.prompt("","","").value;';
+    let str = ' smalltalk.prompt("", "", "").then((value) => {\n' +
+        e.variable + ' = value;';
     return str;
 }
+
+
 

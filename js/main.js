@@ -8,8 +8,9 @@ var canvas;
 
 
 function btn_struct(str) {
+	$('#'+active).removeClass("active-btn");
 	active = str;
-
+	$('#'+active).addClass("active-btn");
 }
 
 function zoom_in(){
@@ -28,10 +29,10 @@ function run_code() {
 	let $new_line = "\n";
 	let run = 'let $buffer_out = "";\n' +
 		run_arr(array_main) +
-		'alert($buffer_out);\n';
-	//alert(run);
+		'//alert($buffer_out);\n';
+	alert(run);
     try {
-        eval(run);
+			eval(run);
     }
     catch(error) {
         alert(error);

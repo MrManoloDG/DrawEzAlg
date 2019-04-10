@@ -5,7 +5,6 @@
   "main": "./index.js",
   "dependencies": {
     "file-saver": "^2.0.1",
-    "highlight.js": "^9.14.2",
     "jcanvas": "15.2.7",
     "jsdom": "^13.2.0",
     "pretty-bytes": "^2.0.1",
