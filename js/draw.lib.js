@@ -72,12 +72,12 @@ function dibujar(canvas) {
 	// Draw text
 	dibujar_inicio(x,y,canvas);
 	y += canvas.measureText('inicio').width+5 / 2;
-	dibujar_linea(x,y,x,y+100,0,canvas,array_main,true,'main');
+	dibujar_linea(x,y,x,y+100,0,canvas,$array_main,true,'main');
 	y += 100;
-	for (var i = 0; i < array_main.length; i++) {
-		array_main[i].dibujar(x,y,i,canvas,array_main);
+	for (var i = 0; i < $array_main.length; i++) {
+		$array_main[i].dibujar(x,y,i,canvas,$array_main);
 		y += canvas.getLayer('maino'+i).height + 10;
-		dibujar_linea(x,y,x,y+100,i+1,canvas,array_main,true,'main');
+		dibujar_linea(x,y,x,y+100,i+1,canvas,$array_main,true,'main');
 		y += 100;
 	}
 	y += canvas.measureText('inicio').width + 20 / 2;
@@ -176,7 +176,7 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
 		click: function(layer) {
 			//alert("Click on: Assing" + layer.name);
-			if(active === 'delete'){
+			if($active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
 					refrescar(canvas).then(function () {
@@ -184,7 +184,7 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 					});
 				}
 			}else{
-				$('.modal-title').text("Assing");
+				$('.modal-title').text($lang['assing']);
 				$('.modal-body').load('modals/assing_modal.html',function(){
 					$('#oID').val(layer.name);
 
@@ -228,7 +228,6 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 						if($('#oID').val() === layer.name){
 							o.list = [];
 							$('.list').find('.row').each(function() {
-								console.log("hola");
 								let key;
 								let val;
 								$(this).find('input').each(function() {
@@ -270,7 +269,7 @@ function dibujar_linea(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 	  },
 		click: function (layer) {
 
-			switch(active){
+			switch($active){
 				case 'if':
 					array.splice(i,0,new If_Struct(struct));
 					break;
@@ -334,7 +333,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 	  },
 	  click: function(layer) {
 	  	  //alert("Click on: if " + layer.name);
-		  if(active === 'delete'){
+		  if($active === 'delete'){
 			  if(confirm("Are you sure to delete?")){
 				  parent_arr.splice(i,1);
 				  refrescar(canvas).then(function () {
@@ -342,7 +341,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 				  });
 			  }
 		  }else{
-		  	  $('.modal-title').text("If");
+		  	  $('.modal-title').text($lang['if']);
 			  $('.modal-body').load('modals/if_modal.html',function(){
 			  	  $('#condition').val(o.condition);
 				  $('#oID').val(layer.name);
@@ -483,7 +482,7 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
-			if(active === 'delete'){
+			if($active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
 					refrescar(canvas).then(function () {
@@ -491,7 +490,7 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 					});
 				}
 			}else{
-				$('.modal-title').text("Input");
+				$('.modal-title').text($lang['input']);
 				$('.modal-body').load('modals/in_modal.html',function(){
 					$('#variable').val(o.variable);
 					$('#oID').val(layer.name);
@@ -548,7 +547,7 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: escritura " + layer.name);
-			if(active === 'delete'){
+			if($active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
 					refrescar(canvas).then(function () {
@@ -556,7 +555,7 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 					});
 				}
 			}else{
-				$('.modal-title').text("Output");
+				$('.modal-title').text($lang['output']);
 				$('.modal-body').load('modals/out_modal.html',function(){
 					$('#buffer_out').val(o.buffer_out);
 					$('#oID').val(layer.name);
@@ -604,7 +603,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: while " + layer.name);
-			if(active === 'delete'){
+			if($active === 'delete'){
 				if(confirm("Are you sure to delete?")){
 					parent_arr.splice(i,1);
 					refrescar(canvas).then(function () {
@@ -612,7 +611,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 					});
 				}
 			}else{
-				$('.modal-title').text("While");
+				$('.modal-title').text($lang['while']);
 				$('.modal-body').load('modals/while_modal.html',function(){
 					$('#condition').val(o.condition);
 					$('#oID').val(layer.name);
@@ -718,7 +717,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 			},
 			click: function(layer) {
 				//alert("Click on: for " + layer.name);
-				if(active === 'delete'){
+				if($active === 'delete'){
 					if(confirm("Are you sure to delete?")){
 						parent_arr.splice(i,1);
 						refrescar(canvas).then(function () {
@@ -726,7 +725,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 						});
 					}
 				}else{
-					$('.modal-title').text("For");
+					$('.modal-title').text($lang['for']);
 					$('.modal-body').load('modals/for_modal.html',function(){
 						$('#condition').val(o.condition);
 						$('#incremental').val(o.incremental);

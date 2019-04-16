@@ -2,25 +2,26 @@
 
 
 require('./js/classes/code_struct.js');
-var array_main;
-var active = null;
-var canvas;
+var $array_main;
+var $active = null;
+var $canvas;
+var $lang;
 
 
 function btn_struct(str) {
-	$('#'+active).removeClass("active-btn");
-	active = str;
-	$('#'+active).addClass("active-btn");
+	$('#'+$active).removeClass("active-btn");
+	$active = str;
+	$('#'+$active).addClass("active-btn");
 }
 
 function zoom_in(){
-	canvas.scaleCanvas({
+	$canvas.scaleCanvas({
 		scale: 1.2
 	});
 }
 
 function zoom_out(){
-	canvas.scaleCanvas({
+	$canvas.scaleCanvas({
 		scale: 0.8
 	});
 }
@@ -28,7 +29,7 @@ function zoom_out(){
 function run_code() {
 	let $new_line = "\n";
 	let run = 'let $buffer_out = "";\n' +
-		run_arr(array_main) +
+		run_arr($array_main) +
 		'//alert($buffer_out);\n';
 	alert(run);
     try {
@@ -44,7 +45,7 @@ function run_code() {
 
 function save(){
 	let FileSaver = require('file-saver');
-	let json = JSON.stringify(array_main);
+	let json = JSON.stringify($array_main);
 	let blob = new Blob([json], {type: "text/plain;charset=utf-8"});
 	FileSaver.saveAs(blob, "flow.json");
 }
@@ -75,10 +76,10 @@ function getAsText(readFile) {
 			let extension = theFile.name.split(".")[1];
 			if( extension === "json" || extension === "JSON"){
 				let json = JSON.parse(e.target.result);
-				array_main = [];
-				load_arr(json,array_main);
-				refrescar(canvas).then(function () {
-					dibujar(canvas);
+				$array_main = [];
+				load_arr(json,$array_main);
+				refrescar($canvas).then(function () {
+					dibujar($canvas);
 				});
 			}else{
 				alert("The file does not have json extension");
@@ -88,16 +89,40 @@ function getAsText(readFile) {
 	})(readFile);
 }
 
+function change_language(lang){
+	alert(lang);
+	$.ajax({
+			url : "./lang/"+ lang +".json",
+			dataType: "text",
+			success : function (data)
+			{
+				$lang = JSON.parse(data);
+				$('#info').text($lang['config']['info']);
+				$('#languages').text($lang['config']['languages']);
+				$('#about').text($lang['config']['about']);
+				$('#es').text($lang['languages']['es']);
+				$('#en').text($lang['languages']['en']);
+
+			}
+		}
+	);
+}
+
 
 
 $(document).ready(function() {
 
-	canvas = $('#canvas');
-	array_main = new Array();
+
+	let ln = x=window.navigator.language||navigator.browserLanguage;
+
+	change_language(ln);
+
+	$canvas = $('#canvas');
+	$array_main = new Array();
 	let JCanvas = require( './js/jcanvas.js' );
 	JCanvas( $, window);
 	//Codigo para probar
-	dibujar(canvas);
+	dibujar($canvas);
 
 	let width = window.innerWidth - 20; // ancho
 	let height = window.innerHeight - $('#buttons').height() - 30; // alto

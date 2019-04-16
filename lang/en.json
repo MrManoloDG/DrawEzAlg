@@ -1,0 +1,37 @@
+{
+  "lang": "english",
+  "if": "If",
+  "while": "While",
+  "for": "For",
+  "output": "Output",
+  "input": "Input",
+  "assing": "Assing",
+  "if-desc": "",
+  "while-desc": "",
+  "for-desc": "",
+  "output-desc": "",
+  "input-desc": "",
+  "assing-desc": "",
+  "condition": "Condition",
+  "condition-placeholder": "",
+  "variable": "Variable",
+  "variable-placeholder": "",
+  "incremental": "Incremental",
+  "incremental-placeholder": "",
+  "output-placeholder": "",
+  "delete": "Borrar",
+  "zoom-in": "Zoom in",
+  "zoom-out": "Zoom out",
+  "run": "Run",
+  "save": "Save",
+  "open-files": "Open Files",
+  "config": {
+      "info":"Info",
+      "languages": "Languages",
+      "about":  "About"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Spanish"
+  }
+}

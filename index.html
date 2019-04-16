@@ -2,7 +2,7 @@
 <html lang="es" dir="ltr">
 	<head>
 		<meta charset="utf-8">
-		<title>CodeFlow</title>
+		<title>DrawEzCode</title>
 		<link rel="stylesheet" href="./css/main.css">
 
 		<!-- Highlight.js -->
@@ -53,24 +53,32 @@
 				</div>
 				<div class="btn-group mr-2 my-1" role="group" aria-label="Second group">
 					<button type="button" name="delete" id="delete" class="btn btn-danger text-white" onclick="btn_struct('delete')"><i class="fas fa-backspace fa-lg"></i></button>
-					<button type="button" name="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus fa-lg"></i></button>
-					<button type="button" name="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus fa-lg"></i></button>
+					<button type="button" name="zoom_in" id="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus fa-lg"></i></button>
+					<button type="button" name="zoom_out" id="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus fa-lg"></i></button>
 				</div>
 				<div class="btn-group mr-2 my-1" role="group" aria-label="Third group">
-					<button type="button" name="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
-					<button type="button" name="save" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
+					<button type="button" name="run" id="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
+					<button type="button" name="save" id="save-file" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
 
 					<input type="file" id="file" class="d-none" name="files[]" multiple/>
-					<button type="button" name="open" class="btn btn-primary text-white" onclick="$('#file').click()"><i class="far fa-folder-open fa-lg"></i></button>
+					<button type="button" name="open" id="open" class="btn btn-primary text-white" onclick="$('#file').click()"><i class="far fa-folder-open fa-lg"></i></button>
 				</div>
 
 				<div class="btn-group dropleft ml-auto mr-2 my-1" role="group" aria-label="Four Group">
 					<button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<i class="fas fa-ellipsis-v fa-lg"></i>
 					</button>
-					<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-						<a class="dropdown-item" href="#">Dropdown link</a>
-						<a class="dropdown-item" href="#">Dropdown link</a>
+					<div class="dropdown-menu multi-level" aria-labelledby="btnGroupDrop1">
+						<li class="dropdown-item"><a href="#" id="info">Info</a></li>
+						<li class="dropdown-submenu">
+							<a class="dropdown-item" href="#" tabindex="-1" id="languages">Languages</a>
+							<ul class="dropdown-menu" href="#">
+								<li class="dropdown-item"><a id="es" onclick="change_language('es')">ES</a></li>
+								<li class="dropdown-item"><a id="en" onclick="change_language('en')">EN</a></li>
+							</ul>
+						</li>
+						<li class="dropdown-item"><a href="#" id="about">About</a></li>
+
 					</div>
 				</div>
 			</div>
