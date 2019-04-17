@@ -88,7 +88,7 @@ function run_out(e) {
 
 function run_in(e) {
     let str = '$promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
-        e.variable + ' = value;';
+        'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);';
     return str;
 }
 
