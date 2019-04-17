@@ -1,15 +1,20 @@
 function run_arr(arr) {
     let str = '';
     let input_then = 0;
+    let n_promiseAll= 0;
     arr.forEach(function (element) {
         console.log(element);
         switch(element.type){
             case 'if':
                 str += run_if(element) + '\n';
+                str += 'Promise.all($promesas).then( () =>{\n';
+                n_promiseAll++;
                 break;
 
             case 'while':
                 str += run_while(element) + '\n';
+                str += 'Promise.all($promesas).then( () =>{\n';
+                n_promiseAll++;
                 break;
 
             case 'assing':
@@ -27,12 +32,17 @@ function run_arr(arr) {
 
             case 'for':
                 str += run_for(element) + '\n';
+                str += 'Promise.all($promesas).then( () =>{\n';
+                n_promiseAll++;
                 break;
 
         }
     });
-    for (let i = 0; i < input_then; i++) {
+    for (let i = 0; i < n_promiseAll; i++) {
         str += '});\n';
+    }
+    for (let i = 0; i < input_then; i++) {
+        str += '}));\n';
     }
     return str;
 }
@@ -77,7 +87,7 @@ function run_out(e) {
 
 
 function run_in(e) {
-    let str = ' smalltalk.prompt("", "", "").then((value) => {\n' +
+    let str = '$promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
         e.variable + ' = value;';
     return str;
 }

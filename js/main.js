@@ -29,6 +29,7 @@ function zoom_out(){
 function run_code() {
 	let $new_line = "\n";
 	let run = 'let $buffer_out = "";\n' +
+		'let $promesas = [];\n' +
 		run_arr($array_main) +
 		'//alert($buffer_out);\n';
 	alert(run);
@@ -90,7 +91,6 @@ function getAsText(readFile) {
 }
 
 function change_language(lang){
-	alert(lang);
 	$.ajax({
 			url : "./lang/"+ lang +".json",
 			dataType: "text",
