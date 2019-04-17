@@ -18,4 +18,4 @@ linux:
 win:
   target: NSIS
   icon: build/icon.ico
-electronVersion: 4.0.4
+electronVersion: 4.1.1

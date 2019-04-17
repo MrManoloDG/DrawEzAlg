@@ -1,8 +1,8 @@
 version: 1.0.0
 files:
-  - url: prueba_tfg-setup-1.0.0.exe
-    sha512: gqIOQlKeqxgbIf5dZiA0btUZPm38q2MRMU3O/XQuILcSqD3TQLnzg0JtSLPUj4XUx3OCcgmmOxqCgV5kwU6IlA==
-    size: 54812810
-path: prueba_tfg-setup-1.0.0.exe
-sha512: gqIOQlKeqxgbIf5dZiA0btUZPm38q2MRMU3O/XQuILcSqD3TQLnzg0JtSLPUj4XUx3OCcgmmOxqCgV5kwU6IlA==
-releaseDate: '2019-03-24T11:26:19.347Z'
+  - url: drawezcode-setup-1.0.0.exe
+    sha512: WaMhGEh4tn34Bzw35uxF2OUHLBedQIczMhDTDMkb2iIVyOcEJGmJ+XzaUB+t6rqsVZEzw5/eNdfTG7jKkVZ7jg==
+    size: 54481519
+path: drawezcode-setup-1.0.0.exe
+sha512: WaMhGEh4tn34Bzw35uxF2OUHLBedQIczMhDTDMkb2iIVyOcEJGmJ+XzaUB+t6rqsVZEzw5/eNdfTG7jKkVZ7jg==
+releaseDate: '2019-04-17T14:45:23.739Z'
