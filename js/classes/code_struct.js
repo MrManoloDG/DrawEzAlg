@@ -5,16 +5,14 @@ class Code_Struct{
 		this.type = type;
 		this.parent = parent;
 	}
-	dibujar(x,y,i,canvas) {
-		dibujar_cuadrado(x,y,i,canvas);
-	}
+
 }
 
 class If_Struct extends Code_Struct{
 	constructor(parent){
 		super('if', parent);
 		this.parent = parent;
-		this.condition = "condition";
+		this.condition = "";
 		this.yes = [];
 		this.no  = [];
 	}
@@ -27,7 +25,7 @@ class While_Struct extends Code_Struct{
 	constructor(parent){
 		super('while', parent);
 
-		this.condition = "condition";
+		this.condition = "";
 		this.loop = [];
 	}
 
@@ -63,7 +61,7 @@ class Assing_Struct extends Code_Struct{
 class Out_Struct extends Code_Struct{
 	constructor(parent){
 		super('out', parent);
-		this.buffer_out = '"Hello World!"';
+		this.buffer_out = '';
 	}
 
 	dibujar(x, y, i, canvas,parent_arr) {
@@ -74,7 +72,7 @@ class Out_Struct extends Code_Struct{
 class In_Struct extends Code_Struct{
 	constructor(parent){
 		super('in', parent);
-		this.variable = " ";
+		this.variable = "";
 	}
 	dibujar(x,y,i,canvas,parent_arr){
 		dibujar_lectura(x,y,i,canvas,this,parent_arr);

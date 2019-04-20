@@ -94,7 +94,7 @@ function dibujar_inicio(x,y,canvas) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: 'Inicio'
+		text: $lang['start']
 	})
 	// Draw circle as wide as the text
 	.drawArc({
@@ -116,7 +116,7 @@ function dibujar_fin(x,y,canvas) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: 'Fin'
+		text: $lang['end']
 	})
 	// Draw circle as wide as the text
 	.drawArc({
@@ -129,128 +129,6 @@ function dibujar_fin(x,y,canvas) {
 	});
 }
 
-function dibujar_cuadrado(x,y,i,canvas, o) {
-	canvas.drawRect({
-		layer:true,
-		fillStyle: '#FFF',
-		strokeStyle: '#000',
-		strokeWidth: 2,
-		name: o.parent+'o'+i,
-		i: i,
-		x: x, y: y + (100+20)/2,
-		width: 200,
-		height: 100,
-		click: function(layer) {
-			alert("Click on: Assing" + layer.name);
-
-		}
-	});
-}
-
-function dibujar_assing(x,y,i,canvas, o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
-	let text = "";
-	let n_lineas = 1;
-	for(let index  in  o.list){
-		text += o.list[index][0] + " <- " + o.list[index][1] + "\n";
-		n_lineas += 5;
-	}
-	text = text.slice(0,-1);
-	canvas.drawText({
-		layer: true,
-		name: o.parent+'t'+i,
-		fillStyle: '#36c',
-		strokeWidth: 1,
-		x: x, y:  y - canvas.measureText('inicio').width/2 + n_lineas,
-		fontSize: '11pt',
-		fontFamily: 'Verdana, sans-serif',
-		text: text === "" ? 'Assing' : text
-	}).drawRect({
-		layer:true,
-		strokeStyle: '#000',
-		strokeWidth: 2,
-		name: o.parent+'o'+i,
-		fromCenter: false,
-		x: x - canvas.measureText(o.parent+'t'+i).width/2 - 15 , y: y + 5 - canvas.measureText('inicio').width,
-		width: (canvas.measureText(o.parent+'t'+i).width + 30),
-		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
-		click: function(layer) {
-			//alert("Click on: Assing" + layer.name);
-			if($active === 'delete'){
-				if(confirm("Are you sure to delete?")){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				$('.modal-title').text($lang['assing']);
-				$('.modal-body').load('modals/assing_modal.html',function(){
-					$('#oID').val(layer.name);
-
-					let j_load = 0;
-					for(let index  in  o.list){
-						$('.list').append(
-							'<div class="form-group row">\n' +
-							'            <div class="col-sm-5">\n' +
-							'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="Variable" value="'+o.list[index][0]+'">\n' +
-							'            </div>\n' +
-							'            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
-							'            <div class="col-sm-6">\n' +
-							'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="Assing" value="'+o.list[index][1]+'">\n' +
-							'            </div>\n' +
-							'        </div>'
-						);
-						j_load++;
-					}
-
-					for (let j = 0; j < o.list.length ; j++) {
-
-					}
-					$('#myModal').modal({show:true});
-					$('#asing_add').click(function () {
-						if($('#oID').val() === layer.name){
-							$('.list').append(
-								'<div class="form-group row">\n' +
-								'            <div class="col-sm-5">\n' +
-								'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="Variable">\n' +
-								'            </div>\n' +
-								'            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
-								'            <div class="col-sm-6">\n' +
-								'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="Assing">\n' +
-								'            </div>\n' +
-								'        </div>'
-							);
-							j_load++;
-						}
-					});
-					$('#save').click(function () {
-						if($('#oID').val() === layer.name){
-							o.list = [];
-							$('.list').find('.row').each(function() {
-								let key;
-								let val;
-								$(this).find('input').each(function() {
-									let id = $(this).attr('id').split("-");
-									if(id[0] === 'value'){
-										val = $(this).val();
-									}else if(id[0] === 'key'){
-										key = $(this).val();
-									}
-								});
-								if(key !== "" && val !== "") o.list.push([key,val]);
-							});
-							refrescar(canvas).then(function () {
-								dibujar(canvas);
-							});
-						}
-					});
-				});
-			}
-		}
-	});
-
-}
 
 function dibujar_linea(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 	canvas.drawLine({
@@ -314,7 +192,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.condition
+		text: o.condition === "" ? $lang['condition'] : o.condition
 	})
 	.drawPath({
 	  layer: true,
@@ -334,7 +212,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 	  click: function(layer) {
 	  	  //alert("Click on: if " + layer.name);
 		  if($active === 'delete'){
-			  if(confirm("Are you sure to delete?")){
+			  if(confirm($lang['delete-msg'])){
 				  parent_arr.splice(i,1);
 				  refrescar(canvas).then(function () {
 					  dibujar(canvas);
@@ -344,6 +222,8 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 		  	  $('.modal-title').text($lang['if']);
 			  $('.modal-body').load('modals/if_modal.html',function(){
 			  	  $('#condition').val(o.condition);
+				  $('#condition').attr("placeholder", $lang['condition-placeholder']);
+			  	  $('#condition-label').text($lang['condition']);
 				  $('#oID').val(layer.name);
 				  $('#myModal').modal({show:true});
 				  $('#save').click(function () {
@@ -365,7 +245,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 		x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: "No"
+		text: $lang['no']
 	}).drawText({
 		layer: true,
 		name: o.parent+'t-yes'+i,
@@ -374,7 +254,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 		x: x - 60 - canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: "Yes"
+		text: $lang['yes']
 	});
 
 	let arrow = false;
@@ -431,11 +311,9 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 
 	//Completar lado desigual
 	if(yh1 > yh2){
-		console.log("igualando si");
 		dibujar_linea(xh2,yh2,xh2,yh1,arr_yes.length + 1,canvas,arr_yes, arrow,o.parent+'if'+i+'yes-');
 		yh2 = yh1;
 	}else if( yh2 > yh1){
-		console.log("igualando no");
 		dibujar_linea(xh1,yh1,xh1,yh2,arr_no.length +1,canvas,arr_no, arrow,o.parent+'if'+i+'no-');
 	}
 
@@ -451,6 +329,111 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 	//
 }
 
+function dibujar_assing(x,y,i,canvas, o,parent_arr) {
+	y+=canvas.measureText('inicio').width;
+	let text = "";
+	let n_lineas = 1;
+	for(let index  in  o.list){
+		text += o.list[index][0] + " <- " + o.list[index][1] + "\n";
+		n_lineas += 5;
+	}
+	text = text.slice(0,-1);
+	canvas.drawText({
+		layer: true,
+		name: o.parent+'t'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x, y:  y - canvas.measureText('inicio').width/2 + n_lineas,
+		fontSize: '11pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: text === "" ? $lang['assign'] : text
+	}).drawRect({
+		layer:true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent+'o'+i,
+		fromCenter: false,
+		x: x - canvas.measureText(o.parent+'t'+i).width/2 - 15 , y: y + 5 - canvas.measureText('inicio').width,
+		width: (canvas.measureText(o.parent+'t'+i).width + 30),
+		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
+		click: function(layer) {
+			//alert("Click on: Assing" + layer.name);
+			if($active === 'delete'){
+				if(confirm($lang['delete-msg'])){
+					parent_arr.splice(i,1);
+					refrescar(canvas).then(function () {
+						dibujar(canvas);
+					});
+				}
+			}else{
+				$('.modal-title').text($lang['assign']);
+				$('.modal-body').load('modals/assing_modal.html',function(){
+					$('#oID').val(layer.name);
+
+					let j_load = 0;
+					for(let index  in  o.list){
+						$('.list').append(
+							'<div class="form-group row">\n' +
+							'            <div class="col-sm-5">\n' +
+							'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="'+ $lang['variable'] +'" value="'+o.list[index][0]+'">\n' +
+							'            </div>\n' +
+							'            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
+							'            <div class="col-sm-6">\n' +
+							'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="'+ $lang['assign'] +'" value="'+o.list[index][1]+'">\n' +
+							'            </div>\n' +
+							'        </div>'
+						);
+						j_load++;
+					}
+
+					for (let j = 0; j < o.list.length ; j++) {
+
+					}
+					$('#myModal').modal({show:true});
+					$('#asing_add').click(function () {
+						if($('#oID').val() === layer.name){
+							$('.list').append(
+								'<div class="form-group row">\n' +
+								'            <div class="col-sm-5">\n' +
+								'                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="' + $lang['variable'] + '">\n' +
+								'            </div>\n' +
+								'            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
+								'            <div class="col-sm-6">\n' +
+								'                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="' + $lang['assign'] + '">\n' +
+								'            </div>\n' +
+								'        </div>'
+							);
+							j_load++;
+						}
+					});
+					$('#save').click(function () {
+						if($('#oID').val() === layer.name){
+							o.list = [];
+							$('.list').find('.row').each(function() {
+								let key;
+								let val;
+								$(this).find('input').each(function() {
+									let id = $(this).attr('id').split("-");
+									if(id[0] === 'value'){
+										val = $(this).val();
+									}else if(id[0] === 'key'){
+										key = $(this).val();
+									}
+								});
+								if(key !== "" && val !== "") o.list.push([key,val]);
+							});
+							refrescar(canvas).then(function () {
+								dibujar(canvas);
+							});
+						}
+					});
+				});
+			}
+		}
+	});
+
+}
+
 function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
 	canvas.drawText({
@@ -461,7 +444,7 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.variable
+		text: o.variable === "" ? $lang['input'] : o.variable
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -483,7 +466,7 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
 			if($active === 'delete'){
-				if(confirm("Are you sure to delete?")){
+				if(confirm($lang['delete'])){
 					parent_arr.splice(i,1);
 					refrescar(canvas).then(function () {
 						dibujar(canvas);
@@ -493,6 +476,8 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 				$('.modal-title').text($lang['input']);
 				$('.modal-body').load('modals/in_modal.html',function(){
 					$('#variable').val(o.variable);
+					$('#variable').attr("placeholder", $lang['variable-placeholder']);
+					$('#variable-label').text($lang['variable']);
 					$('#oID').val(layer.name);
 					$('#myModal').modal({show:true});
 					$('#save').click(function () {
@@ -519,7 +504,7 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.buffer_out
+		text: o.buffer_out === ""? $lang['output']: o.buffer_out
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -548,7 +533,7 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 		click: function(layer) {
 			//alert("Click on: escritura " + layer.name);
 			if($active === 'delete'){
-				if(confirm("Are you sure to delete?")){
+				if(confirm($lang['delete-msg'])){
 					parent_arr.splice(i,1);
 					refrescar(canvas).then(function () {
 						dibujar(canvas);
@@ -558,6 +543,8 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 				$('.modal-title').text($lang['output']);
 				$('.modal-body').load('modals/out_modal.html',function(){
 					$('#buffer_out').val(o.buffer_out);
+					$('#buffer_out').attr("placeholder", $lang['output-placeholder']);
+					$('#output-label').text($lang['output']);
 					$('#oID').val(layer.name);
 					$('#myModal').modal({show:true});
 					$('#save').click(function () {
@@ -584,7 +571,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.condition
+		text: o.condition === "" ? $lang['condition']: o.condition
 	})
 	.drawPath({
 		layer: true,
@@ -604,7 +591,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 		click: function(layer) {
 			//alert("Click on: while " + layer.name);
 			if($active === 'delete'){
-				if(confirm("Are you sure to delete?")){
+				if(confirm($lang['delete-msg'])){
 					parent_arr.splice(i,1);
 					refrescar(canvas).then(function () {
 						dibujar(canvas);
@@ -614,6 +601,8 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 				$('.modal-title').text($lang['while']);
 				$('.modal-body').load('modals/while_modal.html',function(){
 					$('#condition').val(o.condition);
+					$('#condition').attr("placeholder", $lang['condition-placeholder']);
+					$('#condition-label').text($lang['condition']);
 					$('#oID').val(layer.name);
 					$('#myModal').modal({show:true});
 					$('#save').click(function () {
@@ -636,7 +625,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 		x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
 		fontSize: '11pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: "No"
+		text: $lang['no']
 	});
 
 	let arr = o.loop;
@@ -718,7 +707,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 			click: function(layer) {
 				//alert("Click on: for " + layer.name);
 				if($active === 'delete'){
-					if(confirm("Are you sure to delete?")){
+					if(confirm($lang['delete-msg'])){
 						parent_arr.splice(i,1);
 						refrescar(canvas).then(function () {
 							dibujar(canvas);
@@ -728,9 +717,17 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 					$('.modal-title').text($lang['for']);
 					$('.modal-body').load('modals/for_modal.html',function(){
 						$('#condition').val(o.condition);
+						$('#condition').attr("placeholder", $lang['condition-placeholder']);
+						$('#condition-label').text($lang['condition']);
 						$('#incremental').val(o.incremental);
+						$('#incremental').attr("placeholder", $lang['incremental-placeholder']);
+						$('#incremental-label').text($lang['incremental']);
 						$('#initialization').val(o.initialization);
+						$('#initialization').attr("placeholder", $lang['initialization-placeholder']);
+						$('#initialization-label').text($lang['initialization'])
 						$('#variable').val(o.variable);
+						$('#variable').attr("placeholder", $lang['variable-placeholder']);
+						$('#variable-label').text($lang['variable']);
 						$('#oID').val(layer.name);
 						$('#myModal').modal({show:true});
 						$('#save').click(function () {
@@ -763,7 +760,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 			x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
 			fontSize: '11pt',
 			fontFamily: 'Verdana, sans-serif',
-			text: "No"
+			text: $lang['no']
 		});
 
 	let arr = o.loop;

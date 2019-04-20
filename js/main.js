@@ -102,7 +102,12 @@ function change_language(lang){
 				$('#about').text($lang['config']['about']);
 				$('#es').text($lang['languages']['es']);
 				$('#en').text($lang['languages']['en']);
+				$('#save').text($lang['save']);
+				$('#close').text($lang['close']);
 
+				refrescar($canvas).then(function () {
+					dibujar($canvas);
+				});
 			}
 		}
 	);
@@ -122,7 +127,7 @@ $(document).ready(function() {
 	let JCanvas = require( './js/jcanvas.js' );
 	JCanvas( $, window);
 	//Codigo para probar
-	dibujar($canvas);
+	//dibujar($canvas);
 
 	let width = window.innerWidth - 20; // ancho
 	let height = window.innerHeight - $('#buttons').height() - 30; // alto
