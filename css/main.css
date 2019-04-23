@@ -28,7 +28,7 @@
 	}
 
 	to {
-		border: #e0ff30 2px solid;
+		border: #e0ff30 3px solid;
 	}
 }
 
@@ -39,6 +39,14 @@
 	animation-iteration-count: infinite;
 	animation-direction: alternate;
 
+}
+
+.info-mod h3{
+	color: #150fff;
+}
+
+.info-mod h4{
+	color: #006FFF;
 }
 
 

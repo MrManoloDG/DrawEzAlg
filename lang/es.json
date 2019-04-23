@@ -8,15 +8,16 @@
   "output": "Salida",
   "input": "Entrada",
   "assign": "Asignación",
-  "if-desc": "",
-  "while-desc": "",
-  "for-desc": "",
-  "output-desc": "",
-  "input-desc": "",
-  "assign-desc": "",
+  "if-desc": "La estructura selectiva si permite que el flujo del diagrama siga por un camino si se cumple la condición determinada. Si al evaluar la condición es verdadera ejecutara el camino 'Sí', por lo contrario, si es falsa ejecutara el camino 'No'. Tras esto continua la ejecución normal del programa.",
+  "while-desc": "La estructura repetitiva mientras permite repetir un conjunto de instrucciones. La estructura repetirá el bucle hasta que la condición no se cumpla. Una vez esta condición no se cumpla el programa continua con su ejecución normal. ",
+  "for-desc": "Esta estructura es utilizada para repetir un conjunto de instrucciones un numero definido de veces. Esta estructura se compone de una variable de control de ciclo con una inicialización de esta misma, una condición para que se ejecute mientras se cumpla  y un incremento o decremento de la variable de control.",
+  "output-desc": "La escritura de datos, imprime por pantalla un resultado.",
+  "input-desc": "La lectura de datos, asigna a una variable un valor introducido por teclado en tiempo de ejecución del programa. Esta es una operación destructiva.",
+  "assign-desc": "La asignación da valor o expresiones aritméticas a las variables. Esta es una operación destructiva, lo que significa, que si la variable tenía un valor, éste se destruye al asignar el nuevo valor.",
   "condition": "Condición",
   "condition-placeholder": "Escribe una condición",
   "variable": "Variable",
+  "variable-desc": "Las variables son objetos que pueden cambiar su valor durante la ejecución de un programa. Para nombrar las variables se utilizan identificadores.",
   "variable-placeholder": "Escribe una variable",
   "incremental": "Incremental",
   "incremental-placeholder": "Escribe un incremental",
@@ -32,6 +33,32 @@
   "run": "Run",
   "save": "Guardar",
   "close": "Cerrar",
+  "info-table": {
+    "operator-list": "Lista de operadores",
+    "arithmetic-list": "Lista de operadores aritméticos",
+    "relational-list": "Lista de operadores relacionales",
+    "logical-list": "Lista de operadores lógicos",
+    "arithmetic-op": {
+      "sum": "Suma",
+      "sub": "Resta",
+      "multiplication": "Multiplicación",
+      "division": "División",
+      "module": "Módulo"
+    },
+    "relational-op": {
+      "equal": "Igual a",
+      "different": "Diferente de",
+      "less": "Menor que",
+      "greater": "Mayor que",
+      "less-equal": "Menor o igual que ",
+      "greater-equal": "Mayor o igual que "
+    },
+    "logical-op": {
+      "negation": "Negación",
+      "conjunction": "Conjunción",
+      "disjunction": "Disyunción"
+    }
+  },
   "open-files": "Open Files",
   "config": {
     "info":"Info",

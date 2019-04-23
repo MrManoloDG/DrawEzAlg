@@ -7,6 +7,69 @@ var $active = null;
 var $canvas;
 var $lang;
 
+function load_info() {
+    $('.modal-title').text($lang['config']['info']);
+    $('.modal-body').load('modals/info_modal.html',function(){
+        $('#variables h3').text($lang['variable']);
+        $('#variables p').text($lang['variable-desc']);
+
+        $('#assign h3').text($lang['assign']);
+        $('#assign p').text($lang['assign-desc']);
+
+        $('#input h3').text($lang['input']);
+        $('#input p').text($lang['input-desc']);
+
+        $('#output h3').text($lang['output']);
+        $('#output p').text($lang['output-desc']);
+
+        $('#if h3').text($lang['if']);
+        $('#if p').text($lang['if-desc']);
+
+        $('#for h3').text($lang['for']);
+        $('#for p').text($lang['for-desc']);
+
+        $('#while h3').text($lang['while']);
+        $('#while p').text($lang['while-desc']);
+
+		$('#info-tablas .operator-list').text($lang['info-table']['operator-list']);
+		$('#info-tablas .arithmetic-list').text($lang['info-table']['arithmetic-list']);
+		$('#info-tablas .relational-list').text($lang['info-table']['relational-list']);
+		$('#info-tablas .logical-list').text($lang['info-table']['logical-list']);
+
+		$('#info-tablas .sum').text($lang['info-table']['arithmetic-op']['sum']);
+		$('#info-tablas .sub').text($lang['info-table']['arithmetic-op']['sub']);
+		$('#info-tablas .multiplication').text($lang['info-table']['arithmetic-op']['multiplication']);
+		$('#info-tablas .division').text($lang['info-table']['arithmetic-op']['division']);
+		$('#info-tablas .module').text($lang['info-table']['arithmetic-op']['module']);
+
+		$('#info-tablas .equal').text($lang['info-table']['relational-op']['equal']);
+		$('#info-tablas .different').text($lang['info-table']['relational-op']['different']);
+		$('#info-tablas .less').text($lang['info-table']['relational-op']['less']);
+		$('#info-tablas .greater').text($lang['info-table']['relational-op']['greater']);
+		$('#info-tablas .less-equal').text($lang['info-table']['relational-op']['less-equal']);
+		$('#info-tablas .greater-equal').text($lang['info-table']['relational-op']['greater-equal']);
+
+		$('#info-tablas .negation').text($lang['info-table']['logical-op']['negation']);
+		$('#info-tablas .conjunction').text($lang['info-table']['logical-op']['conjunction']);
+		$('#info-tablas .disjunction').text($lang['info-table']['logical-op']['disjunction']);
+
+        $('#myModal').modal({show:true});
+    });
+}
+
+function about() {
+    $.ajax({
+            url : "./package.json",
+            dataType: "text",
+            success : function (data)
+            {
+                let package_json = JSON.parse(data);
+                alert("\t DrawEzCode \t" +
+                    "\t Version (" + package_json['version'] + ")\t");
+            }
+        }
+    );
+}
 
 function btn_struct(str) {
 	$('#'+$active).removeClass("active-btn");
