@@ -49,6 +49,12 @@
 	color: #006FFF;
 }
 
+.dropdown-menu a{
+	color: #006FFF;
+}
+.dropdown-menu a:hover{
+	text-decoration: none;
+}
 
 .dropdown-submenu {
 	position: relative;
