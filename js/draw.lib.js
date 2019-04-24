@@ -225,6 +225,7 @@ function dibujar_if(x,y,i,canvas,o,parent_arr) {
 				  $('#condition').attr("placeholder", $lang['condition-placeholder']);
 			  	  $('#condition-label').text($lang['condition']);
 				  $('#oID').val(layer.name);
+				  $('#save').removeClass("d-none");
 				  $('#myModal').modal({show:true});
 				  $('#save').click(function () {
 					  if($('#oID').val() === layer.name){
@@ -389,6 +390,7 @@ function dibujar_assing(x,y,i,canvas, o,parent_arr) {
 					for (let j = 0; j < o.list.length ; j++) {
 
 					}
+					$('#save').removeClass("d-none");
 					$('#myModal').modal({show:true});
 					$('#asing_add').click(function () {
 						if($('#oID').val() === layer.name){
@@ -479,6 +481,7 @@ function dibujar_lectura(x,y,i,canvas, o,parent_arr) {
 					$('#variable').attr("placeholder", $lang['variable-placeholder']);
 					$('#variable-label').text($lang['variable']);
 					$('#oID').val(layer.name);
+					$('#save').removeClass("d-none");
 					$('#myModal').modal({show:true});
 					$('#save').click(function () {
 						if($('#oID').val() === layer.name){
@@ -546,6 +549,7 @@ function dibujar_escritura(x,y,i,canvas,o,parent_arr) {
 					$('#buffer_out').attr("placeholder", $lang['output-placeholder']);
 					$('#output-label').text($lang['output']);
 					$('#oID').val(layer.name);
+					$('#save').removeClass("d-none");
 					$('#myModal').modal({show:true});
 					$('#save').click(function () {
 						if($('#oID').val() === layer.name){
@@ -604,6 +608,7 @@ function dibujar_while(x,y,i,canvas,o,parent_arr) {
 					$('#condition').attr("placeholder", $lang['condition-placeholder']);
 					$('#condition-label').text($lang['condition']);
 					$('#oID').val(layer.name);
+					$('#save').removeClass("d-none");
 					$('#myModal').modal({show:true});
 					$('#save').click(function () {
 						if($('#oID').val() === layer.name){
@@ -729,6 +734,7 @@ function dibujar_for(x,y,i,canvas,o,parent_arr) {
 						$('#variable').attr("placeholder", $lang['variable-placeholder']);
 						$('#variable-label').text($lang['variable']);
 						$('#oID').val(layer.name);
+						$('#save').removeClass("d-none");
 						$('#myModal').modal({show:true});
 						$('#save').click(function () {
 							if($('#oID').val() === layer.name){

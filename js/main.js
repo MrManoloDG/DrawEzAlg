@@ -53,6 +53,7 @@ function load_info() {
 		$('#info-tablas .conjunction').text($lang['info-table']['logical-op']['conjunction']);
 		$('#info-tablas .disjunction').text($lang['info-table']['logical-op']['disjunction']);
 
+		$('#save').addClass("d-none");
         $('#myModal').modal({show:true});
     });
 }
@@ -64,8 +65,14 @@ function about() {
             success : function (data)
             {
                 let package_json = JSON.parse(data);
-                alert("\t DrawEzCode \t" +
-                    "\t Version (" + package_json['version'] + ")\t");
+				$('.modal-title').text($lang['config']['about']);
+				$('.modal-body').load('modals/about_modal.html',function(){
+					$('#about-mod').html("DrawEzCode <br>" +
+						"(" + package_json['version'] + ")\n" +
+						"");
+					$('#save').addClass("d-none");
+					$('#myModal').modal({show:true});
+				});
             }
         }
     );
