@@ -1,12 +1,12 @@
 version: 1.0.0
 files:
-  - url: prueba_tfg-1.0.0-mac.zip
-    sha512: DH0uhRfSXj9iFpgxeseR+XE+E/6KK8HbHUY56IH6iUJ9awBgwXrgnvOsgCbK4O+S6TvDZ4/ZG0MWhreF6AclqQ==
-    size: 66016185
-    blockMapSize: 69816
-  - url: prueba_tfg-1.0.0.dmg
-    sha512: QFOYOqoc/8Q4ybDdocEEpPstZR6QVWr2gSDuC41gbq1QGHMZOKa002aeWAZ2SPUe0n95nG2pW2Itq1aD/n4MRw==
-    size: 68121575
-path: prueba_tfg-1.0.0-mac.zip
-sha512: DH0uhRfSXj9iFpgxeseR+XE+E/6KK8HbHUY56IH6iUJ9awBgwXrgnvOsgCbK4O+S6TvDZ4/ZG0MWhreF6AclqQ==
-releaseDate: '2019-04-05T09:34:25.574Z'
+  - url: drawezcode-1.0.0-mac.zip
+    sha512: 231TSObZv+w2w9+CRAi8/ZHFmF3T7WIQQjcOSaRlxn2d4KN25kPStLqCJ1qikTcyJCcJNHqhr9dtwlfkhbsbrQ==
+    size: 65736032
+    blockMapSize: 70125
+  - url: drawezcode-1.0.0.dmg
+    sha512: WsCXDa7w/d2GYKsXtoEHuLmmmy00XdlWrg6qPWCLVnLi9bKZIiqrSC/5iNCQ+rcjF1W/PeHl4griIU8kp3+yPA==
+    size: 67857743
+path: drawezcode-1.0.0-mac.zip
+sha512: 231TSObZv+w2w9+CRAi8/ZHFmF3T7WIQQjcOSaRlxn2d4KN25kPStLqCJ1qikTcyJCcJNHqhr9dtwlfkhbsbrQ==
+releaseDate: '2019-04-24T07:30:40.845Z'
