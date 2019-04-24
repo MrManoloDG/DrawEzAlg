@@ -95,7 +95,7 @@ function run_code() {
 		'let $promesas = [];\n' +
 		run_arr($array_main) +
 		'//alert($buffer_out);\n';
-	alert(run);
+	//alert(run);
     try {
 			eval(run);
     }
@@ -111,7 +111,8 @@ function save(){
 	let FileSaver = require('file-saver');
 	let json = JSON.stringify($array_main);
 	let blob = new Blob([json], {type: "text/plain;charset=utf-8"});
-	FileSaver.saveAs(blob, "flow.json");
+	let date = new Date();
+	FileSaver.saveAs(blob, "draw"+date.getTime()+".json");
 }
 
 

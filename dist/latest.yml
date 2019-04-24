@@ -1,8 +1,8 @@
 version: 1.0.0
 files:
   - url: drawezcode-setup-1.0.0.exe
-    sha512: WaMhGEh4tn34Bzw35uxF2OUHLBedQIczMhDTDMkb2iIVyOcEJGmJ+XzaUB+t6rqsVZEzw5/eNdfTG7jKkVZ7jg==
-    size: 54481519
+    sha512: m6TZMPdCw4LZ0bCQHFDco4LZVeQyK+qz4A4MtHpO0wwfkZ7JxSupD1xnTSSA1Fa7Os5H5+qNfKEj9o7Gl7NOVw==
+    size: 54481935
 path: drawezcode-setup-1.0.0.exe
-sha512: WaMhGEh4tn34Bzw35uxF2OUHLBedQIczMhDTDMkb2iIVyOcEJGmJ+XzaUB+t6rqsVZEzw5/eNdfTG7jKkVZ7jg==
-releaseDate: '2019-04-17T14:45:23.739Z'
+sha512: m6TZMPdCw4LZ0bCQHFDco4LZVeQyK+qz4A4MtHpO0wwfkZ7JxSupD1xnTSSA1Fa7Os5H5+qNfKEj9o7Gl7NOVw==
+releaseDate: '2019-04-24T07:18:46.206Z'
