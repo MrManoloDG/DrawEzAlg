@@ -7,3 +7,7 @@ package-lock\.json
 dist/win-unpacked/
 
 dist/mac/
+
+dist/linux-unpacked/
+
+dist/win-ia32-unpacked/
