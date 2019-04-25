@@ -1,25 +1,52 @@
 {
-  "name": "prueba_tfg",
+  "name": "drawezcode",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib"
-  },
+  "description": "TFG",
+  "main": "./index.js",
   "dependencies": {
-    "highlight.js": "^9.14.2",
+    "file-saver": "^2.0.1",
     "jcanvas": "15.2.7",
-    "jquery": "^3.3.1",
     "jsdom": "^13.2.0",
-    "pretty-bytes": "^2.0.1"
+    "pretty-bytes": "^2.0.1",
+    "smalltalk": "^3.3.0"
   },
   "devDependencies": {
     "electron": "^4.0.4",
-    "electron-prebuilt": "^0.35.2"
+    "electron-builder": "^20.39.0"
   },
   "scripts": {
-    "start": "electron index.js"
+    "start": "electron .",
+    "pack": "build --dir",
+    "dist": "build"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Manuel Díaz Gil",
+  "license": "MIT",
+  "build": {
+    "appId": "enupal-electronv1",
+    "asar": true,
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "build/icon.ico"
+    }
+  }
 }

@@ -2,7 +2,7 @@
 <html lang="es" dir="ltr">
 	<head>
 		<meta charset="utf-8">
-		<title>Pruebas Canvas</title>
+		<title>DrawEzCode</title>
 		<link rel="stylesheet" href="./css/main.css">
 
 		<!-- Highlight.js -->
@@ -14,71 +14,97 @@
 		<link rel="stylesheet" href="./lib/fontawesome/css/all.min.css">
 
 		<!-- Jquery -->
-		<script>window.$ = window.jQuery = require('./js/jquery.min.js');</script>
+		<script>window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.js');</script>
+
+		<!-- Popper.js -->
+		<script src="./lib/bootstrap/js/popper.js"></script>
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
 		<script src="./lib/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- Clases JavaScript -->
+		<!-- FileSaver -->
+		<script src="./node_modules/file-saver/dist/FileSaver.js"></script>
+
+		<!-- Smalltalk -->
+		<script src="./node_modules/smalltalk/dist/smalltalk.min.js"></script>
+
+    	<!-- Clases JavaScript -->
 		<script src="./js/classes/code_struct.js"></script>
 
 		<!-- Codigo propio -->
+		<script src="./js/load_file.js"></script>
+		<script src="./js/run.lib.js"></script>
 		<script src="./js/draw.lib.js"></script>
 		<script src="./js/main.js"></script>
 
 	</head>
 	<body class="container-fluid">
 		<!-- Botonera -->
-		<nav class="navbar navbar-expand-lg navbar-light">
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbarNav">
-		    <ul class="navbar-nav">
-		      <li class="nav-item m-1">
-						<button type="button" name="asignación" class="btn btn-primary" onclick="btn_struct('assing')"><i class="far fa-square"></i></button>
-		      </li>
-		      <li class="nav-item m-1">
-						<button type="button" name="asignación" class="btn btn-primary text-white" onclick="btn_struct('if')">If</button>
-		      </li>
-		      <li class="nav-item m-1">
-						<button type="button" name="asignación" class="btn btn-primary text-white" onclick="btn_struct('while')">While</button>
-		      </li>
-					<li class="nav-item m-1">
-						<button type="button" name="asignación" class="btn btn-primary text-white" onclick="btn_struct('out')">Out</button>
-		      </li>
-					<li class="nav-item m-1">
-						<button type="button" name="asignación" class="btn btn-primary text-white" onclick="btn_struct('in')">In</button>
-		      </li>
-		    </ul>
-		  </div>
-		</nav>
+		<div id="buttons">
+			<div class="btn-toolbar mt-1" role="toolbar" aria-label="Toolbar with button groups">
+				<div class="btn-group mr-2 my-1" role="group" aria-label="First group">
+					<button type="button" name="assing" id="assing" class="btn btn-primary" onclick="btn_struct('assing')"><img src="img/btn/assing.png" class="btn-img mx-auto"></button>
+					<button type="button" name="if" id="if" class="btn btn-primary text-white" onclick="btn_struct('if')"><img src="img/btn/if.png" class="btn-img"></button>
+					<button type="button" name="while" id="while" class="btn btn-primary text-white" onclick="btn_struct('while')"><img src="img/btn/while.png" class="btn-img"></button>
+					<button type="button" name="for" id="for" class="btn btn-primary text-white" onclick="btn_struct('for')"><img src="img/btn/for.png" class="btn-img"></button>
+					<button type="button" name="in" id="in" class="btn btn-primary text-white" onclick="btn_struct('in')"><img src="img/btn/input.png" class="btn-img"></button>
+					<button type="button" name="out" id="out" class="btn btn-primary text-white" onclick="btn_struct('out')"><img src="img/btn/output.png" class="btn-img"></button>
+				</div>
+				<div class="btn-group mr-2 my-1" role="group" aria-label="Second group">
+					<button type="button" name="delete" id="delete" class="btn btn-danger text-white" onclick="btn_struct('delete')"><i class="fas fa-backspace fa-lg"></i></button>
+					<button type="button" name="zoom_in" id="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus fa-lg"></i></button>
+					<button type="button" name="zoom_out" id="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus fa-lg"></i></button>
+				</div>
+				<div class="btn-group mr-2 my-1" role="group" aria-label="Third group">
+					<button type="button" name="run" id="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
+					<button type="button" name="save" id="save-file" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
 
-		<nav>
-			<div class="nav nav-tabs" id="nav-tab" role="tablist">
-				<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Diagrama</a>
-				<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Codigo</a>
-			</div>
-		</nav>
-		<div class="tab-content" id="nav-tabContent">
-			<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-				<div id="contenedor" class="mx-auto">
-					<canvas id="canvas" width="1000" height="5000">Tu navegador no soporta Canvas</canvas>
+					<input type="file" id="file" class="d-none" name="files[]" multiple/>
+					<button type="button" name="open" id="open" class="btn btn-primary text-white" onclick="$('#file').click()"><i class="far fa-folder-open fa-lg"></i></button>
+				</div>
+
+				<div class="btn-group dropleft ml-auto mr-2 my-1" role="group" aria-label="Four Group">
+					<button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<i class="fas fa-ellipsis-v fa-lg"></i>
+					</button>
+					<div class="dropdown-menu multi-level" aria-labelledby="btnGroupDrop1">
+						<li class="dropdown-item" onclick="load_info()"><a href="#" id="info">Info</a></li>
+						<li class="dropdown-submenu">
+							<a class="dropdown-item" href="#" tabindex="-1" id="languages">Languages</a>
+							<ul class="dropdown-menu" href="#">
+								<li class="dropdown-item" onclick="change_language('es')"><a id="es">ES</a></li>
+								<li class="dropdown-item" onclick="change_language('en')"><a id="en">EN</a></li>
+							</ul>
+						</li>
+						<li class="dropdown-item" onclick="about()"><a href="#" id="about">About</a></li>
+					</div>
 				</div>
 			</div>
-			<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-				<pre>
-					<code>
-						#include <'stdio.h'>
 
-						main()
-						{
-							printf("hola, primer programa en C\n");
-						}
-					</code>
-				</pre>
+		</div>
+		<output id="list"></output>
+		<div id="contenedor" class="mx-auto">
+			<canvas id="canvas" width="5000" height="5000">Tu navegador no soporta Canvas</canvas>
+		</div>
+
+	</body>
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Modal with Dynamic Content</h4>
+				</div>
+				<div class="modal-body">
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="save" class="btn btn-primary">Save</button>
+					<button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
 			</div>
 		</div>
-	</body>
+	</div>
 </html>

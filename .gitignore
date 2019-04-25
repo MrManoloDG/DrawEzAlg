@@ -3,3 +3,7 @@
 /node_modules
 .idea
 package-lock\.json
+
+dist/win-unpacked/
+
+dist/mac/
