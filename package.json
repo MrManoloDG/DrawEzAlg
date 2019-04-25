@@ -40,7 +40,9 @@
       ]
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "category": "Utility",
+      "icon": "build/lin.png"
     },
     "win": {
       "target": [

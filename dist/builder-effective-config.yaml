@@ -12,10 +12,14 @@ dmg:
       type: link
       path: /Applications
 linux:
-  target:
-    - AppImage
-    - deb
+  target: AppImage
+  category: Utility
+  icon: build/lin.png
 win:
-  target: NSIS
+  target:
+    - target: nsis
+      arch:
+        - x64
+        - ia32
   icon: build/icon.ico
-electronVersion: 4.0.4
+electronVersion: 4.1.5
