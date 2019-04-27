@@ -17,8 +17,8 @@ function run_arr(arr) {
                 n_promiseAll++;
                 break;
 
-            case 'assing':
-                str += run_assing(element) + '\n';
+            case 'assign':
+                str += run_assign(element) + '\n';
                 break;
 
             case 'out':
@@ -70,7 +70,7 @@ function run_for(e) {
     return str;
 }
 
-function run_assing(e) {
+function run_assign(e) {
     let str = '';
     for(let index in e.list){
         str += e.list[index][0] + ' = ' + e.list[index][1] + ';\n';

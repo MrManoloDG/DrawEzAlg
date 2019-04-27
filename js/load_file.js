@@ -12,8 +12,8 @@ function load_arr(json,arr) {
                 load_while(element,arr[arr.length-1]);
                 break;
 
-            case 'assing':
-                arr.push(new Assing_Struct(element.parent));
+            case 'assign':
+                arr.push(new Assign_Struct(element.parent));
                 load_assing(element,arr[arr.length-1]);
                 break;
 
