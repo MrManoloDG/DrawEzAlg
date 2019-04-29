@@ -16,8 +16,8 @@ class If_Struct extends Code_Struct{
 		this.yes = [];
 		this.no  = [];
 	}
-	dibujar(x,y,i,canvas,parent_arr){
-		dibujar_if(x,y,i,canvas,this,parent_arr);
+	draw(x,y,i,canvas,parent_arr){
+		draw_if(x,y,i,canvas,this,parent_arr);
 	}
 }
 
@@ -29,8 +29,8 @@ class While_Struct extends Code_Struct{
 		this.loop = [];
 	}
 
-	dibujar(x, y, i, canvas,parent_arr) {
-		dibujar_while(x,y,i,canvas,this,parent_arr);
+	draw(x, y, i, canvas,parent_arr) {
+		draw_while(x,y,i,canvas,this,parent_arr);
 	}
 }
 
@@ -43,18 +43,18 @@ class For_Struct extends While_Struct{
 		this.incremental = "i++";
 	}
 
-	dibujar(x, y, i, canvas,parent_arr) {
-		dibujar_for(x,y,i,canvas,this,parent_arr);
+	draw(x, y, i, canvas,parent_arr) {
+		draw_for(x,y,i,canvas,this,parent_arr);
 	}
 }
 
-class Assing_Struct extends Code_Struct{
+class Assign_Struct extends Code_Struct{
 	constructor(parent){
-		super('assing', parent);
+		super('assign', parent);
 		this.list = [];
 	}
-	dibujar(x,y,i,canvas,parent_arr) {
-		dibujar_assing(x,y,i,canvas, this,parent_arr);
+	draw(x,y,i,canvas,parent_arr) {
+		draw_assign(x,y,i,canvas, this,parent_arr);
 	}
 }
 
@@ -64,8 +64,8 @@ class Out_Struct extends Code_Struct{
 		this.buffer_out = '';
 	}
 
-	dibujar(x, y, i, canvas,parent_arr) {
-		dibujar_escritura(x,y,i,canvas,this,parent_arr);
+	draw(x, y, i, canvas,parent_arr) {
+		draw_output(x,y,i,canvas,this,parent_arr);
 	}
 }
 
@@ -74,7 +74,7 @@ class In_Struct extends Code_Struct{
 		super('in', parent);
 		this.variable = "";
 	}
-	dibujar(x,y,i,canvas,parent_arr){
-		dibujar_lectura(x,y,i,canvas,this,parent_arr);
+	draw(x,y,i,canvas,parent_arr){
+		draw_input(x,y,i,canvas,this,parent_arr);
 	}
 }
