@@ -171,7 +171,10 @@ function draw_line(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 				case 'for':
 					array.splice(i,0,new For_Struct(struct));
 					break;
-					
+
+				case 'function':
+					array.splice(i,0,new Function_Struct(struct));
+					break;
 			}
 			refrescar(canvas).then(function () {
 				dibujar(canvas);
@@ -454,6 +457,53 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 		}
 	})
 }
+
+function draw_function(x,y,i,canvas, o,parent_arr) {
+	y+=canvas.measureText('inicio').width;
+	canvas.drawText({
+		layer: true,
+		name: o.parent+'t'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x, y: y,
+		fontSize: '11pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: o.name === "" ? $lang['function'] : o.name
+	});
+	let height = canvas.measureText(o.parent+'t'+i).height + 20;
+	let width = canvas.measureText(o.parent+'t'+i).width + 20;
+	canvas.drawPath({
+		layer: true,
+		name: o.parent+'o'+i,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		height: height*2,
+		closed:true,
+		p1: {
+			type: 'line',
+			x1: x - width/2 - 10, y1: y,
+			x2: x - width/2, y2: y - height,
+			x3: x + width/2, y3: y - height,
+			x4: x + width/2, y4: y + height,
+			x5: x - width/2, y5: y + height,
+			x6: x - width/2 - 10, y6: y,
+		},
+		click: function(layer) {
+			//alert("Click on: lectura " + layer.name);
+			if($active === 'delete'){
+				if(confirm($lang['delete'])){
+					parent_arr.splice(i,1);
+					refrescar(canvas).then(function () {
+						dibujar(canvas);
+					});
+				}
+			}else{
+				modal_input(o,layer,canvas);
+			}
+		}
+	})
+}
+
 
 function draw_while(x,y,i,canvas,o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
