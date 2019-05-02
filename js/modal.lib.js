@@ -70,6 +70,58 @@ function about() {
     );
 }
 
+function modal_config_function(name){
+    let o = $array_functions[name];
+    $('.modal-title').text($lang['function']);
+    $('.modal-body').load('modals/config_function_modal.html',function(){
+        $('#name-label').text($lang['name']);
+        $('#name').val(name);
+        $('#name').attr("placeholder", $lang['name-placeholder']);
+
+        $('#param-label').text($lang['param']);
+        $('#param').val(name ==='' ? '' : o['param']);
+        $('#param').attr("placeholder", $lang['param-placeholder']);
+
+        $('#delete-fun').text($lang['delete']);
+
+        $('#save').removeClass("d-none");
+        let check = name + Date.now();
+        $('#oID').val(check);
+        $('#myModal').modal({show:true});
+        $('#delete-fun').click(function () {
+            if($('#oID').val() === check){
+                change_function('main');
+                $('.'+name).remove();
+                delete $array_functions[name];
+            }
+        });
+        $('#save').click(function () {
+            if($('#oID').val() === check){
+                console.log(o);
+                if(o === undefined){
+                    $array_functions[$('#name').val()] = [];
+                    $array_functions[$('#name').val()]['param'] =  $('#param').val();
+                    $array_functions[$('#name').val()]['flow'] = [];
+                    $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
+
+                }else{
+                    if(name !== $('#name').val()){
+                        $array_functions[$('#name').val()] = [];
+                        $array_functions[$('#name').val()]['flow'] = $array_functions[name]['flow'];
+                        delete $array_functions[name];
+                        $('.'+name).addClass($('#name').val());
+                        $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\')");
+                        $('.'+name + ' a').text($('#name').val());
+                        $('.'+name).removeClass(name);
+                        name = $('#name').val();
+                    }
+                    $array_functions[name]['param'] = $('#param').val();
+                }
+            }
+        });
+    });
+}
+
 function modal_assign(o, layer, canvas) {
     $('.modal-title').text($lang['assign']);
     $('.modal-body').load('modals/assing_modal.html',function(){
@@ -168,6 +220,38 @@ function modal_output(o, layer, canvas) {
         $('#save').click(function () {
             if($('#oID').val() === layer.name){
                 o.buffer_out = $('#buffer_out').val();
+                refrescar(canvas).then(function () {
+                    dibujar(canvas);
+                });
+            }
+        });
+    });
+}
+
+function modal_function(o, layer, canvas) {
+    $('.modal-title').text($lang['function']);
+    $('.modal-body').load('modals/function_modal.html',function(){
+        for(let index  in  $array_functions){
+            if(index !== 'main'){
+                if(index === o.name){
+                    $('#function-select').append('<option value="'+ index +'" selected>'+ index +'</option>');
+                }else {
+                    $('#function-select').append('<option value="'+ index +'">'+ index +'</option>');
+                }
+            }
+        }
+        $('#param').val(o.param);
+        $('#param').attr("placeholder", $lang['param']);
+        $('#solution').val(o.solution);
+        $('#solution').attr("placeholder", $lang['solution-placeholder']);
+        $('#oID').val(layer.name);
+        $('#save').removeClass("d-none");
+        $('#myModal').modal({show:true});
+        $('#save').click(function () {
+            if($('#oID').val() === layer.name){
+                o.name = $('#function-select').val();
+                o.solution = $('#solution').val();
+                o.param = $('#param').val();
                 refrescar(canvas).then(function () {
                     dibujar(canvas);
                 });

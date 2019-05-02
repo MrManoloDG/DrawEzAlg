@@ -481,12 +481,12 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 		closed:true,
 		p1: {
 			type: 'line',
-			x1: x - width/2 - 10, y1: y,
-			x2: x - width/2, y2: y - height,
-			x3: x + width/2, y3: y - height,
+			x1: x - width/2, y1: y - height,
+			x2: x + width/2, y2: y - height,
+			x3: x + width/2 + 20, y3: y,
 			x4: x + width/2, y4: y + height,
 			x5: x - width/2, y5: y + height,
-			x6: x - width/2 - 10, y6: y,
+			x6: x - width/2, y6: y - height,
 		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
@@ -498,7 +498,7 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 					});
 				}
 			}else{
-				modal_input(o,layer,canvas);
+				modal_function(o,layer,canvas);
 			}
 		}
 	})

@@ -2,7 +2,9 @@
 
 
 require('./js/classes/code_struct.js');
+var $array_functions = [];
 var $array_main;
+var $active_fun = 'main';
 var $active = null;
 var $canvas;
 var $lang;
@@ -13,6 +15,21 @@ function btn_struct(str) {
 	$('#'+$active).removeClass("active-btn");
 	$active = str;
 	$('#'+$active).addClass("active-btn");
+}
+
+function change_function(fun){
+	if($active_fun === fun && fun !== 'main'){
+		modal_config_function(fun);
+	}else{
+		$('.'+$active_fun+' .nav-link').removeClass('active');
+		$('.'+fun+' .nav-link').addClass('active');
+		$array_main = $array_functions[fun]['flow'];
+		$active_fun = fun;
+	}
+
+	refrescar($canvas).then(function () {
+		dibujar($canvas);
+	});
 }
 
 function zoom_in(){
@@ -118,18 +135,18 @@ function change_language(lang){
 
 
 $(document).ready(function() {
-
-
+    $array_functions['main']=[];
+    $array_functions['main']['param']=$array_main;
+	$array_functions['main']['flow']=[];
 	let ln = x=window.navigator.language||navigator.browserLanguage;
 
 	change_language(ln);
 
 	$canvas = $('#canvas');
-	$array_main = new Array();
+	$array_main = $array_functions['main']['flow'];
 	let JCanvas = require( './js/jcanvas.js' );
 	JCanvas( $, window);
-	//Codigo para probar
-	//dibujar($canvas);
+
 
 	let width = window.innerWidth - 20; // ancho
 	let height = window.innerHeight - $('#buttons').height() - 30; // alto
@@ -150,46 +167,6 @@ $(document).ready(function() {
 	$('#file').change(function () {
 		open_file();
 	});
-	//fin codigo para prueba
-	/*
-	function dibujar(){
-		//console.log("Funcion dibujar()********");
-		var x = 500,y = 150;
-		// Draw text
-		dibujar_inicio(x,y,$canvas);
-		y += $canvas.measureText('inicio').width+5 / 2;
-		dibujar_linea(x,y,x,y+100,0,$canvas,array,true,'main');
-		y += 100;
-		for (var i = 0; i < array.length; i++) {
-			array[i].dibujar(x,y,i,$canvas);
-			y += $canvas.getLayer('maino'+i).height + 10;
-			dibujar_linea(x,y,x,y+100,i+1,$canvas,array,true,'main');
-			y += 100;
-		}
-		y += $canvas.measureText('inicio').width + 20 / 2;
-		dibujar_fin(x,y,$canvas);
-
-		//console.log("fin funcion dibujar *******");
-	}
-
-	$canvas.clearCanvas();
-	dibujar();
-
-	$canvas.getLayers().forEach(function(element) {
-		$canvas.removeLayer(element.name);
-	});
-
-
-	setInterval(function () {
-		$canvas.clearCanvas();
-		$canvas.getLayers().forEach(function(element) {
-			//console.log(element.name);
-			$canvas.removeLayer(element.name);
-		});
-		//console.log(array);
-		dibujar();
-	}, 500);
-	*/
 
 
 

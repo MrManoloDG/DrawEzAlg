@@ -61,7 +61,9 @@ class Assign_Struct extends Code_Struct{
 class Function_Struct extends Code_Struct{
 	constructor(parent){
 		super('function', parent);
-		this.name = ""
+		this.name = "";
+		this.solution = "";
+		this.param = "";
 	}
 	draw(x,y,i,canvas,parent_arr) {
 		draw_function(x,y,i,canvas, this,parent_arr);
