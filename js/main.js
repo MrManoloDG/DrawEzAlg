@@ -2,7 +2,7 @@
 
 
 require('./js/classes/code_struct.js');
-var $array_functions = [];
+var $array_functions = {};
 var $array_main;
 var $active_fun = 'main';
 var $active = null;
@@ -64,7 +64,8 @@ function run_code() {
 
 function save(){
 	let FileSaver = require('file-saver');
-	let json = JSON.stringify($array_main);
+	let json = JSON.stringify($array_functions);
+	alert(json);
 	let blob = new Blob([json], {type: "text/plain;charset=utf-8"});
 	let date = new Date();
 	FileSaver.saveAs(blob, "draw"+date.getTime()+".json");
@@ -96,8 +97,22 @@ function getAsText(readFile) {
 			let extension = theFile.name.split(".")[1];
 			if( extension === "json" || extension === "JSON"){
 				let json = JSON.parse(e.target.result);
-				$array_main = [];
-				load_arr(json,$array_main);
+
+				$array_functions={};
+				$('#functions-nav .nav-item').each(function (e) {
+					if(!$(this).hasClass('main') && !$(this).hasClass('function')){
+						$(this).remove();
+					}
+				});
+				
+				for(let index in json){
+					$array_functions[index] = {};
+					$array_functions[index]['param'] = json[index]['param'];
+					$array_functions[index]['flow'] = [];
+					if(index !== 'main') $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ index+'" onclick="change_function(\''+ index +'\')"><a class="nav-link">'+ index +'</a></li>');
+					load_arr(json[index]['flow'], $array_functions[index]['flow']);
+				}
+				$array_main = $array_functions['main']['flow'];
 				refrescar($canvas).then(function () {
 					dibujar($canvas);
 				});
@@ -135,7 +150,7 @@ function change_language(lang){
 
 
 $(document).ready(function() {
-    $array_functions['main']=[];
+    $array_functions['main']={};
     $array_functions['main']['param']=$array_main;
 	$array_functions['main']['flow']=[];
 	let ln = x=window.navigator.language||navigator.browserLanguage;
