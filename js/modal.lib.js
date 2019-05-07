@@ -99,14 +99,14 @@ function modal_config_function(name){
             if($('#oID').val() === check){
                 console.log(o);
                 if(o === undefined){
-                    $array_functions[$('#name').val()] = [];
+                    $array_functions[$('#name').val()] = {};
                     $array_functions[$('#name').val()]['param'] =  $('#param').val();
                     $array_functions[$('#name').val()]['flow'] = [];
                     $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
 
                 }else{
                     if(name !== $('#name').val()){
-                        $array_functions[$('#name').val()] = [];
+                        $array_functions[$('#name').val()] = {};
                         $array_functions[$('#name').val()]['flow'] = $array_functions[name]['flow'];
                         delete $array_functions[name];
                         $('.'+name).addClass($('#name').val());

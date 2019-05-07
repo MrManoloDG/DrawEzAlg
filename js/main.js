@@ -23,6 +23,7 @@ function change_function(fun){
 	}else{
 		$('.'+$active_fun+' .nav-link').removeClass('active');
 		$('.'+fun+' .nav-link').addClass('active');
+        $array_functions[$active_fun]['flow'] = $array_main;
 		$array_main = $array_functions[fun]['flow'];
 		$active_fun = fun;
 	}
@@ -47,10 +48,18 @@ function zoom_out(){
 function run_code() {
 	let $new_line = "\n";
 	let run = 'let $buffer_out = "";\n' +
-		'let $promesas = [];\n' +
-		run_arr($array_main) +
-		'//alert($buffer_out);\n';
-	//alert(run);
+		'let $promesas = [];\n\n';
+
+	for(let index in $array_functions){
+	    if(index !== 'main'){
+	        run += 'function '+ index +'(' + $array_functions[index]['param'] + '){\n' +
+                run_arr($array_functions[index]['flow']) +
+                '}\n\n';
+        }
+    }
+	run += run_arr($array_functions['main']['flow']) +
+        '//alert($buffer_out);\n';
+	alert(run);
     try {
 			eval(run);
     }
@@ -65,7 +74,7 @@ function run_code() {
 function save(){
 	let FileSaver = require('file-saver');
 	let json = JSON.stringify($array_functions);
-	alert(json);
+	console.log(json);
 	let blob = new Blob([json], {type: "text/plain;charset=utf-8"});
 	let date = new Date();
 	FileSaver.saveAs(blob, "draw"+date.getTime()+".json");
@@ -110,6 +119,8 @@ function getAsText(readFile) {
 					$array_functions[index]['param'] = json[index]['param'];
 					$array_functions[index]['flow'] = [];
 					if(index !== 'main') $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ index+'" onclick="change_function(\''+ index +'\')"><a class="nav-link">'+ index +'</a></li>');
+					console.log(index);
+					console.log(json);
 					load_arr(json[index]['flow'], $array_functions[index]['flow']);
 				}
 				$array_main = $array_functions['main']['flow'];

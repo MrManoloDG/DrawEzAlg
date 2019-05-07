@@ -35,7 +35,9 @@ function run_arr(arr) {
                 str += 'Promise.all($promesas).then( () =>{\n';
                 n_promiseAll++;
                 break;
-
+            case 'function':
+                str += run_function(element) + '\n';
+                break;
         }
     });
     for (let i = 0; i < n_promiseAll; i++) {
@@ -89,6 +91,13 @@ function run_out(e) {
 function run_in(e) {
     let str = '$promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
         'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);';
+    return str;
+}
+
+function run_function(e) {
+    let str = '';
+    if(e.solution !== "") str += e.solution + ' = ';
+    str += e.name + '(' + e.param + ');\n';
     return str;
 }
 

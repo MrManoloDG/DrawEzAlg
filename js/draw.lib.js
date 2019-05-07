@@ -72,12 +72,12 @@ function dibujar(canvas) {
 	// Draw text
 	draw_init(x,y,canvas);
 	y += canvas.measureText('inicio').width+5 / 2;
-	draw_line(x,y,x,y+100,0,canvas,$array_main,true,'main');
+	draw_line(x,y,x,y+100,0,canvas,$array_main,true,$active_fun);
 	y += 100;
 	for (var i = 0; i < $array_main.length; i++) {
 		$array_main[i].draw(x,y,i,canvas,$array_main);
-		y += canvas.getLayer('maino'+i).height + 10;
-		draw_line(x,y,x,y+100,i+1,canvas,$array_main,true,'main');
+		y += canvas.getLayer($active_fun+'o'+i).height + 10;
+		draw_line(x,y,x,y+100,i+1,canvas,$array_main,true,$active_fun);
 		y += 100;
 	}
 	y += canvas.measureText('inicio').width + 20 / 2;
