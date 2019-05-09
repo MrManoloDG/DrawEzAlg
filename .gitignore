@@ -11,3 +11,9 @@ dist/mac/
 dist/linux-unpacked/
 
 dist/win-ia32-unpacked/
+
+dist/latest\.yml
+
+dist/builder-effective-config\.yaml
+
+dist/\.icon-ico/

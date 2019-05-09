@@ -15,7 +15,7 @@
   "param-placeholder": "Introduce Parámetros. Ej: x,y,...",
   "name": "Nombre",
   "name-placeholder": "Introduce nombre de la función",
-  "function-desc": "",
+  "function-desc": "Como idea general, se presenta como un algoritmo que forma parte del algoritmo principal, el cual permite resolver una tarea específica.",
   "if-desc": "La estructura selectiva si permite que el flujo del diagrama siga por un camino si se cumple la condición determinada. Si al evaluar la condición es verdadera ejecutara el camino 'Sí', por lo contrario, si es falsa ejecutara el camino 'No'. Tras esto continua la ejecución normal del programa.",
   "while-desc": "La estructura repetitiva mientras permite repetir un conjunto de instrucciones. La estructura repetirá el bucle hasta que la condición no se cumpla. Una vez esta condición no se cumpla el programa continua con su ejecución normal. ",
   "for-desc": "Esta estructura es utilizada para repetir un conjunto de instrucciones un numero definido de veces. Esta estructura se compone de una variable de control de ciclo con una inicialización de esta misma, una condición para que se ejecute mientras se cumpla  y un incremento o decremento de la variable de control.",
