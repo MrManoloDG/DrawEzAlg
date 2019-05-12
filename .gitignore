@@ -17,3 +17,5 @@ dist/latest\.yml
 dist/builder-effective-config\.yaml
 
 dist/\.icon-ico/
+
+dist/
