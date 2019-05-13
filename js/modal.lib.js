@@ -73,6 +73,39 @@ function about() {
     );
 }
 
+function modal_code() {
+    $('.modal-title').text($lang['code']);
+    $('.modal-body').load('modals/code_modal.html',function(){
+
+        $('.input-group-text').text($lang['language']);
+
+        let check = '' + Date.now();
+        $('#oID').val(check);
+        $('#save').addClass("d-none");
+        $('#myModal').modal({show:true});
+        $('#code-select').change(function () {
+            if($('#oID').val() === check){
+                let code = '';
+                switch($('#code-select').val()){
+                    case 'javascript':
+                        $('#code-show code').attr('class','javascript');
+                        $('#code-show code').html('\n' + javascript_code());
+                        break;
+                    default:
+                        $('#code-show code').attr('class','');
+                        $('#code-show code').text('');
+                        break;
+                }
+
+                hljs.configure({useBR: true});
+                document.querySelectorAll('#code-show code').forEach((block) => {
+                    hljs.highlightBlock(block);
+                });
+            }
+        });
+    });
+}
+
 function modal_config_function(name){
     let o = $array_functions[name];
     $('.modal-title').text($lang['function']);

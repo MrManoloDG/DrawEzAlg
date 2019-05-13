@@ -71,6 +71,10 @@ function run_code() {
     }
 }
 
+function code() {
+	modal_code();
+}
+
 function save(){
 	let FileSaver = require('file-saver');
 	let json = JSON.stringify($array_functions);

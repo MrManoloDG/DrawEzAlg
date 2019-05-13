@@ -11,17 +11,12 @@
 
 
 
-.btn {
-	width: 70px;
-	padding: 4px !important;
-	height: 40px;
-}
 
 .btn-img {
 	width: 50px;
 	height: 30px;
 }
-
+/*
 @media (max-width: 1035px) {
 	.btn {
 		width: 60px;
@@ -61,19 +56,19 @@
 		height: 15px;
 	}
 }
-
+*/
 @keyframes active_animation {
 	from {
 		border: #150fff 2px solid;
 	}
 
 	to {
-		border: #e0ff30 3px solid;
+		border: #e0ff30 2px solid;
 	}
 }
 
 .active-btn{
-	border: #150fff 1px solid;
+	border: #150fff 2px solid;
 	animation-duration: 1s;
 	animation-name: active_animation;
 	animation-iteration-count: infinite;
