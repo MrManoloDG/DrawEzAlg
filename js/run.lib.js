@@ -64,8 +64,8 @@ function run_while(e) {
 }
 
 function run_for(e) {
-    let str = 'for( let ' + e.variable + '=' + e.initialization + ';' +
-        ' ' + e.condition + ';' +
+    let str = 'for( let ' + e.variable + '=' + e.initialization + '; ' +
+        e.variable + ' <= ' + e.condition + ';' +
         ' ' + e.incremental + '){\n';
     str +=  run_arr(e.loop);
     str += '}\n';

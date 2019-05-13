@@ -251,7 +251,7 @@ function modal_output(o, layer, canvas) {
     $('.modal-body').load('modals/out_modal.html',function(){
         $('#buffer_out').val(o.buffer_out);
         $('#buffer_out').attr("placeholder", $lang['output-placeholder']);
-        $('#output-label').text($lang['output']);
+        $('#output-label').text($lang['output-label']);
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
@@ -346,17 +346,17 @@ function modal_for(o, layer, canvas) {
     $('.modal-title').text($lang['for']);
     $('.modal-body').load('modals/for_modal.html',function(){
         $('#condition').val(o.condition);
-        $('#condition').attr("placeholder", $lang['condition-placeholder']);
-        $('#condition-label').text($lang['condition']);
+        $('#condition').attr("placeholder", $lang['final-val']);
+        $('#condition-label').text($lang['final-val']);
         $('#incremental').val(o.incremental);
         $('#incremental').attr("placeholder", $lang['incremental-placeholder']);
         $('#incremental-label').text($lang['incremental']);
         $('#initialization').val(o.initialization);
-        $('#initialization').attr("placeholder", $lang['initialization-placeholder']);
-        $('#initialization-label').text($lang['initialization'])
+        $('#initialization').attr("placeholder", $lang['init-val']);
+        $('#initialization-label').text($lang['init-val']);
         $('#variable').val(o.variable);
-        $('#variable').attr("placeholder", $lang['variable-placeholder']);
-        $('#variable-label').text($lang['variable']);
+        $('#variable').attr("placeholder", $lang['var-cont']);
+        $('#variable-label').text($lang['var-cont']);
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");

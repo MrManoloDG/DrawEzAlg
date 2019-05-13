@@ -73,8 +73,8 @@ function javascript_while(e, tab, textTab) {
 }
 
 function javascript_for(e, tab, textTab) {
-    let str = 'for( let ' + e.variable + '=' + e.initialization + ';' +
-        ' ' + e.condition + ';' +
+    let str = 'for( let ' + e.variable + '=' + e.initialization + '; ' +
+        e.variable + ' <= ' + e.condition + ';' +
         ' ' + e.incremental + '){<br>';
     str +=  javascript_arr(e.loop, tab + 1);
     str += textTab + '}<br>';
