@@ -35,9 +35,11 @@
 
     	<!-- Clases JavaScript -->
 		<script src="./js/classes/code_struct.js"></script>
+		<script src="./js/classes/stack.js"></script>
 
 		<!-- Codigo propio -->
 		<script src="./js/load_file.js"></script>
+		<script src="./js/debug.lib.js"></script>
 		<script src="./js/run.lib.js"></script>
 		<script src="./js/modal.lib.js"></script>
 		<script src="./js/draw.lib.js"></script>
@@ -66,6 +68,7 @@
 					</div>
 					<div class="btn-group mr-2 my-1" role="group" aria-label="Third group">
 						<button type="button" name="run" id="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
+						<button type="button" name="run" id="run_step" class="btn btn-success text-white" onclick="debug_step()"><i class="fas fa-shoe-prints fa-lg"></i></button>
 						<button type="button" name="code" id="code-file" class="btn btn-primary text-white" onclick="code()"><i class="far fa-file-code fa-lg"></i></button>
 						<button type="button" name="save" id="save-file" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
 						<input type="file" id="file" class="d-none" name="files[]" multiple/>
@@ -91,8 +94,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<ul class="nav nav-tabs m-2 col-11" id="functions-nav">
-
+				<ul class="nav nav-tabs mx-1 my-2 col-11" id="functions-nav">
 					<li class="nav-item main" onclick="change_function('main')">
 						<a class="nav-link active">Main</a>
 					</li>

@@ -45,6 +45,26 @@ function zoom_out(){
 	});
 }
 
+function debug_step() {
+
+
+	if($debug_id['main'] === 0 ){
+		let functions = '';
+		for(let index in $array_functions){
+			if(index !== 'main'){
+				functions += 'function '+ index +'(' + $array_functions[index]['param'] + '){\n' +
+					run_arr($array_functions[index]['flow']) +
+					'return sol;\n}\n\n';
+			}
+		}
+		eval(functions);
+
+		$debug_struct = $array_main;
+		$debug_stack.push(['main', $array_main]);
+	}
+	debug_next_step();
+}
+
 function run_code() {
 	let $new_line = "\n";
 	let run = 'let $buffer_out = "";\n' +
