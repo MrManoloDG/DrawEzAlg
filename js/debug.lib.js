@@ -13,11 +13,11 @@ function debug_init() {
 }
 
 function debug_show_vars() {
-    let str = 'Variables: \n';
+    show_tabVar();
+    $('.var-tableBody').empty();
     for (let $i = 0; $i < $debug_vars.length ; $i++) {
-        str += $debug_vars[$i] + ' -> ' + eval($debug_vars[$i]) + '\n';
+        $('.var-tableBody').append('<tr><td>'+$debug_vars[$i]+'</td><td>'+eval($debug_vars[$i])+'</td>');
     }
-    alert(str);
 }
 function debug_uncol_prev_element(element) {
     $canvas.getLayer(element.parent + 'o' + ($debug_id[$debug_function] - 1)).strokeStyle = '#000';
@@ -177,8 +177,20 @@ function debug_in(e) {
 
 function debug_exe_function(e) {
     let str = '';
-    if(e.solution !== "") str += e.solution + ' = ';
-    str += e.name + '(' + e.param + ');\n';
+    let param_call = e.param.split(',');
+    let param_fun = $array_functions[e.name]['param'].split(',');
+    if(param_call.length !== param_fun.length){
+        alert('Error Functions Params');
+    }else{
+        for (let $i = 0; $i < param_call.length ; $i++) {
+            str += param_fun[$i] + ' = ' + param_call[$i] + ';\n';
+        }
+        str += run_arr($array_functions[e.name]['flow']);
+
+        for (let $i = 0; $i < param_call.length ; $i++) {
+            str += 'delete ' + param_fun[$i] + ';\n';
+        }
+    }
 
     return str;
 }

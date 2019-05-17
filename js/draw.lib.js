@@ -1,3 +1,4 @@
+var $textpx = 11;
 
 function get_mult_width_repeat(arr) {
 	let arr_if = [];
@@ -92,7 +93,7 @@ function draw_init(x,y,canvas) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['start']
 	})
@@ -114,7 +115,7 @@ function draw_end(x,y,canvas) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['end']
 	})
@@ -193,7 +194,7 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: o.condition === "" ? $lang['condition'] : o.condition
 	})
@@ -231,7 +232,7 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['no']
 	}).drawText({
@@ -240,7 +241,7 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x - 60 - canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['yes']
 	});
@@ -332,7 +333,7 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y:  y - canvas.measureText('inicio').width/2 + n_lineas,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: text === "" ? $lang['assign'] : text
 	}).drawRect({
@@ -369,7 +370,7 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: o.variable === "" ? $lang['input'] : o.variable
 	});
@@ -414,7 +415,7 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: o.buffer_out === ""? $lang['output']: o.buffer_out
 	});
@@ -466,7 +467,7 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: o.name === "" ? $lang['function'] : o.name
 	});
@@ -513,7 +514,7 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: o.condition === "" ? $lang['condition']: o.condition
 	})
@@ -552,7 +553,7 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['no']
 	});
@@ -614,7 +615,7 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: o.variable +"="+o.initialization +"; " + o.condition + "; " + o.incremental
 	})
@@ -660,7 +661,7 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 			fillStyle: '#36c',
 			strokeWidth: 1,
 			x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-			fontSize: '11pt',
+			fontSize: $textpx+'pt',
 			fontFamily: 'Verdana, sans-serif',
 			text: $lang['no']
 		});

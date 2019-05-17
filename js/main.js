@@ -45,20 +45,18 @@ function zoom_out(){
 	});
 }
 
+function show_tabVar() {
+    $("#sidebar").css( 'width', '300px');
+}
+
+function hidde_tabVar() {
+    $("#sidebar").css( 'width', '0');
+}
+
 function debug_step() {
 
 
 	if($debug_id['main'] === 0 ){
-		let functions = '';
-		for(let index in $array_functions){
-			if(index !== 'main'){
-				functions += 'function '+ index +'(' + $array_functions[index]['param'] + '){\n' +
-					run_arr($array_functions[index]['flow']) +
-					'return sol;\n}\n\n';
-			}
-		}
-		eval(functions);
-
 		$debug_struct = $array_main;
 		$debug_stack.push(['main', $array_main]);
 	}
@@ -199,13 +197,13 @@ $(document).ready(function() {
 
 
 	let width = window.innerWidth - 20; // ancho
-	let height = window.innerHeight - $('#buttons').height() - 30; // alto
+	let height = window.innerHeight - $('#buttons').height() - 5; // alto
 	$('#contenedor').css("width", width + "px");
 	$('#contenedor').css("height", height + "px");
 
 	$( window ).resize(function() {
 		let width = window.innerWidth - 20; // ancho
-		let height = window.innerHeight - $('#buttons').height() - 30; // alto
+		let height = window.innerHeight - $('#buttons').height() - 5; // alto
 		$('#contenedor').css("width", width + "px");
 		$('#contenedor').css("height", height + "px");
 	});
