@@ -177,21 +177,10 @@ function debug_in(e) {
 
 function debug_exe_function(e) {
     let str = '';
-    let param_call = e.param.split(',');
-    let param_fun = $array_functions[e.name]['param'].split(',');
-    if(param_call.length !== param_fun.length){
-        alert('Error Functions Params');
-    }else{
-        for (let $i = 0; $i < param_call.length ; $i++) {
-            str += param_fun[$i] + ' = ' + param_call[$i] + ';\n';
-        }
-        str += run_arr($array_functions[e.name]['flow']);
-
-        for (let $i = 0; $i < param_call.length ; $i++) {
-            str += 'delete ' + param_fun[$i] + ';\n';
-        }
-    }
-
+    str += 'function '+ e.name +'('+$array_functions[e.name]['param']+'){';
+    str += run_arr($array_functions[e.name]['flow']);
+    str += '}\n';
+    str += e.name + '('+e.param+')';
     return str;
 }
 
