@@ -215,16 +215,9 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 	  },
 	  click: function(layer) {
 	  	  //alert("Click on: if " + layer.name);
-		  if($active === 'delete'){
-			  if(confirm($lang['delete-msg'])){
-				  parent_arr.splice(i,1);
-				  refrescar(canvas).then(function () {
-					  dibujar(canvas);
-				  });
-			  }
-		  }else{
-			modal_if(o,layer, canvas);
-		  }
+
+		  modal_if(o,layer, canvas,parent_arr,i);
+
 		}
 	}).drawText({
 		layer: true,
@@ -347,16 +340,8 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
 		click: function(layer) {
 			//alert("Click on: Assing" + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete-msg'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_assign(o,layer,canvas);
-			}
+			modal_assign(o,layer,canvas,parent_arr,i);
+
 		}
 	});
 
@@ -393,16 +378,8 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_input(o,layer,canvas);
-			}
+			modal_input(o,layer,canvas,parent_arr,i);
+
 		}
 	})
 }
@@ -445,16 +422,8 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: escritura " + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete-msg'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_output(o,layer,canvas);
-			}
+			modal_output(o,layer,canvas,parent_arr,i);
+
 		}
 	})
 }
@@ -491,16 +460,9 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_function(o,layer,canvas);
-			}
+
+			modal_function(o,layer,canvas,parent_arr,i);
+
 		}
 	})
 }
@@ -535,16 +497,9 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: while " + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete-msg'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_while(o,layer,canvas);
-			}
+
+			modal_while(o,layer,canvas,parent_arr,i);
+
 		}
 	})
 	.drawText({
@@ -636,16 +591,8 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 			},
 			click: function(layer) {
 				//alert("Click on: for " + layer.name);
-				if($active === 'delete'){
-					if(confirm($lang['delete-msg'])){
-						parent_arr.splice(i,1);
-						refrescar(canvas).then(function () {
-							dibujar(canvas);
-						});
-					}
-				}else{
-					modal_for(o,layer,canvas);
-				}
+				modal_for(o,layer,canvas, parent_arr, i);
+
 			}
 		}).drawLine({
 			layer: true,

@@ -38,7 +38,7 @@
   "initialization-placeholder": "Escribe una inicialización",
   "output-label": "Expresión",
   "output-placeholder": "Escribe una salida",
-  "delete": "Borrar",
+  "delete": "Eliminar",
   "delete-msg": "¿Estas seguro de borrarlo?",
   "yes": "Si",
   "no": "No",
@@ -46,6 +46,7 @@
   "zoom-out": "Zoom out",
   "run": "Run",
   "save": "Guardar",
+  "cancel": "Cancelar",
   "close": "Cerrar",
   "info-table": {
     "operator-list": "Lista de operadores",

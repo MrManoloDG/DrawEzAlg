@@ -170,7 +170,8 @@ function change_language(lang){
 				$('#es').text($lang['languages']['es']);
 				$('#en').text($lang['languages']['en']);
 				$('#save').text($lang['save']);
-				$('#close').text($lang['close']);
+				$('#delete').text($lang['delete']);
+				$('#cancel').text($lang['cancel']);
 
 				refrescar($canvas).then(function () {
 					dibujar($canvas);

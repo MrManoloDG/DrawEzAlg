@@ -49,6 +49,7 @@ function load_info() {
         $('#info-tablas .disjunction').text($lang['info-table']['logical-op']['disjunction']);
 
         $('#save').addClass("d-none");
+        $('#delete').addClass("d-none");
         $('#myModal').modal({show:true});
     });
 }
@@ -66,6 +67,7 @@ function about() {
                         "(" + package_json['version'] + ")\n" +
                         "");
                     $('#save').addClass("d-none");
+                    $('#delete').addClass("d-none");
                     $('#myModal').modal({show:true});
                 });
             }
@@ -82,6 +84,7 @@ function modal_code() {
         let check = '' + Date.now();
         $('#oID').val(check);
         $('#save').addClass("d-none");
+        $('#delete').addClass("d-none");
         $('#myModal').modal({show:true});
         $('#code-select').change(function () {
             if($('#oID').val() === check){
@@ -121,10 +124,11 @@ function modal_config_function(name){
         $('#delete-fun').text($lang['delete']);
 
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         let check = name + Date.now();
         $('#oID').val(check);
         $('#myModal').modal({show:true});
-        $('#delete-fun').click(function () {
+        $('#delete').click(function () {
             if($('#oID').val() === check){
                 change_function('main');
                 $('.'+name).remove();
@@ -158,7 +162,7 @@ function modal_config_function(name){
     });
 }
 
-function modal_assign(o, layer, canvas) {
+function modal_assign(o, layer, canvas, parent_arr, i) {
     $('.modal-title').text($lang['assign']);
     $('.modal-body').load('modals/assing_modal.html',function(){
         let check = layer.name + Date.now();
@@ -184,6 +188,7 @@ function modal_assign(o, layer, canvas) {
 
         }
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
         $('#asing_add').click(function () {
             if($('#oID').val() === check){
@@ -199,6 +204,16 @@ function modal_assign(o, layer, canvas) {
                     '        </div>'
                 );
                 j_load++;
+            }
+        });
+        $('#delete').click(function () {
+            if($('#oID').val() === check){
+                if(confirm($lang['delete-msg'])){
+                    parent_arr.splice(i,1);
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                }
             }
         });
         $('#save').click(function () {
@@ -225,7 +240,7 @@ function modal_assign(o, layer, canvas) {
     });
 }
 
-function modal_input(o, layer, canvas) {
+function modal_input(o, layer, canvas,parent_arr,i) {
     $('.modal-title').text($lang['input']);
     $('.modal-body').load('modals/in_modal.html',function(){
         $('#variable').val(o.variable);
@@ -234,7 +249,18 @@ function modal_input(o, layer, canvas) {
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
+        $('#delete').click(function () {
+            if($('#oID').val() === check){
+                if(confirm($lang['delete-msg'])){
+                    parent_arr.splice(i,1);
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                }
+            }
+        });
         $('#save').click(function () {
             if($('#oID').val() === check){
                 o.variable = $('#variable').val();
@@ -246,7 +272,7 @@ function modal_input(o, layer, canvas) {
     });
 }
 
-function modal_output(o, layer, canvas) {
+function modal_output(o, layer, canvas,parent_arr,i) {
     $('.modal-title').text($lang['output']);
     $('.modal-body').load('modals/out_modal.html',function(){
         $('#buffer_out').val(o.buffer_out);
@@ -255,7 +281,18 @@ function modal_output(o, layer, canvas) {
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
+        $('#delete').click(function () {
+            if($('#oID').val() === check){
+                if(confirm($lang['delete-msg'])){
+                    parent_arr.splice(i,1);
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                }
+            }
+        });
         $('#save').click(function () {
             if($('#oID').val() === check){
                 o.buffer_out = $('#buffer_out').val();
@@ -267,7 +304,7 @@ function modal_output(o, layer, canvas) {
     });
 }
 
-function modal_function(o, layer, canvas) {
+function modal_function(o, layer, canvas, parent_arr, i) {
     $('.modal-title').text($lang['function']);
     $('.modal-body').load('modals/function_modal.html',function(){
         for(let index  in  $array_functions){
@@ -286,7 +323,18 @@ function modal_function(o, layer, canvas) {
         let check = name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
+        $('#delete').click(function () {
+            if($('#oID').val() === check){
+                if(confirm($lang['delete-msg'])){
+                    parent_arr.splice(i,1);
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                }
+            }
+        });
         $('#save').click(function () {
             if($('#oID').val() === check){
                 o.name = $('#function-select').val();
@@ -300,7 +348,7 @@ function modal_function(o, layer, canvas) {
     });
 }
 
-function modal_if(o, layer, canvas) {
+function modal_if(o, layer, canvas,parent_arr,i) {
     $('.modal-title').text($lang['if']);
     $('.modal-body').load('modals/if_modal.html',function(){
         $('#condition').val(o.condition);
@@ -309,7 +357,18 @@ function modal_if(o, layer, canvas) {
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
+        $('#delete').click(function () {
+            if($('#oID').val() === check){
+                if(confirm($lang['delete-msg'])){
+                    parent_arr.splice(i,1);
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                }
+            }
+        });
         $('#save').click(function () {
             if($('#oID').val() === check){
                 o.condition = $('#condition').val();
@@ -321,7 +380,7 @@ function modal_if(o, layer, canvas) {
     });
 }
 
-function modal_while(o, layer, canvas) {
+function modal_while(o, layer, canvas, parent_arr, i) {
     $('.modal-title').text($lang['while']);
     $('.modal-body').load('modals/while_modal.html',function(){
         $('#condition').val(o.condition);
@@ -330,7 +389,18 @@ function modal_while(o, layer, canvas) {
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
+        $('#delete').click(function () {
+            if($('#oID').val() === check){
+                if(confirm($lang['delete-msg'])){
+                    parent_arr.splice(i,1);
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                }
+            }
+        });
         $('#save').click(function () {
             if($('#oID').val() === check){
                 o.condition = $('#condition').val();
@@ -342,7 +412,7 @@ function modal_while(o, layer, canvas) {
     });
 }
 
-function modal_for(o, layer, canvas) {
+function modal_for(o, layer, canvas, parent_arr, i) {
     $('.modal-title').text($lang['for']);
     $('.modal-body').load('modals/for_modal.html',function(){
         $('#condition').val(o.condition);
@@ -360,7 +430,18 @@ function modal_for(o, layer, canvas) {
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
+        $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
+        $('#delete').click(function () {
+            if($('#oID').val() === check){
+                if(confirm($lang['delete-msg'])){
+                    parent_arr.splice(i,1);
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                }
+            }
+        });
         $('#save').click(function () {
             if($('#oID').val() === check){
                 o.condition = $('#condition').val();

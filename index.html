@@ -62,7 +62,6 @@
 
 					</div>
 					<div class="btn-group mr-2 my-1" role="group" aria-label="Second group">
-						<button type="button" name="delete" id="delete" class="btn btn-danger text-white" onclick="btn_struct('delete')"><i class="fas fa-backspace fa-lg"></i></button>
 						<button type="button" name="zoom_in" id="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus fa-lg"></i></button>
 						<button type="button" name="zoom_out" id="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus fa-lg"></i></button>
 					</div>
@@ -134,8 +133,11 @@
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="save" class="btn btn-primary" data-dismiss="modal">Save</button>
-					<button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
+					<div class="mr-auto">
+						<button type="button" id="save" class="btn btn-primary mr-1" data-dismiss="modal">Save</button>
+						<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>
+					<button type="button" id="delete" class="btn btn-danger text-white" data-dismiss="modal">Delete</button>
 				</div>
 			</div>
 		</div>
