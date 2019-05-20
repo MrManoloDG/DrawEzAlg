@@ -53,6 +53,8 @@
     "arithmetic-list": "Lista de operadores aritméticos",
     "relational-list": "Lista de operadores relacionales",
     "logical-list": "Lista de operadores lógicos",
+    "math-list": "Lista de funciones matematicas soportadas",
+    "math-list-info": "Más información acerca de las funciones matemáticas",
     "arithmetic-op": {
       "sum": "Suma",
       "sub": "Resta",

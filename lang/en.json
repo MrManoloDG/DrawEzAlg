@@ -54,6 +54,8 @@
     "arithmetic-list": "List of arithmetic operators",
     "relational-list": "List of relational operators",
     "logical-list": "List of logical operators",
+    "math-list": "List of Math methods supports",
+    "math-list-info": "More info about math methods",
     "arithmetic-op": {
       "sum": "Sum",
       "sub": "Subtraction",

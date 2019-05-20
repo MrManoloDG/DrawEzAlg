@@ -48,6 +48,9 @@ function load_info() {
         $('#info-tablas .conjunction').text($lang['info-table']['logical-op']['conjunction']);
         $('#info-tablas .disjunction').text($lang['info-table']['logical-op']['disjunction']);
 
+        $('#mathlib h3').text($lang['info-table']['math-list']);
+        $('#mathlib a').text($lang['info-table']['math-list-info']);
+
         $('#save').addClass("d-none");
         $('#delete').addClass("d-none");
         $('#myModal').modal({show:true});

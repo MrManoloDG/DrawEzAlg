@@ -75,7 +75,7 @@ function run_for(e) {
 function run_assign(e) {
     let str = '';
     for(let index in e.list){
-        str += e.list[index][0] + ' = ' + e.list[index][1] + ';\n';
+        str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
     }
     return str;
 }

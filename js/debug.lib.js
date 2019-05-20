@@ -147,7 +147,7 @@ function debug_for(e) {
 function debug_assign(e) {
     let str = '';
     for(let index in e.list){
-        str += e.list[index][0] + ' = ' + e.list[index][1] + ';\n';
+        str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
         if($debug_vars.indexOf(e.list[index][0]) === -1){
             $debug_vars.push(e.list[index][0]);
         }
