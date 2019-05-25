@@ -1,7 +1,7 @@
 var $debug_id = {'main': 0};
 var $debug_struct;
 var $debug_function = 'main';
-var $debug_function_name = '';
+var $debug_function_name = 'main';
 var $debug_vars = [];
 var $debug_stack = new Stack();
 var $debug_var_stack = new Stack();
@@ -13,6 +13,11 @@ function debug_init() {
     $debug_vars = [];
     $debug_stack = new Stack();
     $debug_var_stack = new Stack();
+
+    $('.var-tableBody').empty();
+    refrescar($canvas).then(function () {
+        dibujar($canvas);
+    });
 }
 
 function debug_show_vars() {
@@ -26,16 +31,20 @@ function debug_uncol_prev_element(element) {
     $canvas.getLayer(element.parent + 'o' + ($debug_id[$debug_function] - 1)).strokeStyle = '#000';
 }
 
-function debug_col_element(element){
-    console.log(element);
-    if($debug_id[$debug_function] > 0){
-        debug_uncol_prev_element(element);
-    }else if($debug_function !== 'main'){
-        $canvas.getLayer($debug_function).strokeStyle = '#000';
-    }
-    $canvas.getLayer(element.parent + 'o' + $debug_id[$debug_function]).strokeStyle = '#150fff';
+function debug_col_element(element,change_f){
+    return new Promise(function (resolve) {
+        if($debug_id[$debug_function] > 0 && !change_f){
+            debug_uncol_prev_element(element);
+        }else if($debug_function !== 'main' && !change_f){
+            $canvas.getLayer($debug_function).strokeStyle = '#000';
+        }
+        $canvas.getLayer(element.parent + 'o' + $debug_id[$debug_function]).strokeStyle = '#150fff';
+
+        resolve();
+    });
 }
 
+//Return if the name of current function had changed
 function debug_getFunctionName(e) {
     for(let index in $array_functions){
         if(e.parent.indexOf(index) === 0 && index !== $debug_function_name){
@@ -46,55 +55,32 @@ function debug_getFunctionName(e) {
     return false;
 }
 
-function debug_next_step() {
+function debug_next_step(b) {
     if($debug_id[$debug_function] < $debug_struct.length){
         let element = $debug_struct[$debug_id[$debug_function]];
-        debug_getFunctionName(element);
-        let str = '';
-        debug_col_element(element);
-        switch(element.type){
-            case 'if':
-                $debug_id[$debug_function] += 1;
-                debug_if(element);
-                break;
-
-            case 'while':
-                debug_while(element);
-                break;
-
-            case 'assign':
-                $debug_id[$debug_function] += 1;
-                str += debug_assign(element);
-                alert(str);
-                eval(str);
-                break;
-
-            case 'out':
-                $debug_id[$debug_function] += 1;
-                str += debug_out(element);
-                eval(str);
-                break;
-
-            case 'in':
-                $debug_id[$debug_function] += 1;
-                str += debug_in(element);
-                eval(str);
-                break;
-
-            case 'for':
-                str += debug_for(element);
-                break;
-            case 'function':
-                $debug_id[$debug_function] += 1;
-                str += debug_exe_function(element);
-                eval(str);
-                break;
+        let change = debug_getFunctionName(element);
+        if(change){
+            change_function($debug_function_name).then(function () {
+                debug_col_element(element,change).then(function () {
+                    debug_struct(element,b);
+                });
+            });
+        }else{
+            debug_col_element(element,change).then(function () {
+                debug_struct(element,b);
+            });
         }
-
-        debug_show_vars();
     } else {
         debug_uncol_prev_element($debug_struct[$debug_id[$debug_function]-1]);
-        if($debug_function !== 'main'){
+        if($debug_function.indexOf($debug_function_name) < 0 && $debug_function_name !== 'main'){
+            for (let i = 0; i < $debug_vars.length; i++) {
+                eval('delete ' + $debug_vars + ';');
+            }
+            debug_popVarStack();
+        }
+        console.log($debug_function);
+        console.log($debug_function_name);
+        if($debug_function !== $debug_function_name){
             $debug_stack.pop();
             delete $debug_id[$debug_function];
             let stack_peek = $debug_stack.peek();
@@ -106,6 +92,52 @@ function debug_next_step() {
             debug_init();
         }
     }
+}
+
+function debug_struct(element,b){
+    let str = '';
+    switch(element.type){
+        case 'if':
+            $debug_id[$debug_function] += 1;
+            debug_if(element);
+            break;
+
+        case 'while':
+            debug_while(element);
+            break;
+
+        case 'assign':
+            $debug_id[$debug_function] += 1;
+            str += debug_assign(element);
+            eval(str);
+            break;
+
+        case 'out':
+            $debug_id[$debug_function] += 1;
+            str += debug_out(element);
+            eval(str);
+            break;
+
+        case 'in':
+            $debug_id[$debug_function] += 1;
+            str += debug_in(element);
+            eval(str);
+            break;
+
+        case 'for':
+            str += debug_for(element);
+            break;
+        case 'function':
+            $debug_id[$debug_function] += 1;
+            if(b){
+                debug_function(element);
+            }else {
+                str += debug_exe_function(element);
+                eval(str);
+            }
+            break;
+    }
+    debug_show_vars();
 }
 
 function debug_if(e) {
@@ -205,9 +237,16 @@ function debug_exe_function(e) {
 function debug_pushVarStack(){
     let vars_stack = {};
     for (let i = 0; i < $debug_vars.length; i++) {
-        vars_stack[$debug_vars[i]] = eval($debug_vars[$i]);
+        vars_stack[$debug_vars[i]] = eval($debug_vars[i]);
     }
     $debug_var_stack.push(vars_stack);
+}
+
+function debug_popVarStack(){
+    let pop = $debug_var_stack.pop();
+    for(let index in pop){
+        eval(index + ' = ' + pop[index]);
+    }
 }
 
 function debug_function(e){
@@ -232,6 +271,11 @@ function debug_function(e){
     }
 
     $debug_vars = fun_params;
+
+    $debug_struct = $array_functions[e.name]['flow'];
+    $debug_function = e.parent  + 'o' + ($debug_id[$debug_function]-1);
+    $debug_stack.push([$debug_function, e.no]);
+    $debug_id[$debug_function] = 0;
 
 }
 

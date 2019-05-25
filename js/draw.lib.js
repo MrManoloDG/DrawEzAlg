@@ -69,7 +69,7 @@ function limpiar(canvas) {
 
 function dibujar(canvas) {
 
-	var x = 2500 ,y = 150;
+	var x = 1500 ,y = 150;
 	// Draw text
 	draw_init(x,y,canvas);
 	y += canvas.measureText('inicio').width+5 / 2;
@@ -339,7 +339,7 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 		width: (canvas.measureText(o.parent+'t'+i).width + 30),
 		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
 		click: function(layer) {
-			//alert("Click on: Assing" + layer.name);
+			alert("Click on: Assing" + layer.name);
 			modal_assign(o,layer,canvas,parent_arr,i);
 
 		}

@@ -18,18 +18,21 @@ function btn_struct(str) {
 }
 
 function change_function(fun){
-	if($active_fun === fun && fun !== 'main'){
-		modal_config_function(fun);
-	}else{
-		$('.'+$active_fun+' .nav-link').removeClass('active');
-		$('.'+fun+' .nav-link').addClass('active');
-        $array_functions[$active_fun]['flow'] = $array_main;
-		$array_main = $array_functions[fun]['flow'];
-		$active_fun = fun;
-	}
+	return new Promise(function (resolve) {
+		if($active_fun === fun && fun !== 'main'){
+			modal_config_function(fun);
+		}else{
+			$('.'+$active_fun+' .nav-link').removeClass('active');
+			$('.'+fun+' .nav-link').addClass('active');
+			$array_functions[$active_fun]['flow'] = $array_main;
+			$array_main = $array_functions[fun]['flow'];
+			$active_fun = fun;
+		}
 
-	refrescar($canvas).then(function () {
-		dibujar($canvas);
+		refrescar($canvas).then(function () {
+			dibujar($canvas);
+		});
+		resolve();
 	});
 }
 
@@ -47,20 +50,22 @@ function zoom_out(){
 
 function show_tabVar() {
     $("#sidebar").css( 'width', '300px');
+    $("#sidebar-btn").addClass("d-none");
 }
 
 function hidde_tabVar() {
     $("#sidebar").css( 'width', '0');
+    $("#sidebar-btn").removeClass("d-none");
 }
 
-function debug_step() {
+function debug_step(b) {
 
 
 	if($debug_id['main'] === 0 ){
 		$debug_struct = $array_main;
 		$debug_stack.push(['main', $array_main]);
 	}
-	debug_next_step();
+	debug_next_step(b);
 }
 
 function run_code() {
@@ -214,7 +219,7 @@ $(document).ready(function() {
 	});
 
 	$('#contenedor').animate({
-		scrollLeft: 2000
+		scrollLeft: 980
 	}, 100);
 
 	$('#file').change(function () {

@@ -68,7 +68,8 @@
 					</div>
 					<div class="btn-group mr-2 my-1" role="group" aria-label="Third group">
 						<button type="button" name="run" id="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
-						<button type="button" name="run" id="run_step" class="btn btn-success text-white" onclick="debug_step()"><i class="fas fa-shoe-prints fa-lg"></i></button>
+						<button type="button" name="run" id="run_step" class="btn btn-success text-white" onclick="debug_step(false)"><i class="fas fa-shoe-prints fa-lg"></i></button>
+						<button type="button" name="run" id="run_step_inFunction" class="btn btn-success text-white" onclick="debug_step(true)"><i class="fas fa-bug fa-lg"></i></i></button>
 						<button type="button" name="code" id="code-file" class="btn btn-primary text-white" onclick="code()"><i class="far fa-file-code fa-lg"></i></button>
 						<button type="button" name="save" id="save-file" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
 						<input type="file" id="file" class="d-none" name="files[]" multiple/>
@@ -106,6 +107,9 @@
 				</ul>
 			</div>
 		</div>
+		<div id="sidebar-btn" onclick="show_tabVar()">
+			<i class="far fa-eye fa-lg text-white"></i>
+		</div>
         <div id="sidebar" class="sidebar" style="width: 0px;">
             <a href="#" class="boton-cerrar" onclick="hidde_tabVar()">×</a>
             <table class="menu table text-white">
@@ -118,7 +122,7 @@
             </table>
         </div>
 		<div id="contenedor" class="mx-auto">
-			<canvas id="canvas" width="5000" height="5000">Your navigator doesn't support canvas.</canvas>
+			<canvas id="canvas" width="3000" height="3000">Your navigator doesn't support canvas.</canvas>
 		</div>
 
 	</body>
