@@ -70,11 +70,15 @@ function run_code() {
 
 	for(let index in $array_functions){
 	    if(index !== 'main'){
+	    	let param_str = $array_functions[index]['param'].replace(/ /g, "");
+	    	$run_let_function_assings = param_str.split(",");
 	        run += 'function '+ index +'(' + $array_functions[index]['param'] + '){\n' +
                 run_arr($array_functions[index]['flow']) +
                 '}\n\n';
         }
     }
+
+	$run_let_function_assings = [];
 	run += run_arr($array_functions['main']['flow']) +
         '//alert($buffer_out);\n';
 	alert(run);

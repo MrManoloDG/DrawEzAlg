@@ -1,8 +1,10 @@
 var $debug_id = {'main': 0};
 var $debug_struct;
 var $debug_function = 'main';
+var $debug_function_name = '';
 var $debug_vars = [];
 var $debug_stack = new Stack();
+var $debug_var_stack = new Stack();
 
 function debug_init() {
     $debug_id = {'main': 0};
@@ -10,6 +12,7 @@ function debug_init() {
     $debug_function = 'main';
     $debug_vars = [];
     $debug_stack = new Stack();
+    $debug_var_stack = new Stack();
 }
 
 function debug_show_vars() {
@@ -18,7 +21,7 @@ function debug_show_vars() {
     for (let $i = 0; $i < $debug_vars.length ; $i++) {
         $('.var-tableBody').append('<tr><td>'+$debug_vars[$i]+'</td><td>'+eval($debug_vars[$i])+'</td>');
     }
-}
+   }
 function debug_uncol_prev_element(element) {
     $canvas.getLayer(element.parent + 'o' + ($debug_id[$debug_function] - 1)).strokeStyle = '#000';
 }
@@ -33,9 +36,20 @@ function debug_col_element(element){
     $canvas.getLayer(element.parent + 'o' + $debug_id[$debug_function]).strokeStyle = '#150fff';
 }
 
+function debug_getFunctionName(e) {
+    for(let index in $array_functions){
+        if(e.parent.indexOf(index) === 0 && index !== $debug_function_name){
+            $debug_function_name = index;
+            return true;
+        }
+    }
+    return false;
+}
+
 function debug_next_step() {
     if($debug_id[$debug_function] < $debug_struct.length){
         let element = $debug_struct[$debug_id[$debug_function]];
+        debug_getFunctionName(element);
         let str = '';
         debug_col_element(element);
         switch(element.type){
@@ -51,6 +65,7 @@ function debug_next_step() {
             case 'assign':
                 $debug_id[$debug_function] += 1;
                 str += debug_assign(element);
+                alert(str);
                 eval(str);
                 break;
 
@@ -83,7 +98,6 @@ function debug_next_step() {
             $debug_stack.pop();
             delete $debug_id[$debug_function];
             let stack_peek = $debug_stack.peek();
-            console.log(stack_peek);
             $debug_function = stack_peek[0];
             $debug_struct = stack_peek[1];
             //next step to debug of before struct
@@ -147,10 +161,10 @@ function debug_for(e) {
 function debug_assign(e) {
     let str = '';
     for(let index in e.list){
-        str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
         if($debug_vars.indexOf(e.list[index][0]) === -1){
             $debug_vars.push(e.list[index][0]);
         }
+        str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
     }
 
     return str;
@@ -178,10 +192,47 @@ function debug_in(e) {
 function debug_exe_function(e) {
     let str = '';
     str += 'function '+ e.name +'('+$array_functions[e.name]['param']+'){';
+
+    let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
+    $run_let_function_assings = param_str.split(",");
+
     str += run_arr($array_functions[e.name]['flow']);
     str += '}\n';
     str += e.name + '('+e.param+')';
     return str;
+}
+
+function debug_pushVarStack(){
+    let vars_stack = {};
+    for (let i = 0; i < $debug_vars.length; i++) {
+        vars_stack[$debug_vars[i]] = eval($debug_vars[$i]);
+    }
+    $debug_var_stack.push(vars_stack);
+}
+
+function debug_function(e){
+    let str;
+    debug_pushVarStack();
+    let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
+    let fun_params = param_str.split(",");
+
+    let call_pstr = e.param.replace(/ /g, "");
+    let call_params = call_pstr.split(",");
+
+    if(fun_params.length === call_params.length){
+        for (let i = 0; i < fun_params.length ; i++) {
+            eval(fun_params[i] + ' = ' + call_params[i] + ';');
+        }
+    }
+
+    for (let i = 0; i < $debug_vars.length; i++) {
+        if(fun_params.indexOf($debug_vars[i]) === -1){
+            eval('delete ' + $debug_vars + ';');
+        }
+    }
+
+    $debug_vars = fun_params;
+
 }
 
 

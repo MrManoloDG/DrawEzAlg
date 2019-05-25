@@ -1,3 +1,5 @@
+var $run_let_function_assings = [];
+
 function run_arr(arr) {
     let str = '';
     let input_then = 0;
@@ -75,6 +77,10 @@ function run_for(e) {
 function run_assign(e) {
     let str = '';
     for(let index in e.list){
+        if($run_let_function_assings.indexOf(e.list[index][0]) === -1){
+            str += 'let ';
+            $run_let_function_assings.push(e.list[index][0]);
+        }
         str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
     }
     return str;
