@@ -1,7 +1,7 @@
 {
   "name": "drawezalg",
   "version": "1.0.0",
-  "description": "TFG",
+  "description": "Editor, Interprete y Depurador de Diagramas de Flujo",
   "main": "./index.js",
   "dependencies": {
     "file-saver": "^2.0.1",
