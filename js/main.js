@@ -40,11 +40,18 @@ function zoom_in(){
 	$canvas.scaleCanvas({
 		scale: 1.2
 	});
+	refrescar($canvas).then(function () {
+		dibujar($canvas);
+	});
+
 }
 
 function zoom_out(){
 	$canvas.scaleCanvas({
 		scale: 0.8
+	});
+	refrescar($canvas).then(function () {
+		dibujar($canvas);
 	});
 }
 
