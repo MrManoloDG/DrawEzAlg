@@ -1,5 +1,5 @@
 {
-  "name": "drawezcode",
+  "name": "drawezalg",
   "version": "1.0.0",
   "description": "TFG",
   "main": "./index.js",
@@ -54,7 +54,7 @@
           ]
         }
       ],
-      "icon": "build/icon.ico"
+      "icon": "build/lin.png"
     }
   }
 }

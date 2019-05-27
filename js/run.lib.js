@@ -1,3 +1,5 @@
+var $run_let_function_assings = [];
+
 function run_arr(arr) {
     let str = '';
     let input_then = 0;
@@ -35,7 +37,9 @@ function run_arr(arr) {
                 str += 'Promise.all($promesas).then( () =>{\n';
                 n_promiseAll++;
                 break;
-
+            case 'function':
+                str += run_function(element) + '\n';
+                break;
         }
     });
     for (let i = 0; i < n_promiseAll; i++) {
@@ -62,8 +66,8 @@ function run_while(e) {
 }
 
 function run_for(e) {
-    let str = 'for( let ' + e.variable + '=' + e.initialization + ';' +
-        ' ' + e.condition + ';' +
+    let str = 'for( let ' + e.variable + '=' + e.initialization + '; ' +
+        e.variable + ' <= ' + e.condition + ';' +
         ' ' + e.incremental + '){\n';
     str +=  run_arr(e.loop);
     str += '}\n';
@@ -73,7 +77,11 @@ function run_for(e) {
 function run_assign(e) {
     let str = '';
     for(let index in e.list){
-        str += e.list[index][0] + ' = ' + e.list[index][1] + ';\n';
+        if($run_let_function_assings.indexOf(e.list[index][0]) === -1){
+            str += 'let ';
+            $run_let_function_assings.push(e.list[index][0]);
+        }
+        str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
     }
     return str;
 }
@@ -89,6 +97,13 @@ function run_out(e) {
 function run_in(e) {
     let str = '$promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
         'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);';
+    return str;
+}
+
+function run_function(e) {
+    let str = '';
+    if(e.solution !== "") str += e.solution + ' = ';
+    str += e.name + '(' + e.param + ');\n';
     return str;
 }
 
