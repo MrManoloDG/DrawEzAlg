@@ -1,9 +1,0 @@
-version: 1.0.0
-files:
-  - url: drawezcode-1.0.0-x86_64.AppImage
-    sha512: oVjQK3Wkl43MsehHGJX3ANXw9v4lXYLf/Pu96aVEBdwWbzUcnb74kCOb2I5x5mqsY+oOilOIYWy90COMY2xDcA==
-    size: 90054851
-    blockMapSize: 92679
-path: drawezcode-1.0.0-x86_64.AppImage
-sha512: oVjQK3Wkl43MsehHGJX3ANXw9v4lXYLf/Pu96aVEBdwWbzUcnb74kCOb2I5x5mqsY+oOilOIYWy90COMY2xDcA==
-releaseDate: '2019-04-25T18:09:32.429Z'
