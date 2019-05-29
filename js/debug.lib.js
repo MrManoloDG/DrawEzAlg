@@ -15,6 +15,8 @@ function debug_init() {
     $debug_var_stack = new Stack();
 
     $('.var-tableBody').empty();
+    $('#run_step').prop("disabled", false);
+    $('#run_step_inFunction').prop("disabled", false);
     refrescar($canvas).then(function () {
         dibujar($canvas);
     });
@@ -39,6 +41,7 @@ function debug_col_element(element,change_f){
             $canvas.getLayer($debug_function).strokeStyle = '#000';
         }
         $canvas.getLayer(element.parent + 'o' + $debug_id[$debug_function]).strokeStyle = '#150fff';
+        $canvas.drawLayers();
 
         resolve();
     });
@@ -73,10 +76,23 @@ function debug_next_step(b) {
     } else {
         debug_uncol_prev_element($debug_struct[$debug_id[$debug_function]-1]);
         if($debug_function.indexOf($debug_function_name) < 0 && $debug_function_name !== 'main'){
+            let ioparam_str = $array_functions[$debug_function_name]['ioparam'].replace(/ /g, "");
+            let ioparam = ioparam_str.split(",");
+            let iosvar = {};
             for (let i = 0; i < $debug_vars.length; i++) {
-                eval('delete ' + $debug_vars + ';');
+                let var_str = $debug_vars[i].replace(/ /g, "");
+                let var_check = ioparam.indexOf(var_str);
+                if(var_check >= 0){
+                    iosvar[var_str] = eval(var_str);
+                }
+                eval('delete ' + $debug_vars[i] + ';');
             }
             debug_popVarStack();
+            if($array_functions[$debug_function_name]['type'] === 'procedure' && ioparam_str !== ''){
+                for(let index in iosvar ){
+                    eval(index + ' = ' + iosvar[index] + ';\n');
+                }
+            }
         }
         console.log($debug_function);
         console.log($debug_function_name);
@@ -223,14 +239,41 @@ function debug_in(e) {
 
 function debug_exe_function(e) {
     let str = '';
-    str += 'function '+ e.name +'('+$array_functions[e.name]['param']+'){';
 
     let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
     $run_let_function_assings = param_str.split(",");
+    let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
+    let ioparam = ioparam_str.split(",");
+    let parameters = ($array_functions[e.name]['type'] === 'procedure')? $array_functions[e.name]['param'] + ', $ioarr' : $array_functions[e.name]['param'];
+    str += 'function '+ e.name +'(' + parameters + '){\n' +
+        run_arr($array_functions[e.name]['flow']);
 
-    str += run_arr($array_functions[e.name]['flow']);
-    str += '}\n';
-    str += e.name + '('+e.param+')';
+    if($array_functions[e.name]['type'] === 'procedure' && ioparam_str !== ''){
+        for(let i = 0; i < ioparam.length; i++){
+            str += '$ioarr[\'' + ioparam[i] + '\'] = ' + ioparam[i] + ';\n';
+        }
+    }
+    str += '}\n\n';
+
+    if($array_functions[e.name]['type'] === 'procedure'){
+        str += 'let $ioarr = {};\n';
+    }
+
+    parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', $ioarr') : e.param;
+    str += e.name + '(' + parameters + ');\n';
+    if($array_functions[e.name]['type'] === 'procedure'){
+        let param = param_str.split(",");
+        let call_param_str = e.param.replace(/ /g, "");
+        let call_param = call_param_str.split(",");
+        if(ioparam_str !== ''){
+            for(let i=0; i<ioparam.length; i++){
+                let index = param.indexOf(ioparam[i]);
+                str += call_param[index] + ' = $ioarr[\'' + ioparam[i] +'\'];\n';
+            }
+        }
+    }
+
+    str += 'delete $ioarr;\n';
     return str;
 }
 

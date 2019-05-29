@@ -71,6 +71,11 @@ function debug_step(b) {
 	if($debug_id['main'] === 0 ){
 		$debug_struct = $array_main;
 		$debug_stack.push(['main', $array_main]);
+		if(b){
+			$('#run_step').prop("disabled", true);
+		}else {
+			$('#run_step_inFunction').prop("disabled", true);
+		}
 	}
 	debug_next_step(b);
 }
@@ -84,9 +89,18 @@ function run_code() {
 	    if(index !== 'main'){
 	    	let param_str = $array_functions[index]['param'].replace(/ /g, "");
 	    	$run_let_function_assings = param_str.split(",");
-	        run += 'function '+ index +'(' + $array_functions[index]['param'] + '){\n' +
-                run_arr($array_functions[index]['flow']) +
-                '}\n\n';
+			let ioparam_str = $array_functions[index]['ioparam'].replace(/ /g, "");
+			let ioparam = ioparam_str.split(",");
+			let parameters = ($array_functions[index]['type'] === 'procedure')? $array_functions[index]['param'] + ', $ioarr' : $array_functions[index]['param'];
+	        run += 'function '+ index +'(' + parameters + '){\n' +
+                run_arr($array_functions[index]['flow']);
+
+			if($array_functions[index]['type'] === 'procedure' && ioparam_str !== ''){
+				for(let i = 0; i < ioparam.length; i++){
+					run += '$ioarr[\'' + ioparam[i] + '\'] = ' + ioparam[i] + ';\n';
+				}
+			}
+			run += '}\n\n';
         }
     }
 
@@ -156,6 +170,9 @@ function getAsText(readFile) {
 					$array_functions[index] = {};
 					$array_functions[index]['param'] = json[index]['param'];
 					$array_functions[index]['flow'] = [];
+					$array_functions[index]['type'] = json[index]['type'];
+					$array_functions[index]['ioparam'] = json[index]['ioparam'];
+					$array_functions[index]['desc'] = json[index]['desc'];
 					if(index !== 'main') $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ index+'" onclick="change_function(\''+ index +'\')"><a class="nav-link">'+ index +'</a></li>');
 					console.log(index);
 					console.log(json);
@@ -201,9 +218,13 @@ function change_language(lang){
 
 $(document).ready(function() {
     $array_functions['main']={};
-    $array_functions['main']['param']=$array_main;
+    $array_functions['main']['param'] = $array_main;
 	$array_functions['main']['flow']=[];
-	let ln = x=window.navigator.language||navigator.browserLanguage;
+	$array_functions['main']['type'] = '';
+	$array_functions['main']['ioparam'] = '';
+	$array_functions['main']['desc'] = '';
+
+	let ln = window.navigator.language||navigator.browserLanguage;
 
 	change_language(ln);
 

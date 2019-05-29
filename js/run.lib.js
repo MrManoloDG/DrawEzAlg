@@ -88,7 +88,7 @@ function run_assign(e) {
 
 function run_out(e) {
     //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
-    let str = 'alert( ' + e.buffer_out +')';
+    let str = 'alert( ' + e.buffer_out +');';
     return str;
 }
 
@@ -103,7 +103,28 @@ function run_in(e) {
 function run_function(e) {
     let str = '';
     if(e.solution !== "") str += e.solution + ' = ';
-    str += e.name + '(' + e.param + ');\n';
+    let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', $ioarr') : e.param;
+    str += e.name + '(' + parameters + ');\n';
+
+    if($array_functions[e.name]['type'] === 'procedure'){
+        str = 'let $ioarr = {};\n' + str;
+
+        let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
+        let param = param_str.split(",");
+        let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
+        let ioparam = ioparam_str.split(",");
+        let call_param_str = e.param.replace(/ /g, "");
+        let call_param = call_param_str.split(",");
+
+        if(ioparam_str !== ''){
+            for(let i=0; i<ioparam.length; i++){
+                let index = param.indexOf(ioparam[i]);
+                str += call_param[index] + ' = $ioarr[\'' + ioparam[i] +'\'];\n';
+            }
+        }
+
+        str += 'delete $ioarr;\n';
+    }
     return str;
 }
 

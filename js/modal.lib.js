@@ -114,7 +114,7 @@ function modal_code() {
 
 function modal_config_function(name){
     let o = $array_functions[name];
-    $('.modal-title').text($lang['function']);
+    $('.modal-title').text($lang['subprogram']);
     $('.modal-body').load('modals/config_function_modal.html',function(){
         $('#name-label').text($lang['name']);
         $('#name').val(name);
@@ -124,13 +124,39 @@ function modal_config_function(name){
         $('#param').val(name ==='' ? '' : o['param']);
         $('#param').attr("placeholder", $lang['param-placeholder']);
 
-        $('#delete-fun').text($lang['delete']);
+        $('#function-check-lbl').text($lang['function']);
+        $('#procedure-check-lbl').text($lang['procedure']);
+
+        $('#param_io-label').text($lang['ioparam']);
+        $('#param_io').attr("Placeholder", $lang['param-placeholder']);
+
+        $('#desc-lbl').text($lang['desc']);
+
+
+        if(name !== ''){
+            $('#' + o['type'] + '-check').prop('checked', true);
+            if(o['type'] === 'procedure')$('#param_io').prop( "disabled", false );
+            $('#param_io').val(o['ioparam']);
+            $('#desc').val(o['desc']);
+        }
 
         $('#save').removeClass("d-none");
         $('#delete').removeClass("d-none");
         let check = name + Date.now();
         $('#oID').val(check);
         $('#myModal').modal({show:true});
+
+        $('input:radio[name=typecheck]').change(function () {
+            switch($('input:radio[name=typecheck]:checked').val()) {
+                case 'procedure':
+                    $('#param_io').prop( "disabled", false );
+                    break;
+                case 'function':
+                    $('#param_io').prop( "disabled", true );
+                    break;
+            }
+        });
+
         $('#delete').click(function () {
             if($('#oID').val() === check){
                 change_function('main');
@@ -138,6 +164,7 @@ function modal_config_function(name){
                 delete $array_functions[name];
             }
         });
+
         $('#save').click(function () {
             if($('#oID').val() === check){
                 console.log(o);
@@ -145,12 +172,19 @@ function modal_config_function(name){
                     $array_functions[$('#name').val()] = {};
                     $array_functions[$('#name').val()]['param'] =  $('#param').val();
                     $array_functions[$('#name').val()]['flow'] = [];
+                    $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
+                    $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
+                    $array_functions[$('#name').val()]['desc'] = $('#desc').val();
                     $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
 
                 }else{
                     if(name !== $('#name').val()){
                         $array_functions[$('#name').val()] = {};
+                        $array_functions[$('#name').val()]['param'] =  $('#param').val();
                         $array_functions[$('#name').val()]['flow'] = $array_functions[name]['flow'];
+                        $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
+                        $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
+                        $array_functions[$('#name').val()]['desc'] = $('#desc').val();
                         delete $array_functions[name];
                         $('.'+name).addClass($('#name').val());
                         $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\')");
@@ -158,6 +192,9 @@ function modal_config_function(name){
                         $('.'+name).removeClass(name);
                         name = $('#name').val();
                     }
+                    $array_functions[name]['type'] = $('input:radio[name=typecheck]:checked').val();
+                    $array_functions[name]['ioparam'] = $('#param_io').val();
+                    $array_functions[name]['desc'] = $('#desc').val();
                     $array_functions[name]['param'] = $('#param').val();
                 }
             }
