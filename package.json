@@ -4,7 +4,6 @@
   "description": "Editor, Interprete y Depurador de Diagramas de Flujo",
   "main": "./index.js",
   "dependencies": {
-    "file-saver": "^2.0.1",
     "jcanvas": "15.2.7",
     "jsdom": "^13.2.0",
     "pretty-bytes": "^2.0.1",

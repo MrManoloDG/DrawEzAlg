@@ -8,6 +8,7 @@ var $active_fun = 'main';
 var $active = null;
 var $canvas;
 var $lang;
+var $file_path = '';
 
 
 
@@ -124,12 +125,31 @@ function code() {
 }
 
 function save(){
-	let FileSaver = require('file-saver');
 	let json = JSON.stringify($array_functions);
-	console.log(json);
-	let blob = new Blob([json], {type: "text/plain;charset=utf-8"});
-	let date = new Date();
-	FileSaver.saveAs(blob, "draw"+date.getTime()+".json");
+	let $fs = require('fs');
+	if($file_path === ''){
+		let { dialog,app} = require('electron').remote;
+		let options = {
+			defaultPath: app.getPath('documents') + '/draw.json',
+		};
+		dialog.showSaveDialog(null, options, (path) => {
+			$file_path = path;
+			let arrfile = path.split("/");
+			let filename = arrfile[arrfile.length -1];
+
+			$('title').text("DrawEzAlg - " + filename );
+			try {
+				$fs.writeFileSync(path , json, 'utf-8');
+			}
+			catch(e) {new Error(e.message); }
+		});
+	}
+	else{
+		try { $fs.writeFileSync($file_path , json, 'utf-8'); }
+		catch(e) {new Error(e.message); }
+	}
+
+
 }
 
 
@@ -157,6 +177,9 @@ function getAsText(readFile) {
 		return function(e) {
 			let extension = theFile.name.split(".")[1];
 			if( extension === "json" || extension === "JSON"){
+				$file_path = theFile.path;
+				$('title').text("DrawEzAlg - " + theFile.name );
+
 				let json = JSON.parse(e.target.result);
 
 				$array_functions={};
