@@ -144,8 +144,12 @@ function draw_line(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 		x1: x1, y1: y1,
 		x2: x2, y2: y2,
 		mouseover: function(layer) {
-	    $(this).css('cursor','copy');
-	  },
+			$(this).css('cursor','copy');
+			layer.strokeStyle = '#FFEB3B'
+	  	},
+		mouseout: function(layer) {
+			layer.strokeStyle = '#000';
+		},
 		click: function (layer) {
 
 			switch($active){
@@ -314,34 +318,28 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 function draw_assign(x,y,i,canvas, o,parent_arr) {
 	y+=canvas.measureText('inicio').width;
 	let text = "";
-	let n_lineas = 1;
-	for(let index  in  o.list){
-		text += o.list[index][0] + " <- " + o.list[index][1] + "\n";
-		n_lineas += 5;
-	}
-	text = text.slice(0,-1);
+	text += o.variable + " <- " + o.value ;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
-		x: x, y:  y - canvas.measureText('inicio').width/2 + n_lineas,
+		x: x, y:  y - canvas.measureText('inicio').width/2,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: text === "" ? $lang['assign'] : text
+		text: text === " <- " ? $lang['assign'] : text
 	}).drawRect({
 		layer:true,
 		strokeStyle: '#000',
 		strokeWidth: 2,
 		name: o.parent+'o'+i,
-		fromCenter: false,
-		x: x - canvas.measureText(o.parent+'t'+i).width/2 - 15 , y: y + 5 - canvas.measureText('inicio').width,
+		fromCenter: true,
+		x: x  , y: y - canvas.measureText('inicio').width/2,
 		width: (canvas.measureText(o.parent+'t'+i).width + 30),
-		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
+		height:  canvas.measureText(o.parent+'t'+i).height + 15 ,
 		click: function(layer) {
-			alert("Click on: Assing" + layer.name);
+			//alert("Click on: Assing" + layer.name);
 			modal_assign(o,layer,canvas,parent_arr,i);
-
 		}
 	});
 

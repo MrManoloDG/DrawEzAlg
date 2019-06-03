@@ -60,9 +60,10 @@ function load_for(e,o) {
 }
 
 function load_assign(e,o) {
-    for(let index in e.list){
-        o.list[index] = e.list[index];
-    }
+
+    o.variable = e.variable;
+    o.value = e.value;
+
 }
 
 function load_out(e,o) {

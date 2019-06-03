@@ -5,6 +5,7 @@
   "main": "./index.js",
   "dependencies": {
     "jcanvas": "15.2.7",
+    "jquery-resizable": "^1.0.6",
     "jsdom": "^13.2.0",
     "pretty-bytes": "^2.0.1",
     "smalltalk": "^3.3.0"

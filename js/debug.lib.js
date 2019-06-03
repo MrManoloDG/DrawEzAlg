@@ -5,6 +5,7 @@ var $debug_function_name = 'main';
 var $debug_vars = [];
 var $debug_stack = new Stack();
 var $debug_var_stack = new Stack();
+var $debug_assign_back = '';
 
 function debug_init() {
     $debug_id = {'main': 0};
@@ -23,11 +24,15 @@ function debug_init() {
 }
 
 function debug_show_vars() {
-    show_tabVar();
-    $('.var-tableBody').empty();
-    for (let $i = 0; $i < $debug_vars.length ; $i++) {
-        $('.var-tableBody').append('<tr><td>'+$debug_vars[$i]+'</td><td>'+eval($debug_vars[$i])+'</td>');
-    }
+    return new Promise(function (resolve) {
+        show_tabVar();
+        $('.var-tableBody').empty();
+        for (let $i = 0; $i < $debug_vars.length ; $i++) {
+            $('.var-tableBody').append('<tr><td>'+$debug_vars[$i]+'</td><td>'+eval($debug_vars[$i])+'</td>');
+        }
+
+        resolve();
+    });
    }
 function debug_uncol_prev_element(element) {
     $canvas.getLayer(element.parent + 'o' + ($debug_id[$debug_function] - 1)).strokeStyle = '#000';
@@ -38,6 +43,7 @@ function debug_col_element(element,change_f){
         if($debug_id[$debug_function] > 0 && !change_f){
             debug_uncol_prev_element(element);
         }else if($debug_function !== 'main' && !change_f){
+            console.log($debug_function);
             $canvas.getLayer($debug_function).strokeStyle = '#000';
         }
         $canvas.getLayer(element.parent + 'o' + $debug_id[$debug_function]).strokeStyle = '#150fff';
@@ -79,6 +85,12 @@ function debug_next_step(b) {
             let ioparam_str = $array_functions[$debug_function_name]['ioparam'].replace(/ /g, "");
             let ioparam = ioparam_str.split(",");
             let iosvar = {};
+            if($array_functions[$debug_function_name]['type'] === 'function' && $debug_assign_back !== ''){
+                let variable_back = $debug_assign_back.replace(/ /g, "");
+                variable_back = variable_back.split("=");
+                iosvar[variable_back[0]] = eval('sol');
+                console.log($debug_vars);
+            }
             for (let i = 0; i < $debug_vars.length; i++) {
                 let var_str = $debug_vars[i].replace(/ /g, "");
                 let var_check = ioparam.indexOf(var_str);
@@ -88,14 +100,21 @@ function debug_next_step(b) {
                 eval('delete ' + $debug_vars[i] + ';');
             }
             debug_popVarStack();
+
+            if($array_functions[$debug_function_name]['type'] === 'function' && $debug_assign_back !== ''){
+                for(let index in iosvar ){
+                    console.log($debug_function);
+                    console.log($debug_function_name);
+                    eval(index + ' = ' + iosvar[index] + ';\n');
+                }
+            }
             if($array_functions[$debug_function_name]['type'] === 'procedure' && ioparam_str !== ''){
                 for(let index in iosvar ){
                     eval(index + ' = ' + iosvar[index] + ';\n');
                 }
             }
         }
-        console.log($debug_function);
-        console.log($debug_function_name);
+
         if($debug_function !== $debug_function_name){
             $debug_stack.pop();
             delete $debug_id[$debug_function];
@@ -124,7 +143,12 @@ function debug_struct(element,b){
 
         case 'assign':
             $debug_id[$debug_function] += 1;
-            str += debug_assign(element);
+            if(b){
+                debug_assign_fun_step(element);
+            }else{
+
+                str += debug_assign(element);
+            }
             eval(str);
             break;
 
@@ -206,21 +230,59 @@ function debug_for(e) {
     }
 }
 
+function debug_assign_fun_step(e) {
+    let sum_ind = true;
+
+    if($debug_vars.indexOf(e.variable) === -1){
+        $debug_vars.push(e.variable);
+    }
+    let haveFunction = false;
+    let func;
+    for(let nameFun in $array_functions){
+        let posfun = e.value.indexOf(nameFun+'(');
+        if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && posfun >= 0){
+            func = new Function_Struct(e.parent);
+            func.name = nameFun;
+            let initc = posfun + (nameFun+'(').length;
+            let longc  = e.value.indexOf(')', posfun) - initc ;
+            func.param = e.value.substr(initc, longc);
+            haveFunction = true;
+            sum_ind = false;
+            $debug_assign_back = e.variable + ' = ' + e.value;
+        }
+    }
+    if(!haveFunction) eval(e.variable + ' = ' + math_lib_check(e.value) + ';\n');
+    else{
+        eval(e.variable + ' = undefined' );
+        debug_show_vars().then( () => {
+            console.log(func);
+            debug_function(func);
+        });
+    }
+
+}
+
 function debug_assign(e) {
     let str = '';
-    for(let index in e.list){
-        if($debug_vars.indexOf(e.list[index][0]) === -1){
-            $debug_vars.push(e.list[index][0]);
-        }
-        str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
+
+    if($debug_vars.indexOf(e.variable) === -1){
+        $debug_vars.push(e.variable);
     }
+    for(let nameFun in $array_functions){
+        if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
+            str += 'function '+ nameFun +'(' + $array_functions[nameFun]['param'] + '){\n' +
+                run_arr($array_functions[nameFun]['flow'])
+                + 'return sol; \n}\n';
+        }
+    }
+    str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
 
     return str;
 }
 
 function debug_out(e) {
     //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
-    let str = 'alert( ' + e.buffer_out + ');';
+    let str = '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
     return str;
 }
 
@@ -287,13 +349,14 @@ function debug_pushVarStack(){
 
 function debug_popVarStack(){
     let pop = $debug_var_stack.pop();
+    $debug_vars = [];
     for(let index in pop){
+        $debug_vars.push(index);
         eval(index + ' = ' + pop[index]);
     }
 }
 
 function debug_function(e){
-    let str;
     debug_pushVarStack();
     let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
     let fun_params = param_str.split(",");

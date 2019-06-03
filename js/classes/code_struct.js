@@ -51,7 +51,8 @@ class For_Struct extends While_Struct{
 class Assign_Struct extends Code_Struct{
 	constructor(parent){
 		super('assign', parent);
-		this.list = [];
+		this.variable = '';
+		this.value = '';
 	}
 	draw(x,y,i,canvas,parent_arr) {
 		draw_assign(x,y,i,canvas, this,parent_arr);

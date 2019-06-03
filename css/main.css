@@ -63,7 +63,7 @@
 	}
 
 	to {
-		border: #e0ff30 2px solid;
+		border: #FFEB3B 2px solid;
 	}
 }
 
@@ -87,7 +87,18 @@
 	background-color: #150fff;
 }
 
-
+#outputShow {
+	position: fixed;
+	height: 20%;
+	width: 30%;
+	bottom: 3%;
+	right: 2%;
+	z-index: 1;
+	overflow: auto;
+	transition: 0.4s;
+	box-sizing:border-box;
+	border-radius: 4px;
+}
 
 
 .sidebar {

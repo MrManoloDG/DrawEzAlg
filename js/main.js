@@ -70,6 +70,7 @@ function debug_step(b) {
 
 
 	if($debug_id['main'] === 0 ){
+		$('#outputShow p').html("");
 		$debug_struct = $array_main;
 		$debug_stack.push(['main', $array_main]);
 		if(b){
@@ -82,9 +83,9 @@ function debug_step(b) {
 }
 
 function run_code() {
+	$('#outputShow p').html("");
 	let $new_line = "\n";
-	let run = 'let $buffer_out = "";\n' +
-		'let $promesas = [];\n\n';
+	let run = 'let $promesas = [];\n\n';
 
 	for(let index in $array_functions){
 	    if(index !== 'main'){
@@ -101,14 +102,16 @@ function run_code() {
 					run += '$ioarr[\'' + ioparam[i] + '\'] = ' + ioparam[i] + ';\n';
 				}
 			}
+			if($array_functions[index]['type'] === 'function'){
+				run += 'return sol;\n';
+			}
+
 			run += '}\n\n';
         }
     }
 
 	$run_let_function_assings = [];
-	run += run_arr($array_functions['main']['flow']) +
-        '//alert($buffer_out);\n';
-	alert(run);
+	run += run_arr($array_functions['main']['flow']);
     try {
 			eval(run);
     }
@@ -256,6 +259,7 @@ $(document).ready(function() {
 	let JCanvas = require( './js/jcanvas.js' );
 	JCanvas( $, window);
 
+	$('#outputShow').resizable();
 
 	let width = window.innerWidth - 20; // ancho
 	let height = window.innerHeight - $('#buttons').height() - 5; // alto

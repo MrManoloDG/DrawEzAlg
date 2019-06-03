@@ -208,44 +208,18 @@ function modal_assign(o, layer, canvas, parent_arr, i) {
         let check = layer.name + Date.now();
         $('#oID').val(check);
 
-        let j_load = 0;
-        for(let index  in  o.list){
-            $('.list').append(
-                '<div class="form-group row">\n' +
-                '            <div class="col-sm-5">\n' +
-                '                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="'+ $lang['variable'] +'" value="'+o.list[index][0]+'">\n' +
-                '            </div>\n' +
-                '            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
-                '            <div class="col-sm-6">\n' +
-                '                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="'+ $lang['assign'] +'" value="'+o.list[index][1]+'">\n' +
-                '            </div>\n' +
-                '        </div>'
-            );
-            j_load++;
-        }
+        $('#variable').val(o.variable);
+        $('#variable').attr("placeholder", $lang['variable']);
 
-        for (let j = 0; j < o.list.length ; j++) {
 
-        }
+        $('#value').val(o.value);
+        $('#value').attr("placeholder", $lang['assign']);
+
+
         $('#save').removeClass("d-none");
         $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
-        $('#asing_add').click(function () {
-            if($('#oID').val() === check){
-                $('.list').append(
-                    '<div class="form-group row">\n' +
-                    '            <div class="col-sm-5">\n' +
-                    '                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="' + $lang['variable'] + '">\n' +
-                    '            </div>\n' +
-                    '            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
-                    '            <div class="col-sm-6">\n' +
-                    '                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="' + $lang['assign'] + '">\n' +
-                    '            </div>\n' +
-                    '        </div>'
-                );
-                j_load++;
-            }
-        });
+
         $('#delete').click(function () {
             if($('#oID').val() === check){
                 if(confirm($lang['delete-msg'])){
@@ -258,20 +232,8 @@ function modal_assign(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.list = [];
-                $('.list').find('.row').each(function() {
-                    let key;
-                    let val;
-                    $(this).find('input').each(function() {
-                        let id = $(this).attr('id').split("-");
-                        if(id[0] === 'value'){
-                            val = $(this).val();
-                        }else if(id[0] === 'key'){
-                            key = $(this).val();
-                        }
-                    });
-                    if(key !== "" && val !== "") o.list.push([key,val]);
-                });
+                o.variable = $('#variable').val();
+                o.value = $('#value').val();
                 refrescar(canvas).then(function () {
                     dibujar(canvas);
                 });

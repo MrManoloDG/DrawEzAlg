@@ -76,19 +76,19 @@ function run_for(e) {
 
 function run_assign(e) {
     let str = '';
-    for(let index in e.list){
-        if($run_let_function_assings.indexOf(e.list[index][0]) === -1){
-            str += 'let ';
-            $run_let_function_assings.push(e.list[index][0]);
-        }
-        str += e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';\n';
+
+    if($run_let_function_assings.indexOf(e.variable) === -1){
+        str += 'let ';
+        $run_let_function_assings.push(e.variable);
     }
+    str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
+
     return str;
 }
 
 function run_out(e) {
     //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
-    let str = 'alert( ' + e.buffer_out +');';
+    let str = '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
     return str;
 }
 

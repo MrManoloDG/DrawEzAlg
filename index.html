@@ -15,6 +15,8 @@
 
 		<!-- Jquery -->
 		<script>window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.js');</script>
+        <script src="./node_modules/jquery-resizable/resizable.js"></script>
+        <link rel="stylesheet" href="./node_modules/jquery-resizable/resizable.css">
 
 		<!-- Popper.js -->
 		<script src="./lib/bootstrap/js/popper.js"></script>
@@ -118,6 +120,9 @@
                 </tbody>
             </table>
         </div>
+		<div id="outputShow" class="bg-dark p-4">
+			<p class="text-white"></p>
+		</div>
 		<div id="contenedor" class="mx-auto">
 			<canvas id="canvas" width="3000" height="3000">Your navigator doesn't support canvas.</canvas>
 		</div>
