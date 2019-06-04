@@ -224,9 +224,10 @@
 	border-radius: 6px 0 6px 6px;
 }
 
-/*
+
 ::-webkit-scrollbar {
-	width: 12px;
+	width: 10px;
+	height: 10px;
 }
 ::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
@@ -236,4 +237,4 @@
 	border-radius: 10px;
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
-*/
+
