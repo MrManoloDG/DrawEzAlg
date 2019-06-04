@@ -368,11 +368,11 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 		closed:true,
 		p1: {
 			type: 'line',
-			x1: x - width/2, y1: y - height,
-			x2: x + width, y2: y - height,
-			x3: x + width/2, y3: y + height,
-			x4: x - width, y4: y + height,
-			x5: x - width/2, y5: y - height,
+			x1: x - width, y1: y + height,
+			x2: x - width, y2: y - height/2 + 5,
+			x3: x + width, y3: y - height,
+			x4: x + width, y4: y + height,
+			x5: x - width, y5: y + height,
 		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
@@ -405,18 +405,17 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 		closed:false,
 		p1: {
 			type: 'line',
-			x1: x - width, y1: y + height,
-			x2: x - width, y2: y - height,
-			x3: x + width, y3: y - height,
-			x4: x + width, y4: y + height
+			x1: x + width/2, y1: y + height,
+			x2: x - width/2, y2: y + height,
+			x3: x - width, y3: y,
+			x4: x - width/2, y4: y - height,
+			x5: x + width/2, y5: y - height
 		},
 		p2:	{
-			type: 'quadratic',
-			x1: x + width, y1: y + height,
-			cx1: x + width/2, cy1: y + height - 20,
-			x2: x, y2: y + height,
-			cx2: x - width/2, cy2: y + height + 20,
-			x3: x - width, y3: y + height
+			type: 'arc',
+			x: x + width/2, y: y,
+			start: 0, end: 180,
+			radius: height
 		},
 		click: function(layer) {
 			//alert("Click on: escritura " + layer.name);
@@ -440,28 +439,35 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
-	canvas.drawPath({
-		layer: true,
-		name: o.parent+'o'+i,
+	canvas.drawRect({
+		layer:true,
 		strokeStyle: '#000',
 		strokeWidth: 2,
-		height: height*2,
-		closed:true,
-		p1: {
-			type: 'line',
-			x1: x - width/2, y1: y - height,
-			x2: x + width/2, y2: y - height,
-			x3: x + width/2 + 20, y3: y,
-			x4: x + width/2, y4: y + height,
-			x5: x - width/2, y5: y + height,
-			x6: x - width/2, y6: y - height,
-		},
+		name: o.parent+'o'+i,
+		fromCenter: true,
+		x: x  , y: y,
+		width: width*2,
+		height:  height*2,
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
 
 			modal_function(o,layer,canvas,parent_arr,i);
 
 		}
+	}).drawLine({
+		layer: true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent +i+'line1',
+		x1: x - width/2 - 10, y1: y - height,
+		x2: x - width/2 - 10, y2: y + height
+	}).drawLine({
+		layer: true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent +i+'line2',
+		x1: x + width/2 + 10, y1: y - height,
+		x2: x + width/2 + 10, y2: y + height
 	})
 }
 
