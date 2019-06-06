@@ -1,4 +1,5 @@
-var $textpx = 11;
+const $textpx = 11;
+const $y_desp = 40; 
 
 function get_mult_width_repeat(arr) {
 	let arr_if = [];
@@ -72,7 +73,7 @@ function dibujar(canvas) {
 	var x = 1500 ,y = 150;
 	// Draw text
 	draw_init(x,y,canvas);
-	y += canvas.measureText('inicio').width+5 / 2;
+	y += canvas.measureText('inicio').height*2 + 1;
 	draw_line(x,y,x,y+100,0,canvas,$array_main,true,$active_fun);
 	y += 100;
 	for (var i = 0; i < $array_main.length; i++) {
@@ -81,7 +82,7 @@ function dibujar(canvas) {
 		draw_line(x,y,x,y+100,i+1,canvas,$array_main,true,$active_fun);
 		y += 100;
 	}
-	y += canvas.measureText('inicio').width + 20 / 2;
+	y += canvas.measureText('inicio').height*2 + 5;
 	draw_end(x,y,canvas);
 	console.log("******** Dibujado Completo ********");
 }
@@ -95,17 +96,43 @@ function draw_init(x,y,canvas) {
 		x: x, y: y,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: $lang['start']
+		text: ($active_fun === 'main')? $lang['start'] : $active_fun + '(' + $array_functions[$active_fun]['param'] + ')'
 	})
 	// Draw circle as wide as the text
-	.drawArc({
+	.drawPath({
 		layer: true,
+		closed: false,
 		name: 'o_inicio',
 		strokeStyle: '#000',
 		strokeWidth: 2,
-		x: x, y: y,
-		radius: canvas.measureText('inicio').width+5 / 2
-	});
+		p1: {
+			type: 'arc',
+			x: x - canvas.measureText('inicio').width, y: y,
+			start: 180, end: 360,
+			radius: canvas.measureText('inicio').height*2
+		},
+		p2: {
+			type: 'line',
+			x1: x - canvas.measureText('inicio').width, y1: y + canvas.measureText('inicio').height*2,
+			x2: x + canvas.measureText('inicio').width, y2: y + canvas.measureText('inicio').height*2
+		},
+		p3: {
+			type: 'quadratic',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2
+		},
+		p4: {
+			type: 'arc',
+			x: x + canvas.measureText('inicio').width, y: y,
+			start: 0, end: 180,
+			radius: canvas.measureText('inicio').height*2,
+			closed: false,
+		},
+		p5: {
+			type: 'line',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2,
+			x2: x - canvas.measureText('inicio').width, y2: y - canvas.measureText('inicio').height*2
+		},
+	})
 }
 
 function draw_end(x,y,canvas) {
@@ -118,8 +145,42 @@ function draw_end(x,y,canvas) {
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['end']
+	}).drawPath({
+		layer: true,
+		closed: false,
+		name: 'o_fin',
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		p1: {
+			type: 'arc',
+			x: x - canvas.measureText('inicio').width, y: y,
+			start: 180, end: 360,
+			radius: canvas.measureText('inicio').height*2
+		},
+		p2: {
+			type: 'line',
+			x1: x - canvas.measureText('inicio').width, y1: y + canvas.measureText('inicio').height*2,
+			x2: x + canvas.measureText('inicio').width, y2: y + canvas.measureText('inicio').height*2
+		},
+		p3: {
+			type: 'quadratic',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2
+		},
+		p4: {
+			type: 'arc',
+			x: x + canvas.measureText('inicio').width, y: y,
+			start: 0, end: 180,
+			radius: canvas.measureText('inicio').height*2,
+			closed: false,
+		},
+		p5: {
+			type: 'line',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2,
+			x2: x - canvas.measureText('inicio').width, y2: y - canvas.measureText('inicio').height*2
+		},
 	})
 	// Draw circle as wide as the text
+	/*
 	.drawArc({
 		layer: true,
 		name: 'o_fin',
@@ -128,6 +189,7 @@ function draw_end(x,y,canvas) {
 		x: x, y: y,
 		radius: canvas.measureText('inicio').width+5 / 2
 	});
+	*/
 }
 
 
@@ -191,7 +253,7 @@ function draw_line(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 
 
 function draw_if(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -316,7 +378,8 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 }
 
 function draw_assign(x,y,i,canvas, o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	
+	y+=$y_desp;
 	let text = "";
 	text += o.variable + " <- " + o.value ;
 	canvas.drawText({
@@ -324,7 +387,7 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
-		x: x, y:  y - canvas.measureText('inicio').width/2,
+		x: x, y:  y - $y_desp/2,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: text === " <- " ? $lang['assign'] : text
@@ -334,7 +397,7 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 		strokeWidth: 2,
 		name: o.parent+'o'+i,
 		fromCenter: true,
-		x: x  , y: y - canvas.measureText('inicio').width/2,
+		x: x  , y: y - $y_desp/2,
 		width: (canvas.measureText(o.parent+'t'+i).width + 30),
 		height:  canvas.measureText(o.parent+'t'+i).height + 15 ,
 		click: function(layer) {
@@ -346,7 +409,7 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 }
 
 function draw_input(x,y,i,canvas, o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -383,7 +446,7 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 }
 
 function draw_output(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -426,7 +489,7 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 }
 
 function draw_function(x,y,i,canvas, o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -473,7 +536,7 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 
 
 function draw_while(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -567,7 +630,7 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 }
 
 function draw_for(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
