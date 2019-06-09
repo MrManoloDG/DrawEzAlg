@@ -3,6 +3,7 @@
   "start": "Start",
   "code": "Code",
   "end": "End",
+  "return": "Return",
   "if": "If",
   "while": "While",
   "for": "For",

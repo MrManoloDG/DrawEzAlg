@@ -136,6 +136,10 @@ function draw_init(x,y,canvas) {
 }
 
 function draw_end(x,y,canvas) {
+	let text = '';
+	if($active_fun !== 'main' && $array_functions[$active_fun]['type'] === 'function') text = $lang['return'] + " sol";
+	else text = $lang['end'];
+	
 	canvas.drawText({
 		layer: true,
 		name: 'fin',
@@ -144,7 +148,7 @@ function draw_end(x,y,canvas) {
 		x: x, y: y,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: $lang['end']
+		text: text
 	}).drawPath({
 		layer: true,
 		closed: false,
@@ -179,17 +183,7 @@ function draw_end(x,y,canvas) {
 			x2: x - canvas.measureText('inicio').width, y2: y - canvas.measureText('inicio').height*2
 		},
 	})
-	// Draw circle as wide as the text
-	/*
-	.drawArc({
-		layer: true,
-		name: 'o_fin',
-		strokeStyle: '#000',
-		strokeWidth: 2,
-		x: x, y: y,
-		radius: canvas.measureText('inicio').width+5 / 2
-	});
-	*/
+
 }
 
 
@@ -470,7 +464,7 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 			type: 'line',
 			x1: x + width/2, y1: y + height,
 			x2: x - width/2, y2: y + height,
-			x3: x - width, y3: y,
+			x3: x - ($y_desp + width/2), y3: y,
 			x4: x - width/2, y4: y - height,
 			x5: x + width/2, y5: y - height
 		},

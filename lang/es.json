@@ -3,6 +3,7 @@
   "start": "Inicio",
   "code": "Código",
   "end": "Fin",
+  "return": "Devolver",
   "if": "Si",
   "while": "Mientras",
   "for": "For",
