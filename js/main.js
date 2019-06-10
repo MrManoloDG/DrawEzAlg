@@ -69,17 +69,26 @@ function hidde_tabVar() {
 function debug_step(b) {
 
 
-	if($debug_id['main'] === 0 ){
+	if($debug_id['main'] === 0 || $debug_error){
+		
 		$('#outputShow p').html("");
 		$debug_struct = $array_main;
 		$debug_stack.push(['main', $array_main]);
+		$debug_error=false;
 		if(b){
 			$('#run_step').prop("disabled", true);
 		}else {
 			$('#run_step_inFunction').prop("disabled", true);
 		}
 	}
-	debug_next_step(b);
+	try {
+		debug_next_step(b);
+	}
+	catch(error) {
+		$('#outputShow p').html($('#outputShow p').html()  +'<span class=\'text-warning\'>Error: ' + error.message + '</span><br>');
+		// expected output: ReferenceError: nonExistentFunction is not defined
+		// Note - error messages will vary depending on browser
+	}
 }
 
 function run_code() {
@@ -116,8 +125,7 @@ function run_code() {
 			eval(run);
     }
     catch(error) {
-        alert(error);
-        console.error(error);
+        $('#outputShow p').html($('#outputShow p').html()  +'<span class=\'text-warning\'>Error: ' + error.message + '</span><br>');
         // expected output: ReferenceError: nonExistentFunction is not defined
         // Note - error messages will vary depending on browser
     }

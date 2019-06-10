@@ -6,6 +6,7 @@ var $debug_vars = [];
 var $debug_stack = new Stack();
 var $debug_var_stack = new Stack();
 var $debug_assign_back = '';
+var $debug_error = false;
 
 function debug_init() {
     $debug_id = {'main': 0};
@@ -14,6 +15,8 @@ function debug_init() {
     $debug_vars = [];
     $debug_stack = new Stack();
     $debug_var_stack = new Stack();
+    $debug_assign_back = '';
+    $debug_error = false;
 
     $('.var-tableBody').empty();
     $('#run_step').prop("disabled", false);
@@ -71,12 +74,30 @@ function debug_next_step(b) {
         if(change){
             change_function($debug_function_name).then(function () {
                 debug_col_element(element,change).then(function () {
-                    debug_struct(element,b);
+                    try {
+                        debug_struct(element,b);
+                    }
+                    catch(error) {
+                        $('#outputShow p').html($('#outputShow p').html()  +'<span class=\'text-warning\'>Error: ' + error.message + '</span><br>');
+                        $debug_error = true;
+                        debug_init();
+                        // expected output: ReferenceError: nonExistentFunction is not defined
+                        // Note - error messages will vary depending on browser
+                    }
                 });
             });
         }else{
             debug_col_element(element,change).then(function () {
-                debug_struct(element,b);
+                try {
+                    debug_struct(element,b);
+                }
+                catch(error) {
+                    $('#outputShow p').html($('#outputShow p').html()  +'<span class=\'text-warning\'>Error: ' + error.message + '</span><br>');
+                    $debug_error = true;
+                    debug_init();
+                    // expected output: ReferenceError: nonExistentFunction is not defined
+                    // Note - error messages will vary depending on browser
+                }
             });
         }
     } else {
