@@ -53,6 +53,8 @@
   "save": "Guardar",
   "cancel": "Cancelar",
   "close": "Cerrar",
+  "empty-input": "Campo Vacío",
+  "empty-input-text": "Hay algunos campos necesarios vacios",
   "info-table": {
     "operator-list": "Lista de operadores",
     "arithmetic-list": "Lista de operadores aritméticos",

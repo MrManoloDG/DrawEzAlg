@@ -97,9 +97,9 @@ function draw_init(x,y,canvas) {
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: ($active_fun === 'main')? $lang['start'] : $active_fun + '(' + $array_functions[$active_fun]['param'] + ')'
-	})
+	});
 	// Draw circle as wide as the text
-	.drawPath({
+	canvas.drawPath({
 		layer: true,
 		closed: false,
 		name: 'o_inicio',
@@ -131,6 +131,9 @@ function draw_init(x,y,canvas) {
 			type: 'line',
 			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2,
 			x2: x - canvas.measureText('inicio').width, y2: y - canvas.measureText('inicio').height*2
+		},
+		mouseover: function(layer) {
+			$(this).css('cursor', 'pointer');
 		},
 		click: function(layer){
 			modal_config_function($active_fun);

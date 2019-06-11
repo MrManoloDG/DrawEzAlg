@@ -1,3 +1,4 @@
+const $Swal = require('sweetalert2');
 
 function load_info() {
     $('.modal-title').text($lang['config']['info']);
@@ -116,7 +117,7 @@ function validate_form(){
     let validate = true;
     $('form .needed').each(function(){
         console.log($(this));
-        if($(this).val() === ''){
+        if($(this).val() === '' || $(this).val() === null){
             validate = false;
             $(this).addClass("border border-danger");
         }else{
@@ -221,6 +222,12 @@ function modal_config_function(name){
                         $array_functions[name]['param'] = $('#param').val();
                     }
                     $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
@@ -265,6 +272,12 @@ function modal_assign(o, layer, canvas, parent_arr, i) {
                         dibujar(canvas);
                     });
                     $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
@@ -302,6 +315,12 @@ function modal_input(o, layer, canvas,parent_arr,i) {
                     });
 
                     $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
@@ -337,6 +356,12 @@ function modal_output(o, layer, canvas,parent_arr,i) {
                         dibujar(canvas);
                     });
                     $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
@@ -371,20 +396,31 @@ function modal_function(o, layer, canvas, parent_arr, i) {
                     refrescar(canvas).then(function () {
                         dibujar(canvas);
                     });
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
                 if(validate_form()){
-
-                o.name = $('#function-select').val();
-                o.solution = $('#solution').val();
-                o.param = $('#param').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
-                $('#cancel').click();
+                    o.name = $('#function-select').val();
+                    o.solution = $('#solution').val();
+                    o.param = $('#param').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
@@ -420,6 +456,12 @@ function modal_if(o, layer, canvas,parent_arr,i) {
                         dibujar(canvas);
                     });
                     $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
@@ -455,6 +497,12 @@ function modal_while(o, layer, canvas, parent_arr, i) {
                         dibujar(canvas);
                     });
                     $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
@@ -495,14 +543,20 @@ function modal_for(o, layer, canvas, parent_arr, i) {
             if($('#oID').val() === check){
                 if(validate_form()){
 
-                o.condition = $('#condition').val();
-                o.incremental = $('#incremental').val();
-                o.initialization = $('#initialization').val();
-                o.variable = $('#variable').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
-                $('#cancel').click();
+                    o.condition = $('#condition').val();
+                    o.incremental = $('#incremental').val();
+                    o.initialization = $('#initialization').val();
+                    o.variable = $('#variable').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
