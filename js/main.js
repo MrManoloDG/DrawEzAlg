@@ -20,7 +20,7 @@ function btn_struct(str) {
 
 function change_function(fun){
 	return new Promise(function (resolve) {
-		if($active_fun === fun && fun !== 'main'){
+		if($active_fun === fun){
 			modal_config_function(fun);
 		}else{
 			$('.'+$active_fun+' .nav-link').removeClass('active');

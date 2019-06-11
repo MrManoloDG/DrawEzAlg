@@ -112,6 +112,21 @@ function modal_code() {
     });
 }
 
+function validate_form(){
+    let validate = true;
+    $('form .needed').each(function(){
+        console.log($(this));
+        if($(this).val() === ''){
+            validate = false;
+            $(this).addClass("border border-danger");
+        }else{
+            $(this).removeClass("border border-danger");
+        }
+
+    });
+    return validate;
+}
+
 function modal_config_function(name){
     let o = $array_functions[name];
     $('.modal-title').text($lang['subprogram']);
@@ -132,6 +147,13 @@ function modal_config_function(name){
 
         $('#desc-lbl').text($lang['desc']);
 
+        if(name === 'main'){
+            $('#name').prop('disabled',true);
+            $('#param').prop('disabled',true);
+            $('#function-check').prop('disabled',true);
+            $('#procedure-check').prop('disabled',true);
+            $('#param_io').prop('disabled',true);
+        }
 
         if(name !== ''){
             $('#' + o['type'] + '-check').prop('checked', true);
@@ -168,34 +190,37 @@ function modal_config_function(name){
         $('#save').click(function () {
             if($('#oID').val() === check){
                 console.log(o);
-                if(o === undefined){
-                    $array_functions[$('#name').val()] = {};
-                    $array_functions[$('#name').val()]['param'] =  $('#param').val();
-                    $array_functions[$('#name').val()]['flow'] = [];
-                    $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
-                    $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
-                    $array_functions[$('#name').val()]['desc'] = $('#desc').val();
-                    $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
-
-                }else{
-                    if(name !== $('#name').val()){
+                if(validate_form()){
+                    if(o === undefined){
                         $array_functions[$('#name').val()] = {};
                         $array_functions[$('#name').val()]['param'] =  $('#param').val();
-                        $array_functions[$('#name').val()]['flow'] = $array_functions[name]['flow'];
+                        $array_functions[$('#name').val()]['flow'] = [];
                         $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
                         $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
                         $array_functions[$('#name').val()]['desc'] = $('#desc').val();
-                        delete $array_functions[name];
-                        $('.'+name).addClass($('#name').val());
-                        $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\')");
-                        $('.'+name + ' a').text($('#name').val());
-                        $('.'+name).removeClass(name);
-                        name = $('#name').val();
+                        $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
+    
+                    }else{
+                        if(name !== $('#name').val()){
+                            $array_functions[$('#name').val()] = {};
+                            $array_functions[$('#name').val()]['param'] =  $('#param').val();
+                            $array_functions[$('#name').val()]['flow'] = $array_functions[name]['flow'];
+                            $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
+                            $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
+                            $array_functions[$('#name').val()]['desc'] = $('#desc').val();
+                            delete $array_functions[name];
+                            $('.'+name).addClass($('#name').val());
+                            $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\')");
+                            $('.'+name + ' a').text($('#name').val());
+                            $('.'+name).removeClass(name);
+                            name = $('#name').val();
+                        }
+                        $array_functions[name]['type'] = $('input:radio[name=typecheck]:checked').val();
+                        $array_functions[name]['ioparam'] = $('#param_io').val();
+                        $array_functions[name]['desc'] = $('#desc').val();
+                        $array_functions[name]['param'] = $('#param').val();
                     }
-                    $array_functions[name]['type'] = $('input:radio[name=typecheck]:checked').val();
-                    $array_functions[name]['ioparam'] = $('#param_io').val();
-                    $array_functions[name]['desc'] = $('#desc').val();
-                    $array_functions[name]['param'] = $('#param').val();
+                    $('#cancel').click();
                 }
             }
         });
@@ -232,11 +257,15 @@ function modal_assign(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.variable = $('#variable').val();
-                o.value = $('#value').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+
+                    o.variable = $('#variable').val();
+                    o.value = $('#value').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }
             }
         });
     });
@@ -265,10 +294,15 @@ function modal_input(o, layer, canvas,parent_arr,i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.variable = $('#variable').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+
+                    o.variable = $('#variable').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+
+                    $('#cancel').click();
+                }
             }
         });
     });
@@ -297,10 +331,13 @@ function modal_output(o, layer, canvas,parent_arr,i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.buffer_out = $('#buffer_out').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+                    o.buffer_out = $('#buffer_out').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }
             }
         });
     });
@@ -339,12 +376,16 @@ function modal_function(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
+                if(validate_form()){
+
                 o.name = $('#function-select').val();
                 o.solution = $('#solution').val();
                 o.param = $('#param').val();
                 refrescar(canvas).then(function () {
                     dibujar(canvas);
                 });
+                $('#cancel').click();
+                }
             }
         });
     });
@@ -373,10 +414,13 @@ function modal_if(o, layer, canvas,parent_arr,i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.condition = $('#condition').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+                    o.condition = $('#condition').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }
             }
         });
     });
@@ -405,10 +449,13 @@ function modal_while(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.condition = $('#condition').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+                    o.condition = $('#condition').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }
             }
         });
     });
@@ -446,6 +493,8 @@ function modal_for(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
+                if(validate_form()){
+
                 o.condition = $('#condition').val();
                 o.incremental = $('#incremental').val();
                 o.initialization = $('#initialization').val();
@@ -453,6 +502,8 @@ function modal_for(o, layer, canvas, parent_arr, i) {
                 refrescar(canvas).then(function () {
                     dibujar(canvas);
                 });
+                $('#cancel').click();
+                }
             }
         });
     });

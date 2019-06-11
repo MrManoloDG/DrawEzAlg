@@ -132,6 +132,9 @@ function draw_init(x,y,canvas) {
 			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2,
 			x2: x - canvas.measureText('inicio').width, y2: y - canvas.measureText('inicio').height*2
 		},
+		click: function(layer){
+			modal_config_function($active_fun);
+		}
 	})
 }
 
