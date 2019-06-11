@@ -191,16 +191,28 @@ function modal_config_function(name){
         $('#save').click(function () {
             if($('#oID').val() === check){
                 console.log(o);
-                if(validate_form()){
+                let validate = validate_form();
+                if(validate){
                     if(o === undefined){
-                        $array_functions[$('#name').val()] = {};
-                        $array_functions[$('#name').val()]['param'] =  $('#param').val();
-                        $array_functions[$('#name').val()]['flow'] = [];
-                        $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
-                        $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
-                        $array_functions[$('#name').val()]['desc'] = $('#desc').val();
-                        $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
-    
+                        //Check there aren't other function with the same name
+                        if($array_functions[$('#name').val()] === undefined){
+                            $array_functions[$('#name').val()] = {};
+                            $array_functions[$('#name').val()]['param'] =  $('#param').val();
+                            $array_functions[$('#name').val()]['flow'] = [];
+                            $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
+                            $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
+                            $array_functions[$('#name').val()]['desc'] = $('#desc').val();
+                            $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
+                        }else{
+                            //Show Error Alert
+                            $Swal.fire(
+                                'Error',
+                                $lang['duplicate-funname'],
+                                'error',
+                            );
+                            validate = false;
+                        }
+
                     }else{
                         if(name !== $('#name').val()){
                             $array_functions[$('#name').val()] = {};
@@ -221,13 +233,13 @@ function modal_config_function(name){
                         $array_functions[name]['desc'] = $('#desc').val();
                         $array_functions[name]['param'] = $('#param').val();
                     }
-                    $('#cancel').click();
+                    if(validate) $('#cancel').click();
                 }else{
                     $Swal.fire(
                         $lang['empty-input'],
                         $lang['empty-input-text'],
                         'error',
-                      );
+                    );
                 }
             }
         });

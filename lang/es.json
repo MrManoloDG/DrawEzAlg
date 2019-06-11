@@ -55,6 +55,7 @@
   "close": "Cerrar",
   "empty-input": "Campo Vacío",
   "empty-input-text": "Hay algunos campos necesarios vacios",
+  "duplicate-funname": "Hay una función con el mismo nombre",
   "info-table": {
     "operator-list": "Lista de operadores",
     "arithmetic-list": "Lista de operadores aritméticos",
