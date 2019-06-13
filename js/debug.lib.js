@@ -124,8 +124,13 @@ function debug_next_step(b) {
             debug_next_step(b);
         } else if($debug_function_name !== 'main'){
             //this code exec when is going out of function
+            $debug_stack.pop();
+
+            let param_str = $array_functions[$debug_function_name]['param'].replace(/ /g, "");
+            let param = param_str.split(",");
             let ioparam_str = $array_functions[$debug_function_name]['ioparam'].replace(/ /g, "");
             let ioparam = ioparam_str.split(",");
+    
             let iosvar = {};
             if($array_functions[$debug_function_name]['type'] === 'function' && $debug_assign_back !== ''){
                 let variable_back = $debug_assign_back.replace(/ /g, "");
@@ -134,8 +139,24 @@ function debug_next_step(b) {
             }
 
             if($array_functions[$debug_function_name]['type'] === 'procedure'){
-                for(let i=0; i<ioparam.length; i++){
-                    iosvar[ioparam[i]] = eval(ioparam[i]);
+                let bef_stack = $debug_stack.peek();
+                let bef_struct = bef_stack[1];
+                let bef_id = $debug_id_stack.peek();
+                let function_element = bef_struct[bef_id-1];
+                console.log(function_element);
+
+                let call_param_str = function_element.param.replace(/ /g, "");
+                let call_param = call_param_str.split(",");
+
+                if(ioparam_str !== ''){
+                    for(let i=0; i<ioparam.length; i++){
+                        let pos = param.indexOf(ioparam[i]);
+                        let check_call_param = new RegExp("^[a-zA-Z]+.*");
+                        if(check_call_param.test(call_param[pos])){
+                            console.log(call_param[pos] + ' = [\'' + ioparam[i] +'\'];\n');
+                            iosvar[call_param[pos]] = eval(ioparam[i]);
+                        } 
+                    }
                 }
             }
             for (let i = 0; i < $debug_vars.length; i++) {
@@ -150,11 +171,12 @@ function debug_next_step(b) {
             }
             if($array_functions[$debug_function_name]['type'] === 'procedure' && ioparam_str !== ''){
                 for(let index in iosvar ){
+                    console.log(index + ' = ' + iosvar[index] + ';\n')
                     eval(index + ' = ' + iosvar[index] + ';\n');
                 }
             }
 
-            $debug_stack.pop();
+            
             $debug_id = $debug_id_stack.pop();
             let stack_peek = $debug_stack.peek();
             $debug_function = stack_peek[0];
@@ -343,24 +365,12 @@ function debug_assign(e) {
         $debug_vars.push(e.variable);
     }
     for(let nameFun in $array_functions){
-        $run_let_function_assings = [];
         if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
             functions = true;
-            $run_let_function_assings.push('sol');
-            str += 'function '+ nameFun +'(' + $array_functions[nameFun]['param'] + '){\n' +
-                'return new Promise(function (resolve) {\n' +
-                '<-$declarations->' + 
-                run_arr($array_functions[nameFun]['flow'],nameFun)
-                + '; \n});}\n $promesas = [];';
-                let declarations = '';
-            for(let i = 0; i<$run_let_function_assings.length; i++){
-                declarations += 'let '+ $run_let_function_assings[i] +';\n';	
-            }
-            str = str.replace("<-$declarations->", declarations);
         }
     }
     if(functions){
-
+        str += run_functions();
         str += 'sol = undefined;\n ' + math_lib_check(e.value) + '.then(($sol) => {'+e.variable+' = $sol;});\n';
     }else{
         str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
@@ -403,37 +413,18 @@ function debug_in(e) {
 function debug_exe_function(e) {
     let str = '';
 
-    let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
-    let params =  param_str.split(",");
-    $run_let_function_assings = [];
-    let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
-    let ioparam = ioparam_str.split(",");
-    let parameters = ($array_functions[e.name]['type'] === 'procedure')? $array_functions[e.name]['param'] + ', $ioarr' : $array_functions[e.name]['param'];
-    str += 'function '+ e.name +'(' + parameters + '){\n' +
-        run_arr($array_functions[e.name]['flow']);
-
-    let declarations = '';
-    for(let i = 0; i<$run_let_function_assings.length; i++){
-        declarations += 'let '+ $run_let_function_assings[i] +';\n';	
-    }
-    str = str.replace("<-$declarations->", declarations);
-
-    if($array_functions[e.name]['type'] === 'procedure' && ioparam_str !== ''){
-        for(let i = 0; i < ioparam.length; i++){
-            str += '$ioarr[\'' + ioparam[i] + '\'] = ' + ioparam[i] + ';\n';
-        }
-    }
-    if($array_functions[e.name]['type'] === 'function') str += 'return sol;';
-    
-    str += '}\n\n';
-
+    str += run_functions();
+ 
     if($array_functions[e.name]['type'] === 'procedure'){
         str += 'let $ioarr = {};\n';
     }
 
-    parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', $ioarr') : e.param;
+    let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', $ioarr') : e.param;
     str += e.name + '(' + parameters + ');\n';
     if($array_functions[e.name]['type'] === 'procedure'){
+        let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
+        let ioparam = ioparam_str.split(",");
+        let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
         let param = param_str.split(",");
         let call_param_str = e.param.replace(/ /g, "");
         let call_param = call_param_str.split(",");

@@ -97,43 +97,7 @@ function run_code() {
 	let $new_line = "\n";
 	let run = 'let $promesas = [];\n\n';
 
-	for(let index in $array_functions){
-	    if(index !== 'main'){
-			let param_str = $array_functions[index]['param'].replace(/ /g, "");
-			let params =  param_str.split(",");
-	    	$run_let_function_assings = [];
-			let ioparam_str = $array_functions[index]['ioparam'].replace(/ /g, "");
-			let ioparam = ioparam_str.split(",");
-			let parameters = ($array_functions[index]['type'] === 'procedure')? $array_functions[index]['param'] + ', $ioarr' : $array_functions[index]['param'];
-			run += 'function '+ index +'(' + parameters + '){\n';
-
-			if(($array_functions[index]['type'] === 'function')){
-				$run_let_function_assings.push('sol');
-				run += 'return new Promise(function (resolve) {\n';
-				run += '<-$declarations-> ' + run_arr($array_functions[index]['flow'],index);
-			}else{
-				run += '<-$declarations-> ' + run_arr($array_functions[index]['flow']);
-			}
-				
-			
-			let declarations = '';
-			for(let i = 0; i<$run_let_function_assings.length; i++){
-				if(params.indexOf($run_let_function_assings[i]) === -1) declarations += 'let '+ $run_let_function_assings[i] +';\n';	
-			}
-			run = run.replace("<-$declarations->", declarations);
-
-			if($array_functions[index]['type'] === 'procedure' && ioparam_str !== ''){
-				for(let i = 0; i < ioparam.length; i++){
-					run += '$ioarr[\'' + ioparam[i] + '\'] = ' + ioparam[i] + ';\n';
-				}
-			}
-			if($array_functions[index]['type'] === 'function'){
-				run += '\n});\n';
-			}
-
-			run += '}\n\n';
-        }
-    }
+	run += run_functions();
 
 	$run_let_function_assings = [];
 	run += '<-$declarations-> ' + run_arr($array_functions['main']['flow']);
