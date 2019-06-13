@@ -1,6 +1,5 @@
 function load_arr(json,arr) {
     json.forEach(function (element) {
-        console.log(element);
         switch(element.type){
             case 'if':
                 arr.push(new If_Struct(element.parent));

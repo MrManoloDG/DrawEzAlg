@@ -18,9 +18,9 @@ function btn_struct(str) {
 	$('#'+$active).addClass("active-btn");
 }
 
-function change_function(fun){
+function change_function(fun, cl){
 	return new Promise(function (resolve) {
-		if($active_fun === fun){
+		if($active_fun === fun && cl){
 			modal_config_function(fun);
 		}else{
 			$('.'+$active_fun+' .nav-link').removeClass('active');
@@ -69,12 +69,13 @@ function hidde_tabVar() {
 function debug_step(b) {
 
 
-	if($debug_id['main'] === 0 || $debug_error){
+	if(($debug_id === 0 && $debug_function === 'main') || $debug_error){
 		
 		$('#outputShow p').html("");
 		$debug_struct = $array_main;
 		$debug_stack.push(['main', $array_main]);
 		$debug_error=false;
+		eval("$promesas = [];");
 		if(b){
 			$('#run_step').prop("disabled", true);
 		}else {
@@ -98,13 +99,28 @@ function run_code() {
 
 	for(let index in $array_functions){
 	    if(index !== 'main'){
-	    	let param_str = $array_functions[index]['param'].replace(/ /g, "");
-	    	$run_let_function_assings = param_str.split(",");
+			let param_str = $array_functions[index]['param'].replace(/ /g, "");
+			let params =  param_str.split(",");
+	    	$run_let_function_assings = [];
 			let ioparam_str = $array_functions[index]['ioparam'].replace(/ /g, "");
 			let ioparam = ioparam_str.split(",");
 			let parameters = ($array_functions[index]['type'] === 'procedure')? $array_functions[index]['param'] + ', $ioarr' : $array_functions[index]['param'];
-	        run += 'function '+ index +'(' + parameters + '){\n' +
-                run_arr($array_functions[index]['flow']);
+			run += 'function '+ index +'(' + parameters + '){\n';
+
+			if(($array_functions[index]['type'] === 'function')){
+				$run_let_function_assings.push('sol');
+				run += 'return new Promise(function (resolve) {\n';
+				run += '<-$declarations-> ' + run_arr($array_functions[index]['flow'],index);
+			}else{
+				run += '<-$declarations-> ' + run_arr($array_functions[index]['flow']);
+			}
+				
+			
+			let declarations = '';
+			for(let i = 0; i<$run_let_function_assings.length; i++){
+				if(params.indexOf($run_let_function_assings[i]) === -1) declarations += 'let '+ $run_let_function_assings[i] +';\n';	
+			}
+			run = run.replace("<-$declarations->", declarations);
 
 			if($array_functions[index]['type'] === 'procedure' && ioparam_str !== ''){
 				for(let i = 0; i < ioparam.length; i++){
@@ -112,7 +128,7 @@ function run_code() {
 				}
 			}
 			if($array_functions[index]['type'] === 'function'){
-				run += 'return sol;\n';
+				run += '\n});\n';
 			}
 
 			run += '}\n\n';
@@ -120,11 +136,19 @@ function run_code() {
     }
 
 	$run_let_function_assings = [];
-	run += run_arr($array_functions['main']['flow']);
+	run += '<-$declarations-> ' + run_arr($array_functions['main']['flow']);
+	let declarations = '';
+	for(let i = 0; i<$run_let_function_assings.length; i++){
+				declarations += 'let '+ $run_let_function_assings[i] +';\n';	
+	}
+	run = run.replace("<-$declarations->", declarations);
+
     try {
+			alert(run);
 			eval(run);
     }
     catch(error) {
+		console.error(error);
         $('#outputShow p').html($('#outputShow p').html()  +'<span class=\'text-warning\'>Error: ' + error.message + '</span><br>');
         // expected output: ReferenceError: nonExistentFunction is not defined
         // Note - error messages will vary depending on browser
@@ -207,9 +231,7 @@ function getAsText(readFile) {
 					$array_functions[index]['type'] = json[index]['type'];
 					$array_functions[index]['ioparam'] = json[index]['ioparam'];
 					$array_functions[index]['desc'] = json[index]['desc'];
-					if(index !== 'main') $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ index+'" onclick="change_function(\''+ index +'\')"><a class="nav-link">'+ index +'</a></li>');
-					console.log(index);
-					console.log(json);
+					if(index !== 'main') $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ index+'" onclick="change_function(\''+ index +'\',true)"><a class="nav-link">'+ index +'</a></li>');
 					load_arr(json[index]['flow'], $array_functions[index]['flow']);
 				}
 				$array_main = $array_functions['main']['flow'];

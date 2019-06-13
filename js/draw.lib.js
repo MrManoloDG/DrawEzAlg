@@ -336,7 +336,6 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 	for (let j = 0; j < arr_yes.length; j++) {
 		arr_yes[j].parent = o.parent+'if'+i+'yes-';
 		arr_yes[j].draw(xh2,yh2,j,canvas,arr_yes);
-		console.log(o.parent+'if'+i+'yes-'+'o'+j);
 		yh2 += canvas.getLayer(o.parent+'if'+i+'yes-'+'o'+j).height + 10;
 		if(j >= arr_yes.length-1) arrow = false;
 		draw_line(xh2,yh2,xh2,yh2+100,j+1,canvas,arr_yes, arrow,o.parent+'if'+i+'yes-');

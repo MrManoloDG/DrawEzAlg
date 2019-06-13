@@ -202,7 +202,7 @@ function modal_config_function(name){
                             $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
                             $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
                             $array_functions[$('#name').val()]['desc'] = $('#desc').val();
-                            $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
+                            $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\', true)"><a class="nav-link">'+ $('#name').val() +'</a></li>');
                         }else{
                             //Show Error Alert
                             $Swal.fire(
@@ -223,7 +223,7 @@ function modal_config_function(name){
                             $array_functions[$('#name').val()]['desc'] = $('#desc').val();
                             delete $array_functions[name];
                             $('.'+name).addClass($('#name').val());
-                            $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\')");
+                            $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\',true)");
                             $('.'+name + ' a').text($('#name').val());
                             $('.'+name).removeClass(name);
                             name = $('#name').val();
