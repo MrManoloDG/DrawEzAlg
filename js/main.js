@@ -108,7 +108,7 @@ function run_code() {
 	run = run.replace("<-$declarations->", declarations);
 
     try {
-			alert(run);
+			console.log(run);
 			eval(run);
     }
     catch(error) {
@@ -139,12 +139,24 @@ function save(){
 			$('title').text("DrawEzAlg - " + filename );
 			try {
 				$fs.writeFileSync(path , json, 'utf-8');
+				$Swal.fire(
+					$lang['saved'],
+					'',
+					'success'
+				  );
 			}
 			catch(e) {new Error(e.message); }
 		});
 	}
 	else{
-		try { $fs.writeFileSync($file_path , json, 'utf-8'); }
+		try { 
+			$fs.writeFileSync($file_path , json, 'utf-8');
+			$Swal.fire(
+				$lang['saved'],
+				'',
+				'success'
+			); 
+		}
 		catch(e) {new Error(e.message); }
 	}
 
@@ -208,6 +220,25 @@ function getAsText(readFile) {
 
 		};
 	})(readFile);
+}
+
+function newFile(){
+	let electron = require('electron')
+	let path = require('path')
+	let BrowserWindow = electron.remote.BrowserWindow;
+	let url = require('url');
+	let $win = new BrowserWindow({width: 1080, height: 720});
+
+	$win.loadURL(url.format({
+        pathname: path.join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
+
+
+    $win.on('closed', () => {
+        $win = null
+    });
 }
 
 function change_language(lang){
