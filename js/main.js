@@ -308,6 +308,4 @@ $(document).ready(function() {
 		open_file();
 	});
 
-
-
 });

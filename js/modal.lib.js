@@ -115,7 +115,7 @@ function modal_code() {
 
 function validate_form(){
     let validate = true;
-    $('form .needed').each(function(){
+    $('#id_form .needed').each(function(){
         console.log($(this));
         if($(this).val() === '' || $(this).val() === null){
             validate = false;
