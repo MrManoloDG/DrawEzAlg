@@ -15,6 +15,8 @@
 
 		<!-- Jquery -->
 		<script>window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.js');</script>
+        <script src="./node_modules/jquery-resizable/resizable.js"></script>
+        <link rel="stylesheet" href="./node_modules/jquery-resizable/resizable.css">
 
 		<!-- Popper.js -->
 		<script src="./lib/bootstrap/js/popper.js"></script>
@@ -22,9 +24,6 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
 		<script src="./lib/bootstrap/js/bootstrap.min.js"></script>
-
-		<!-- FileSaver -->
-		<script src="./node_modules/file-saver/dist/FileSaver.js"></script>
 
 		<!-- Smalltalk -->
 		<script src="./node_modules/smalltalk/dist/smalltalk.min.js"></script>
@@ -74,6 +73,7 @@
 						<button type="button" name="save" id="save-file" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
 						<input type="file" id="file" class="d-none" name="files[]" multiple/>
 						<button type="button" name="open" id="open" class="btn btn-primary text-white" onclick="$('#file').click()"><i class="far fa-folder-open fa-lg"></i></button>
+						<button type="button" name="new-file" id="new-file" class="btn btn-primary text-white" onclick="newFile()"><i class="far fa-file fa-lg"></i></button>
 					</div>
 
 					<div class="btn-group dropleft ml-auto mr-2 my-1" role="group" aria-label="Four Group">
@@ -96,7 +96,7 @@
 			</div>
 			<div class="row">
 				<ul class="nav nav-tabs mx-1 my-2 col-11" id="functions-nav">
-					<li class="nav-item main" onclick="change_function('main')">
+					<li class="nav-item main" onclick="change_function('main',true)">
 						<a class="nav-link active">Main</a>
 					</li>
 
@@ -121,6 +121,9 @@
                 </tbody>
             </table>
         </div>
+		<div id="outputShow" class="bg-dark p-4">
+			<p class="text-white"></p>
+		</div>
 		<div id="contenedor" class="mx-auto">
 			<canvas id="canvas" width="3000" height="3000">Your navigator doesn't support canvas.</canvas>
 		</div>
@@ -139,7 +142,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="mr-auto">
-						<button type="button" id="save" class="btn btn-primary mr-1" data-dismiss="modal">Save</button>
+						<button type="button" id="save" class="btn btn-primary mr-1">Save</button>
 						<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					</div>
 					<button type="button" id="delete" class="btn btn-danger text-white" data-dismiss="modal">Delete</button>

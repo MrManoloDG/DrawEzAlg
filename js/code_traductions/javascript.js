@@ -83,9 +83,9 @@ function javascript_for(e, tab, textTab) {
 
 function javascript_assign(e, textTab) {
     let str = '';
-    for(let index in e.list){
-        str += textTab +  e.list[index][0] + ' = ' + math_lib_check(e.list[index][1]) + ';<br>';
-    }
+
+    str += textTab +  e.variable + ' = ' + math_lib_check(e.value) + ';<br>';
+
     return str;
 }
 

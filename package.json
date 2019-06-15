@@ -4,11 +4,12 @@
   "description": "Editor, Interprete y Depurador de Diagramas de Flujo",
   "main": "./index.js",
   "dependencies": {
-    "file-saver": "^2.0.1",
     "jcanvas": "15.2.7",
+    "jquery-resizable": "^1.0.6",
     "jsdom": "^13.2.0",
     "pretty-bytes": "^2.0.1",
-    "smalltalk": "^3.3.0"
+    "smalltalk": "^3.3.0",
+    "sweetalert2": "^8.12.1"
   },
   "devDependencies": {
     "electron": "^4.1.5",

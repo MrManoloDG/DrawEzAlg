@@ -1,3 +1,4 @@
+const $Swal = require('sweetalert2');
 
 function load_info() {
     $('.modal-title').text($lang['config']['info']);
@@ -112,9 +113,24 @@ function modal_code() {
     });
 }
 
+function validate_form(){
+    let validate = true;
+    $('#id_form .needed').each(function(){
+        console.log($(this));
+        if($(this).val() === '' || $(this).val() === null){
+            validate = false;
+            $(this).addClass("border border-danger");
+        }else{
+            $(this).removeClass("border border-danger");
+        }
+
+    });
+    return validate;
+}
+
 function modal_config_function(name){
     let o = $array_functions[name];
-    $('.modal-title').text($lang['function']);
+    $('.modal-title').text($lang['subprogram']);
     $('.modal-body').load('modals/config_function_modal.html',function(){
         $('#name-label').text($lang['name']);
         $('#name').val(name);
@@ -124,13 +140,46 @@ function modal_config_function(name){
         $('#param').val(name ==='' ? '' : o['param']);
         $('#param').attr("placeholder", $lang['param-placeholder']);
 
-        $('#delete-fun').text($lang['delete']);
+        $('#function-check-lbl').text($lang['function']);
+        $('#procedure-check-lbl').text($lang['procedure']);
+
+        $('#param_io-label').text($lang['ioparam']);
+        $('#param_io').attr("Placeholder", $lang['param-placeholder']);
+
+        $('#desc-lbl').text($lang['desc']);
+
+        if(name === 'main'){
+            $('#name').prop('disabled',true);
+            $('#param').prop('disabled',true);
+            $('#function-check').prop('disabled',true);
+            $('#procedure-check').prop('disabled',true);
+            $('#param_io').prop('disabled',true);
+        }
+
+        if(name !== ''){
+            $('#' + o['type'] + '-check').prop('checked', true);
+            if(o['type'] === 'procedure')$('#param_io').prop( "disabled", false );
+            $('#param_io').val(o['ioparam']);
+            $('#desc').val(o['desc']);
+        }
 
         $('#save').removeClass("d-none");
         $('#delete').removeClass("d-none");
         let check = name + Date.now();
         $('#oID').val(check);
         $('#myModal').modal({show:true});
+
+        $('input:radio[name=typecheck]').change(function () {
+            switch($('input:radio[name=typecheck]:checked').val()) {
+                case 'procedure':
+                    $('#param_io').prop( "disabled", false );
+                    break;
+                case 'function':
+                    $('#param_io').prop( "disabled", true );
+                    break;
+            }
+        });
+
         $('#delete').click(function () {
             if($('#oID').val() === check){
                 change_function('main');
@@ -138,27 +187,59 @@ function modal_config_function(name){
                 delete $array_functions[name];
             }
         });
+
         $('#save').click(function () {
             if($('#oID').val() === check){
                 console.log(o);
-                if(o === undefined){
-                    $array_functions[$('#name').val()] = {};
-                    $array_functions[$('#name').val()]['param'] =  $('#param').val();
-                    $array_functions[$('#name').val()]['flow'] = [];
-                    $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\')"><a class="nav-link">'+ $('#name').val() +'</a></li>');
+                let validate = validate_form();
+                if(validate){
+                    if(o === undefined){
+                        //Check there aren't other function with the same name
+                        if($array_functions[$('#name').val()] === undefined){
+                            $array_functions[$('#name').val()] = {};
+                            $array_functions[$('#name').val()]['param'] =  $('#param').val();
+                            $array_functions[$('#name').val()]['flow'] = [];
+                            $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
+                            $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
+                            $array_functions[$('#name').val()]['desc'] = $('#desc').val();
+                            $('#functions-nav > .nav-item:eq(-2)').after('<li class="nav-item '+ $('#name').val() +'" onclick="change_function(\''+ $('#name').val() +'\', true)"><a class="nav-link">'+ $('#name').val() +'</a></li>');
+                        }else{
+                            //Show Error Alert
+                            $Swal.fire(
+                                'Error',
+                                $lang['duplicate-funname'],
+                                'error',
+                            );
+                            validate = false;
+                        }
 
-                }else{
-                    if(name !== $('#name').val()){
-                        $array_functions[$('#name').val()] = {};
-                        $array_functions[$('#name').val()]['flow'] = $array_functions[name]['flow'];
-                        delete $array_functions[name];
-                        $('.'+name).addClass($('#name').val());
-                        $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\')");
-                        $('.'+name + ' a').text($('#name').val());
-                        $('.'+name).removeClass(name);
-                        name = $('#name').val();
+                    }else{
+                        if(name !== $('#name').val()){
+                            $array_functions[$('#name').val()] = {};
+                            $array_functions[$('#name').val()]['param'] =  $('#param').val();
+                            $array_functions[$('#name').val()]['flow'] = $array_functions[name]['flow'];
+                            $array_functions[$('#name').val()]['type'] = $('input:radio[name=typecheck]:checked').val();
+                            $array_functions[$('#name').val()]['ioparam'] = $('#param_io').val();
+                            $array_functions[$('#name').val()]['desc'] = $('#desc').val();
+                            delete $array_functions[name];
+                            $('.'+name).addClass($('#name').val());
+                            $('.'+name).attr("onclick","modal_config_function(\'"+ $('#name').val() +"\',true)");
+                            $('.'+name + ' a').text($('#name').val());
+                            $('.'+name).removeClass(name);
+                            name = $('#name').val();
+                        }
+                        $array_functions[name]['type'] = $('input:radio[name=typecheck]:checked').val();
+                        $array_functions[name]['ioparam'] = $('#param_io').val();
+                        $array_functions[name]['desc'] = $('#desc').val();
+                        $array_functions[name]['param'] = $('#param').val();
                     }
-                    $array_functions[name]['param'] = $('#param').val();
+                    if(validate) $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                    );
                 }
             }
         });
@@ -171,44 +252,18 @@ function modal_assign(o, layer, canvas, parent_arr, i) {
         let check = layer.name + Date.now();
         $('#oID').val(check);
 
-        let j_load = 0;
-        for(let index  in  o.list){
-            $('.list').append(
-                '<div class="form-group row">\n' +
-                '            <div class="col-sm-5">\n' +
-                '                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="'+ $lang['variable'] +'" value="'+o.list[index][0]+'">\n' +
-                '            </div>\n' +
-                '            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
-                '            <div class="col-sm-6">\n' +
-                '                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="'+ $lang['assign'] +'" value="'+o.list[index][1]+'">\n' +
-                '            </div>\n' +
-                '        </div>'
-            );
-            j_load++;
-        }
+        $('#variable').val(o.variable);
+        $('#variable').attr("placeholder", $lang['variable']);
 
-        for (let j = 0; j < o.list.length ; j++) {
 
-        }
+        $('#value').val(o.value);
+        $('#value').attr("placeholder", $lang['assign']);
+
+
         $('#save').removeClass("d-none");
         $('#delete').removeClass("d-none");
         $('#myModal').modal({show:true});
-        $('#asing_add').click(function () {
-            if($('#oID').val() === check){
-                $('.list').append(
-                    '<div class="form-group row">\n' +
-                    '            <div class="col-sm-5">\n' +
-                    '                <input type="text" class="form-control " id="key-'+j_load+'" placeholder="' + $lang['variable'] + '">\n' +
-                    '            </div>\n' +
-                    '            <div class="col-sm-1 col-form-label mx-auto"><i class="fas fa-arrow-left"></i></div>\n' +
-                    '            <div class="col-sm-6">\n' +
-                    '                <input type="text" class="form-control" id="value-'+j_load+'" placeholder="' + $lang['assign'] + '">\n' +
-                    '            </div>\n' +
-                    '        </div>'
-                );
-                j_load++;
-            }
-        });
+
         $('#delete').click(function () {
             if($('#oID').val() === check){
                 if(confirm($lang['delete-msg'])){
@@ -221,23 +276,21 @@ function modal_assign(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.list = [];
-                $('.list').find('.row').each(function() {
-                    let key;
-                    let val;
-                    $(this).find('input').each(function() {
-                        let id = $(this).attr('id').split("-");
-                        if(id[0] === 'value'){
-                            val = $(this).val();
-                        }else if(id[0] === 'key'){
-                            key = $(this).val();
-                        }
+                if(validate_form()){
+
+                    o.variable = $('#variable').val();
+                    o.value = $('#value').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
                     });
-                    if(key !== "" && val !== "") o.list.push([key,val]);
-                });
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
+                }
             }
         });
     });
@@ -266,10 +319,21 @@ function modal_input(o, layer, canvas,parent_arr,i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.variable = $('#variable').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+
+                    o.variable = $('#variable').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
+                }
             }
         });
     });
@@ -298,10 +362,19 @@ function modal_output(o, layer, canvas,parent_arr,i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.buffer_out = $('#buffer_out').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+                    o.buffer_out = $('#buffer_out').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
+                }
             }
         });
     });
@@ -312,10 +385,12 @@ function modal_function(o, layer, canvas, parent_arr, i) {
     $('.modal-body').load('modals/function_modal.html',function(){
         for(let index  in  $array_functions){
             if(index !== 'main'){
-                if(index === o.name){
-                    $('#function-select').append('<option value="'+ index +'" selected>'+ index +'</option>');
-                }else {
-                    $('#function-select').append('<option value="'+ index +'">'+ index +'</option>');
+                if($array_functions[index]['type'] === 'procedure'){
+                    if(index === o.name){
+                        $('#function-select').append('<option value="'+ index +'" selected>'+ index +'</option>');
+                    }else {
+                        $('#function-select').append('<option value="'+ index +'">'+ index +'</option>');
+                    }
                 }
             }
         }
@@ -335,17 +410,32 @@ function modal_function(o, layer, canvas, parent_arr, i) {
                     refrescar(canvas).then(function () {
                         dibujar(canvas);
                     });
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
                 }
             }
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.name = $('#function-select').val();
-                o.solution = $('#solution').val();
-                o.param = $('#param').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+                    o.name = $('#function-select').val();
+                    o.solution = $('#solution').val();
+                    o.param = $('#param').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
+                }
             }
         });
     });
@@ -374,10 +464,19 @@ function modal_if(o, layer, canvas,parent_arr,i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.condition = $('#condition').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+                    o.condition = $('#condition').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
+                }
             }
         });
     });
@@ -406,10 +505,19 @@ function modal_while(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.condition = $('#condition').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+                    o.condition = $('#condition').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
+                }
             }
         });
     });
@@ -447,13 +555,23 @@ function modal_for(o, layer, canvas, parent_arr, i) {
         });
         $('#save').click(function () {
             if($('#oID').val() === check){
-                o.condition = $('#condition').val();
-                o.incremental = $('#incremental').val();
-                o.initialization = $('#initialization').val();
-                o.variable = $('#variable').val();
-                refrescar(canvas).then(function () {
-                    dibujar(canvas);
-                });
+                if(validate_form()){
+
+                    o.condition = $('#condition').val();
+                    o.incremental = $('#incremental').val();
+                    o.initialization = $('#initialization').val();
+                    o.variable = $('#variable').val();
+                    refrescar(canvas).then(function () {
+                        dibujar(canvas);
+                    });
+                    $('#cancel').click();
+                }else{
+                    $Swal.fire(
+                        $lang['empty-input'],
+                        $lang['empty-input-text'],
+                        'error',
+                      );
+                }
             }
         });
     });
