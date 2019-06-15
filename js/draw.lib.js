@@ -13,13 +13,16 @@ function get_mult_width_repeat(arr) {
 		for(let i = 0; i < arr_if.length; i++){
 			max_arr = Math.max(get_mult_width_if(arr_if[i].yes,true),get_mult_width_if(arr_if[i].false,false),max_arr);
 		}
-		return 1 + max_arr*1.4;
-	} else if (arr_repeat.length !== 0){
+		max_arr = 1 + max_arr*1;
+	}
+	if (arr_repeat.length !== 0){
 		for (let i = 0; i < arr_repeat.length ; i++) {
 			max_arr = Math.max(get_mult_width_repeat(arr_repeat[i].loop),max_arr);
 		}
-		return 1 + max_arr;
-	} else return 1;
+		max_arr = 1 + max_arr*1;
+	} 
+	if(max_arr === 0 ) return 1;
+	else return max_arr;
 }
 
 function get_mult_width_if(arr, way) {
@@ -40,13 +43,16 @@ function get_mult_width_if(arr, way) {
 				max_arr = Math.max(get_mult_width_if(arr_if[i].yes,way),max_arr);
 			}
 		}
-		return 1 + max_arr*1.4;
-	}else if (arr_repeat.length !== 0){
+		max_arr =  1 + max_arr*1;
+	}
+	if (arr_repeat.length !== 0){
 		for (let i = 0; i < arr_repeat.length ; i++) {
 			max_arr = Math.max(get_mult_width_repeat(arr_repeat[i].loop),max_arr);
 		}
-		return 1 + max_arr;
-	} else return 1;
+		max_arr =  1 + max_arr*1;
+	} 
+	if(max_arr === 0 ) return 1;
+	else return max_arr;
 
 }
 
@@ -254,6 +260,16 @@ function draw_line(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 
 function draw_if(x,y,i,canvas,o,parent_arr) {
 	y+=$y_desp;
+	let text = '';
+	if(o.condition !== ''){
+		if(o.condition.length > 16){
+			text = o.condition.substring(0,16) + "...";
+		}else{
+			text = o.condition;
+		}
+	}else{
+		text = $lang['condition'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -262,7 +278,7 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.condition === "" ? $lang['condition'] : o.condition
+		text: text
 	})
 	.drawPath({
 	  layer: true,
@@ -381,6 +397,16 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 	y+=$y_desp;
 	let text = "";
 	text += o.variable + " <- " + o.value ;
+	
+	if(text !== " <- "){
+		if(text.length > 16){
+			text = text.substring(0,16) + "...";
+		}else{
+			text = text;
+		}
+	}else{
+		text = $lang['assign'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -409,6 +435,17 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 
 function draw_input(x,y,i,canvas, o,parent_arr) {
 	y+=$y_desp;
+
+	let text = '';
+	if(o.variable !== ''){
+		if(o.variable.length > 16){
+			text = o.variable.substring(0,16) + "...";
+		}else{
+			text = o.variable;
+		}
+	}else{
+		text = $lang['input'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -417,7 +454,7 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 		x: x, y: y,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.variable === "" ? $lang['input'] : o.variable
+		text: text
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -446,6 +483,18 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 
 function draw_output(x,y,i,canvas,o,parent_arr) {
 	y+=$y_desp;
+	let text = '';
+
+	if(o.buffer_out !== ''){
+		if(o.buffer_out.length > 16){
+			text = o.buffer_out.substring(0,16) + "...";
+		}else{
+			text = o.buffer_out;
+		}
+	}else{
+		text = $lang['output'];
+	}
+
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -454,7 +503,7 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.buffer_out === ""? $lang['output']: o.buffer_out
+		text: text
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -489,6 +538,16 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 
 function draw_function(x,y,i,canvas, o,parent_arr) {
 	y+=$y_desp;
+	let text = '';
+	if(o.name !== ''){
+		if(o.name.length > 16){
+			text = o.name.substring(0,16) + "...";
+		}else{
+			text = o.name;
+		}
+	}else{
+		text = $lang['function'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -497,7 +556,7 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 		x: x, y: y,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.name === "" ? $lang['function'] : o.name
+		text: text
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -536,6 +595,16 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 
 function draw_while(x,y,i,canvas,o,parent_arr) {
 	y+=$y_desp;
+	let text = '';
+	if(o.condition !== ''){
+		if(o.condition.length > 16){
+			text = o.condition.substring(0,16) + "...";
+		}else{
+			text = o.condition;
+		}
+	}else{
+		text = $lang['condition'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
@@ -544,7 +613,7 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		x: x, y: y,
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.condition === "" ? $lang['condition']: o.condition
+		text: text
 	})
 	.drawPath({
 		layer: true,
@@ -681,6 +750,7 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 
 	let arr = o.loop;
 	let multp_width = get_mult_width_repeat(arr);
+	console.log(multp_width);
 	let yloop = y + canvas.measureText(o.parent+'t'+i).height*2;
 	let arrow = false;
 	if(arr.length>0)  arrow = true;

@@ -1,6 +1,35 @@
 var $run_let_function_assings = [];
 var $run_assing_function = false;
 
+function run_check_async(arr){
+    let res = arr.filter( element => {
+        switch(element.type){
+            case 'if':
+                return run_check_async(element.yes) || run_check_async(element.no);
+                break;
+            case 'while':
+                return run_check_async(element.loop);
+                break;
+            case 'for':
+                return run_check_async(element.loop);
+            case 'assign':
+                run_assign(element);
+                if($run_assing_function){
+                    $run_assing_function=false;
+                    return true;
+                }else return false;
+            case 'in':
+                return true;
+            default:
+                return false;
+
+        }
+    });
+    if(res.length > 0)  return true;
+    else    return false;
+
+}
+
 function run_arr(arr, res) {
     let str = '';
     let input_then = 0;
@@ -9,14 +38,18 @@ function run_arr(arr, res) {
         switch(element.type){
             case 'if':
                 str += run_if(element) + '\n';
-                str += 'Promise.all($promesas).then( () =>{\n';
-                n_promiseAll++;
+                if(run_check_async(element.yes) || run_check_async(element.no)){
+                    str += 'Promise.all($promesas).then( () =>{\n';
+                    n_promiseAll++;
+                }
                 break;
 
             case 'while':
                 str += run_while(element) + '\n';
-                str += 'Promise.all($promesas).then( () =>{\n';
-                n_promiseAll++;
+                if(run_check_async(element.loop)){
+                    str += 'Promise.all($promesas).then( () =>{\n';
+                    n_promiseAll++;
+                }
                 break;
 
             case 'assign':
@@ -38,13 +71,17 @@ function run_arr(arr, res) {
 
             case 'for':
                 str += run_for(element) + '\n';
-                str += 'Promise.all($promesas).then( () =>{\n';
-                n_promiseAll++;
+                if(run_check_async(element.loop)){
+                    str += 'Promise.all($promesas).then( () =>{\n';
+                    n_promiseAll++; 
+                }
                 break;
             case 'function':
                 str += run_function(element) + '\n';
-                str += 'Promise.all($promesas).then( () =>{\n';
-                n_promiseAll++;
+                if(run_check_async($array_functions[element.name]['flow'])){
+                    str += 'Promise.all($promesas).then( () =>{\n';
+                    n_promiseAll++;
+                }
                 break;
         }
     });
@@ -62,6 +99,7 @@ function run_arr(arr, res) {
 
 function run_if(e) {
     let str = 'if('+ e.condition +'){\n';
+    str = math_lib_check(str);
     str += run_arr(e.yes) + '\n' +
         '}\n else {';
     str += run_arr(e.no) + '\n}';
@@ -70,6 +108,7 @@ function run_if(e) {
 
 function run_while(e) {
     let str = 'while('+ e.condition + '){\n';
+    str = math_lib_check(str);
     str += run_arr(e.loop) + '\n}';
     return str;
 }
@@ -78,6 +117,7 @@ function run_for(e) {
     let str = 'for( let ' + e.variable + '=' + e.initialization + '; ' +
         e.variable + ' <= ' + e.condition + ';' +
         ' ' + e.incremental + '){\n';
+    str = math_lib_check(str);
     str +=  run_arr(e.loop);
     str += '}\n';
     return str;
@@ -113,7 +153,7 @@ function run_out(e) {
     let check_string = /".+"/;
 
     if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
-    else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + e.buffer_out +') + \'<br>\');';
+    else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + math_lib_check(e.buffer_out) +') + \'<br>\');';
     return str;
 }
 

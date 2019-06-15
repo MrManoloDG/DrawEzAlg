@@ -200,7 +200,7 @@ function debug_next_step(b) {
  * @param {*} element element of code 
  * @param {*} b type of debug ( choosing diferent functions of debug)
  */
-function debug_struct(element,b){
+function debug_struct(element,$b){
     let str = '';
     switch(element.type){
         case 'if':
@@ -215,7 +215,7 @@ function debug_struct(element,b){
         case 'assign':
             $debug_id += 1;
             
-            if(b){
+            if($b){
                 debug_assign_fun_step(element);
             }else{
 
@@ -241,7 +241,7 @@ function debug_struct(element,b){
             break;
         case 'function':
             $debug_id += 1;
-            if(b){
+            if($b){
                 debug_function(element);
             }else {
                 str += debug_exe_function(element);
@@ -257,7 +257,7 @@ function debug_struct(element,b){
  * @param {*} e struct 
  */
 function debug_if(e) {
-    let bIf = eval(e.condition);
+    let bIf = eval(math_lib_check(e.condition));
     if(bIf){
         if(e.yes.length > 0){
             $debug_struct = e.yes;
@@ -282,7 +282,7 @@ function debug_if(e) {
  * @param {*} e struct
  */
 function debug_while(e) {
-    let bWhile = eval(e.condition);
+    let bWhile = eval(math_lib_check(e.condition));
     if(bWhile){
         $debug_struct = e.loop;
         $debug_function = e.parent + 'o' + $debug_id;
@@ -371,10 +371,11 @@ function debug_assign(e) {
     }
     if(functions){
         str += run_functions();
-        str += 'sol = undefined;\n ' + math_lib_check(e.value) + '.then(($sol) => {'+e.variable+' = $sol;});\n';
+        str += math_lib_check(e.value) + '.then(($sol) => {'+e.variable+' = $sol;});\n';
     }else{
         str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
     }
+    console.log(str);
     return str;
 }
 
@@ -387,7 +388,7 @@ function debug_out(e) {
     let str = '';
     let check_string = /".+"/;
     if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
-    else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + e.buffer_out +') + \'<br>\');';
+    else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + math_lib_check(e.buffer_out) +') + \'<br>\');';
     return str;
 }
 
@@ -396,13 +397,19 @@ function debug_out(e) {
  * @param {*} e 
  */
 function debug_in(e) {
-    let str = 'smalltalk.prompt("", "", "").then((value) => {\n' +
-        'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);});';
+    let str = '';
 
     if($debug_vars.indexOf(e.variable) === -1){
         $debug_vars.push(e.variable);
+        str += e.variable + ' = undefined;\n';
     }
 
+    str += 'Promise.all($promesas).then( () =>{ $promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
+        'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);}));});';
+
+    
+
+    console.log(str);
     return str;
 }
 

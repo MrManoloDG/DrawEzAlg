@@ -385,10 +385,12 @@ function modal_function(o, layer, canvas, parent_arr, i) {
     $('.modal-body').load('modals/function_modal.html',function(){
         for(let index  in  $array_functions){
             if(index !== 'main'){
-                if(index === o.name){
-                    $('#function-select').append('<option value="'+ index +'" selected>'+ index +'</option>');
-                }else {
-                    $('#function-select').append('<option value="'+ index +'">'+ index +'</option>');
+                if($array_functions[index]['type'] === 'procedure'){
+                    if(index === o.name){
+                        $('#function-select').append('<option value="'+ index +'" selected>'+ index +'</option>');
+                    }else {
+                        $('#function-select').append('<option value="'+ index +'">'+ index +'</option>');
+                    }
                 }
             }
         }

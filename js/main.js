@@ -94,6 +94,8 @@ function debug_step(b) {
 
 function run_code() {
 	$('#outputShow p').html("");
+	debug_init();
+	
 	let $new_line = "\n";
 	let run = 'let $promesas = [];\n\n';
 
