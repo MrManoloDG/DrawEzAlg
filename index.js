@@ -11,7 +11,7 @@ let win;
 
 function createWindow () {
 
-    win = new BrowserWindow({width: 1000, height: 700});
+    win = new BrowserWindow({width: 1080, height: 720});
 
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),

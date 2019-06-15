@@ -1,6 +1,5 @@
 function load_arr(json,arr) {
     json.forEach(function (element) {
-        console.log(element);
         switch(element.type){
             case 'if':
                 arr.push(new If_Struct(element.parent));
@@ -14,7 +13,7 @@ function load_arr(json,arr) {
 
             case 'assign':
                 arr.push(new Assign_Struct(element.parent));
-                load_assing(element,arr[arr.length-1]);
+                load_assign(element,arr[arr.length-1]);
                 break;
 
             case 'out':
@@ -32,6 +31,10 @@ function load_arr(json,arr) {
                 load_for(element,arr[arr.length-1]);
                 break;
 
+            case 'function':
+                arr.push(new Function_Struct(element.parent));
+                load_function(element,arr[arr.length-1]);
+                break;
         }
     })
 }
@@ -55,10 +58,11 @@ function load_for(e,o) {
     load_arr(e.loop, o.loop);
 }
 
-function load_assing(e,o) {
-    for(let index in e.list){
-        o.list[index] = e.list[index];
-    }
+function load_assign(e,o) {
+
+    o.variable = e.variable;
+    o.value = e.value;
+
 }
 
 function load_out(e,o) {
@@ -67,5 +71,11 @@ function load_out(e,o) {
 
 function load_in(e,o) {
     o.variable = e.variable;
+}
+
+function load_function(e,o) {
+    o.name = e.name;
+    o.solution = e.solution;
+    o.param = e.param;
 }
 

@@ -1,0 +1,39 @@
+<div class="" id="id_form" action="#">
+    <div class="form-group">
+        <label for="name" id="name-label">Name</label>
+        <input type="text" class="form-control needed" id="name" placeholder="Enter name of function">
+    </div>
+    <div class="form-group">
+        <label for="param" id="param-label">Parameters</label>
+        <input type="text" class="form-control" id="param" placeholder="Enter parameters. Ej: x,y,...">
+    </div>
+
+    <div class="my-2 mx-1">
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="typecheck" id="function-check" value="function">
+            <label class="form-check-label" id="function-check-lbl" for="function-check">
+                Function
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="typecheck" id="procedure-check" value="procedure">
+            <label class="form-check-label" id="procedure-check-lbl" for="procedure-check">
+                Procedure
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group mt-2">
+        <label for="param" id="param_io-label">I/O Parameters</label>
+        <input type="text" class="form-control" id="param_io" placeholder="Enter parameters. Ej: x,y,..." disabled>
+    </div>
+
+    <div class="form-group mt-2">
+        <label for="desc" id="desc-lbl">Description</label>
+        <textarea class="form-control" id="desc" placeholder=""></textarea>
+    </div>
+
+    <div class="form-group row">
+        <input type="hidden" class="form-control" id="oID">
+    </div>
+</div>

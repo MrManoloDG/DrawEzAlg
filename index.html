@@ -2,11 +2,11 @@
 <html lang="es" dir="ltr">
 	<head>
 		<meta charset="utf-8">
-		<title>DrawEzCode</title>
+		<title>DrawEzAlg</title>
 		<link rel="stylesheet" href="./css/main.css">
 
 		<!-- Highlight.js -->
-		<link rel="stylesheet" href="./lib/highlight/styles/default.css">
+		<link rel="stylesheet" href="./lib/highlight/styles/arduino-light.css">
 		<script src="./lib/highlight/highlight.pack.js"></script>
 		<script>hljs.initHighlightingOnLoad();</script>
 
@@ -15,6 +15,8 @@
 
 		<!-- Jquery -->
 		<script>window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.js');</script>
+        <script src="./node_modules/jquery-resizable/resizable.js"></script>
+        <link rel="stylesheet" href="./node_modules/jquery-resizable/resizable.css">
 
 		<!-- Popper.js -->
 		<script src="./lib/bootstrap/js/popper.js"></script>
@@ -23,19 +25,23 @@
 		<link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
 		<script src="./lib/bootstrap/js/bootstrap.min.js"></script>
 
-		<!-- FileSaver -->
-		<script src="./node_modules/file-saver/dist/FileSaver.js"></script>
-
 		<!-- Smalltalk -->
 		<script src="./node_modules/smalltalk/dist/smalltalk.min.js"></script>
 
+		<!-- Programming languages traduction -->
+
+		<script src="./js/code_traductions/javascript.js"></script>
+
     	<!-- Clases JavaScript -->
 		<script src="./js/classes/code_struct.js"></script>
+		<script src="./js/classes/stack.js"></script>
 
 		<!-- Codigo propio -->
 		<script src="./js/load_file.js"></script>
+		<script src="./js/debug.lib.js"></script>
 		<script src="./js/run.lib.js"></script>
 		<script src="./js/modal.lib.js"></script>
+		<script src="./js/math.lib.js"></script>
 		<script src="./js/draw.lib.js"></script>
 		<script src="./js/main.js"></script>
 
@@ -43,50 +49,83 @@
 	<body class="container-fluid">
 		<!-- Botonera -->
 		<div id="buttons">
-			<div class="btn-toolbar mt-1" role="toolbar" aria-label="Toolbar with button groups">
-				<div class="btn-group mr-2 my-1" role="group" aria-label="First group">
-					<button type="button" name="assing" id="assing" class="btn btn-primary" onclick="btn_struct('assing')"><img src="img/btn/assing.png" class="btn-img mx-auto"></button>
-					<button type="button" name="if" id="if" class="btn btn-primary text-white" onclick="btn_struct('if')"><img src="img/btn/if.png" class="btn-img"></button>
-					<button type="button" name="while" id="while" class="btn btn-primary text-white" onclick="btn_struct('while')"><img src="img/btn/while.png" class="btn-img"></button>
-					<button type="button" name="for" id="for" class="btn btn-primary text-white" onclick="btn_struct('for')"><img src="img/btn/for.png" class="btn-img"></button>
-					<button type="button" name="in" id="in" class="btn btn-primary text-white" onclick="btn_struct('in')"><img src="img/btn/input.png" class="btn-img"></button>
-					<button type="button" name="out" id="out" class="btn btn-primary text-white" onclick="btn_struct('out')"><img src="img/btn/output.png" class="btn-img"></button>
-				</div>
-				<div class="btn-group mr-2 my-1" role="group" aria-label="Second group">
-					<button type="button" name="delete" id="delete" class="btn btn-danger text-white" onclick="btn_struct('delete')"><i class="fas fa-backspace fa-lg"></i></button>
-					<button type="button" name="zoom_in" id="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus fa-lg"></i></button>
-					<button type="button" name="zoom_out" id="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus fa-lg"></i></button>
-				</div>
-				<div class="btn-group mr-2 my-1" role="group" aria-label="Third group">
-					<button type="button" name="run" id="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
-					<button type="button" name="save" id="save-file" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
+			<div class="row">
+				<div class="btn-toolbar mt-1 col-12" role="toolbar" aria-label="Toolbar with button groups">
+					<div class="btn-group mr-2 my-1" role="group" aria-label="First group">
+						<button type="button" name="assign" id="assign" class="btn btn-primary" onclick="btn_struct('assign')"><img src="img/btn/assing.png" class="img-fluid btn-img mx-auto"></button>
+						<button type="button" name="if" id="if" class="btn btn-primary text-white" onclick="btn_struct('if')"><img src="img/btn/if.png" class="img-fluid btn-img"></button>
+						<button type="button" name="while" id="while" class="btn btn-primary text-white" onclick="btn_struct('while')"><img src="img/btn/while.png" class="img-fluid btn-img"></button>
+						<button type="button" name="for" id="for" class="btn btn-primary text-white" onclick="btn_struct('for')"><img src="img/btn/for.png" class="img-fluid btn-img"></button>
+						<button type="button" name="in" id="in" class="btn btn-primary text-white" onclick="btn_struct('in')"><img src="img/btn/input.png" class="img-fluid btn-img"></button>
+						<button type="button" name="out" id="out" class="btn btn-primary text-white" onclick="btn_struct('out')"><img src="img/btn/output.png" class="img-fluid btn-img"></button>
+						<button type="button" name="function" id="function" class="btn btn-primary text-white" onclick="btn_struct('function')"><img src="img/btn/function.png" class="img-fluid btn-img"></button>
 
-					<input type="file" id="file" class="d-none" name="files[]" multiple/>
-					<button type="button" name="open" id="open" class="btn btn-primary text-white" onclick="$('#file').click()"><i class="far fa-folder-open fa-lg"></i></button>
-				</div>
+					</div>
+					<div class="btn-group mr-2 my-1" role="group" aria-label="Second group">
+						<button type="button" name="zoom_in" id="zoom_in" class="btn btn-primary text-white" onclick="zoom_in()"><i class="fas fa-search-plus fa-lg"></i></button>
+						<button type="button" name="zoom_out" id="zoom_out" class="btn btn-primary text-white" onclick="zoom_out()"><i class="fas fa-search-minus fa-lg"></i></button>
+					</div>
+					<div class="btn-group mr-2 my-1" role="group" aria-label="Third group">
+						<button type="button" name="run" id="run" class="btn btn-success text-white" onclick="run_code()"><i class="fas fa-play fa-lg"></i></button>
+						<button type="button" name="run" id="run_step" class="btn btn-success text-white" onclick="debug_step(false)"><i class="fas fa-shoe-prints fa-lg"></i></button>
+						<button type="button" name="run" id="run_step_inFunction" class="btn btn-success text-white" onclick="debug_step(true)"><i class="fas fa-bug fa-lg"></i></i></button>
+						<button type="button" name="code" id="code-file" class="btn btn-primary text-white" onclick="code()"><i class="far fa-file-code fa-lg"></i></button>
+						<button type="button" name="save" id="save-file" class="btn btn-primary text-white" onclick="save()"><i class="far fa-save fa-lg"></i></button>
+						<input type="file" id="file" class="d-none" name="files[]" multiple/>
+						<button type="button" name="open" id="open" class="btn btn-primary text-white" onclick="$('#file').click()"><i class="far fa-folder-open fa-lg"></i></button>
+						<button type="button" name="new-file" id="new-file" class="btn btn-primary text-white" onclick="newFile()"><i class="far fa-file fa-lg"></i></button>
+					</div>
 
-				<div class="btn-group dropleft ml-auto mr-2 my-1" role="group" aria-label="Four Group">
-					<button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-ellipsis-v fa-lg"></i>
-					</button>
-					<div class="dropdown-menu multi-level" aria-labelledby="btnGroupDrop1">
-						<li class="dropdown-item" onclick="load_info()"><a href="#" id="info">Info</a></li>
-						<li class="dropdown-submenu">
-							<a class="dropdown-item" href="#" tabindex="-1" id="languages">Languages</a>
-							<ul class="dropdown-menu" href="#">
-								<li class="dropdown-item" onclick="change_language('es')"><a id="es">ES</a></li>
-								<li class="dropdown-item" onclick="change_language('en')"><a id="en">EN</a></li>
-							</ul>
-						</li>
-						<li class="dropdown-item" onclick="about()"><a href="#" id="about">About</a></li>
+					<div class="btn-group dropleft ml-auto mr-2 my-1" role="group" aria-label="Four Group">
+						<button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fas fa-ellipsis-v fa-lg"></i>
+						</button>
+						<div class="dropdown-menu multi-level" aria-labelledby="btnGroupDrop1">
+							<li class="dropdown-item" onclick="load_info()"><a href="#" id="info">Info</a></li>
+							<li class="dropdown-submenu">
+								<a class="dropdown-item" href="#" tabindex="-1" id="languages">Languages</a>
+								<ul class="dropdown-menu" href="#">
+									<li class="dropdown-item" onclick="change_language('es')"><a id="es">ES</a></li>
+									<li class="dropdown-item" onclick="change_language('en')"><a id="en">EN</a></li>
+								</ul>
+							</li>
+							<li class="dropdown-item" onclick="about()"><a href="#" id="about">About</a></li>
+						</div>
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<ul class="nav nav-tabs mx-1 my-2 col-11" id="functions-nav">
+					<li class="nav-item main" onclick="change_function('main',true)">
+						<a class="nav-link active">Main</a>
+					</li>
 
+					<li class="nav-item function">
+						<a class="nav-link" onclick="modal_config_function('')"><i class="fas fa-plus"></i></a>
+					</li>
+
+				</ul>
+			</div>
 		</div>
-		<output id="list"></output>
+		<div id="sidebar-btn" onclick="show_tabVar()">
+			<i class="far fa-eye fa-lg text-white"></i>
+		</div>
+        <div id="sidebar" class="sidebar" style="width: 0px;">
+            <a href="#" class="boton-cerrar" onclick="hidde_tabVar()">×</a>
+            <table class="menu table text-white">
+                <thead>
+                    <th>Variables</th>
+                    <th></th>
+                </thead>
+                <tbody class="var-tableBody">
+                </tbody>
+            </table>
+        </div>
+		<div id="outputShow" class="bg-dark p-4">
+			<p class="text-white"></p>
+		</div>
 		<div id="contenedor" class="mx-auto">
-			<canvas id="canvas" width="5000" height="5000">Tu navegador no soporta Canvas</canvas>
+			<canvas id="canvas" width="3000" height="3000">Your navigator doesn't support canvas.</canvas>
 		</div>
 
 	</body>
@@ -102,8 +141,11 @@
 
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="save" class="btn btn-primary" data-dismiss="modal">Save</button>
-					<button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
+					<div class="mr-auto">
+						<button type="button" id="save" class="btn btn-primary mr-1">Save</button>
+						<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>
+					<button type="button" id="delete" class="btn btn-danger text-white" data-dismiss="modal">Delete</button>
 				</div>
 			</div>
 		</div>

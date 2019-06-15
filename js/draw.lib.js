@@ -1,3 +1,5 @@
+const $textpx = 11;
+const $y_desp = 40; 
 
 function get_mult_width_repeat(arr) {
 	let arr_if = [];
@@ -11,13 +13,16 @@ function get_mult_width_repeat(arr) {
 		for(let i = 0; i < arr_if.length; i++){
 			max_arr = Math.max(get_mult_width_if(arr_if[i].yes,true),get_mult_width_if(arr_if[i].false,false),max_arr);
 		}
-		return 1 + max_arr*1.4;
-	} else if (arr_repeat.length !== 0){
+		max_arr = 1 + max_arr*1;
+	}
+	if (arr_repeat.length !== 0){
 		for (let i = 0; i < arr_repeat.length ; i++) {
 			max_arr = Math.max(get_mult_width_repeat(arr_repeat[i].loop),max_arr);
 		}
-		return 1 + max_arr;
-	} else return 1;
+		max_arr = 1 + max_arr*1;
+	} 
+	if(max_arr === 0 ) return 1;
+	else return max_arr;
 }
 
 function get_mult_width_if(arr, way) {
@@ -38,13 +43,16 @@ function get_mult_width_if(arr, way) {
 				max_arr = Math.max(get_mult_width_if(arr_if[i].yes,way),max_arr);
 			}
 		}
-		return 1 + max_arr*1.4;
-	}else if (arr_repeat.length !== 0){
+		max_arr =  1 + max_arr*1;
+	}
+	if (arr_repeat.length !== 0){
 		for (let i = 0; i < arr_repeat.length ; i++) {
 			max_arr = Math.max(get_mult_width_repeat(arr_repeat[i].loop),max_arr);
 		}
-		return 1 + max_arr;
-	} else return 1;
+		max_arr =  1 + max_arr*1;
+	} 
+	if(max_arr === 0 ) return 1;
+	else return max_arr;
 
 }
 
@@ -68,19 +76,19 @@ function limpiar(canvas) {
 
 function dibujar(canvas) {
 
-	var x = 2500 ,y = 150;
+	var x = 1500 ,y = 150;
 	// Draw text
 	draw_init(x,y,canvas);
-	y += canvas.measureText('inicio').width+5 / 2;
-	draw_line(x,y,x,y+100,0,canvas,$array_main,true,'main');
+	y += canvas.measureText('inicio').height*2 + 1;
+	draw_line(x,y,x,y+100,0,canvas,$array_main,true,$active_fun);
 	y += 100;
 	for (var i = 0; i < $array_main.length; i++) {
 		$array_main[i].draw(x,y,i,canvas,$array_main);
-		y += canvas.getLayer('maino'+i).height + 10;
-		draw_line(x,y,x,y+100,i+1,canvas,$array_main,true,'main');
+		y += canvas.getLayer($active_fun+'o'+i).height + 10;
+		draw_line(x,y,x,y+100,i+1,canvas,$array_main,true,$active_fun);
 		y += 100;
 	}
-	y += canvas.measureText('inicio').width + 20 / 2;
+	y += canvas.measureText('inicio').height*2 + 5;
 	draw_end(x,y,canvas);
 	console.log("******** Dibujado Completo ********");
 }
@@ -92,41 +100,102 @@ function draw_init(x,y,canvas) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: $lang['start']
-	})
+		text: ($active_fun === 'main')? $lang['start'] : $active_fun + '(' + $array_functions[$active_fun]['param'] + ')'
+	});
 	// Draw circle as wide as the text
-	.drawArc({
+	canvas.drawPath({
 		layer: true,
+		closed: false,
 		name: 'o_inicio',
 		strokeStyle: '#000',
 		strokeWidth: 2,
-		x: x, y: y,
-		radius: canvas.measureText('inicio').width+5 / 2
-	});
+		p1: {
+			type: 'arc',
+			x: x - canvas.measureText('inicio').width, y: y,
+			start: 180, end: 360,
+			radius: canvas.measureText('inicio').height*2
+		},
+		p2: {
+			type: 'line',
+			x1: x - canvas.measureText('inicio').width, y1: y + canvas.measureText('inicio').height*2,
+			x2: x + canvas.measureText('inicio').width, y2: y + canvas.measureText('inicio').height*2
+		},
+		p3: {
+			type: 'quadratic',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2
+		},
+		p4: {
+			type: 'arc',
+			x: x + canvas.measureText('inicio').width, y: y,
+			start: 0, end: 180,
+			radius: canvas.measureText('inicio').height*2,
+			closed: false,
+		},
+		p5: {
+			type: 'line',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2,
+			x2: x - canvas.measureText('inicio').width, y2: y - canvas.measureText('inicio').height*2
+		},
+		mouseover: function(layer) {
+			$(this).css('cursor', 'pointer');
+		},
+		click: function(layer){
+			modal_config_function($active_fun);
+		}
+	})
 }
 
 function draw_end(x,y,canvas) {
+	let text = '';
+	if($active_fun !== 'main' && $array_functions[$active_fun]['type'] === 'function') text = $lang['return'] + " sol";
+	else text = $lang['end'];
+	
 	canvas.drawText({
 		layer: true,
 		name: 'fin',
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: $lang['end']
-	})
-	// Draw circle as wide as the text
-	.drawArc({
+		text: text
+	}).drawPath({
 		layer: true,
+		closed: false,
 		name: 'o_fin',
 		strokeStyle: '#000',
 		strokeWidth: 2,
-		x: x, y: y,
-		radius: canvas.measureText('inicio').width+5 / 2
-	});
+		p1: {
+			type: 'arc',
+			x: x - canvas.measureText('inicio').width, y: y,
+			start: 180, end: 360,
+			radius: canvas.measureText('inicio').height*2
+		},
+		p2: {
+			type: 'line',
+			x1: x - canvas.measureText('inicio').width, y1: y + canvas.measureText('inicio').height*2,
+			x2: x + canvas.measureText('inicio').width, y2: y + canvas.measureText('inicio').height*2
+		},
+		p3: {
+			type: 'quadratic',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2
+		},
+		p4: {
+			type: 'arc',
+			x: x + canvas.measureText('inicio').width, y: y,
+			start: 0, end: 180,
+			radius: canvas.measureText('inicio').height*2,
+			closed: false,
+		},
+		p5: {
+			type: 'line',
+			x1: x + canvas.measureText('inicio').width, y1: y - canvas.measureText('inicio').height*2,
+			x2: x - canvas.measureText('inicio').width, y2: y - canvas.measureText('inicio').height*2
+		},
+	})
+
 }
 
 
@@ -143,8 +212,12 @@ function draw_line(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 		x1: x1, y1: y1,
 		x2: x2, y2: y2,
 		mouseover: function(layer) {
-	    $(this).css('cursor','copy');
-	  },
+			$(this).css('cursor','copy');
+			layer.strokeStyle = '#FFEB3B'
+	  	},
+		mouseout: function(layer) {
+			layer.strokeStyle = '#000';
+		},
 		click: function (layer) {
 
 			switch($active){
@@ -171,7 +244,10 @@ function draw_line(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 				case 'for':
 					array.splice(i,0,new For_Struct(struct));
 					break;
-					
+
+				case 'function':
+					array.splice(i,0,new Function_Struct(struct));
+					break;
 			}
 			refrescar(canvas).then(function () {
 				dibujar(canvas);
@@ -183,16 +259,26 @@ function draw_line(x1,y1,x2,y2,i,canvas,array, arrow ,struct) {
 
 
 function draw_if(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
+	let text = '';
+	if(o.condition !== ''){
+		if(o.condition.length > 18){
+			text = o.condition.substring(0,18) + "...";
+		}else{
+			text = o.condition;
+		}
+	}else{
+		text = $lang['condition'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.condition === "" ? $lang['condition'] : o.condition
+		text: text
 	})
 	.drawPath({
 	  layer: true,
@@ -211,16 +297,9 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 	  },
 	  click: function(layer) {
 	  	  //alert("Click on: if " + layer.name);
-		  if($active === 'delete'){
-			  if(confirm($lang['delete-msg'])){
-				  parent_arr.splice(i,1);
-				  refrescar(canvas).then(function () {
-					  dibujar(canvas);
-				  });
-			  }
-		  }else{
-			modal_if(o,layer, canvas);
-		  }
+
+		  modal_if(o,layer, canvas,parent_arr,i);
+
 		}
 	}).drawText({
 		layer: true,
@@ -228,7 +307,7 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['no']
 	}).drawText({
@@ -237,7 +316,7 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x - 60 - canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['yes']
 	});
@@ -273,7 +352,6 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 	for (let j = 0; j < arr_yes.length; j++) {
 		arr_yes[j].parent = o.parent+'if'+i+'yes-';
 		arr_yes[j].draw(xh2,yh2,j,canvas,arr_yes);
-		console.log(o.parent+'if'+i+'yes-'+'o'+j);
 		yh2 += canvas.getLayer(o.parent+'if'+i+'yes-'+'o'+j).height + 10;
 		if(j >= arr_yes.length-1) arrow = false;
 		draw_line(xh2,yh2,xh2,yh2+100,j+1,canvas,arr_yes, arrow,o.parent+'if'+i+'yes-');
@@ -315,60 +393,68 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 }
 
 function draw_assign(x,y,i,canvas, o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	
+	y+=$y_desp;
 	let text = "";
-	let n_lineas = 1;
-	for(let index  in  o.list){
-		text += o.list[index][0] + " <- " + o.list[index][1] + "\n";
-		n_lineas += 5;
+	text += o.variable + " <- " + o.value ;
+	
+	if(text !== " <- "){
+		if(text.length > 18){
+			text = text.substring(0,18) + "...";
+		}else{
+			text = text;
+		}
+	}else{
+		text = $lang['assign'];
 	}
-	text = text.slice(0,-1);
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
-		x: x, y:  y - canvas.measureText('inicio').width/2 + n_lineas,
-		fontSize: '11pt',
+		x: x, y:  y - $y_desp/2,
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: text === "" ? $lang['assign'] : text
+		text: text === " <- " ? $lang['assign'] : text
 	}).drawRect({
 		layer:true,
 		strokeStyle: '#000',
 		strokeWidth: 2,
 		name: o.parent+'o'+i,
-		fromCenter: false,
-		x: x - canvas.measureText(o.parent+'t'+i).width/2 - 15 , y: y + 5 - canvas.measureText('inicio').width,
+		fromCenter: true,
+		x: x  , y: y - $y_desp/2,
 		width: (canvas.measureText(o.parent+'t'+i).width + 30),
-		height:  canvas.measureText(o.parent+'t'+i).height +30 ,
+		height:  canvas.measureText(o.parent+'t'+i).height + 15 ,
 		click: function(layer) {
 			//alert("Click on: Assing" + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete-msg'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_assign(o,layer,canvas);
-			}
+			modal_assign(o,layer,canvas,parent_arr,i);
 		}
 	});
 
 }
 
 function draw_input(x,y,i,canvas, o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
+
+	let text = '';
+	if(o.variable !== ''){
+		if(o.variable.length > 18){
+			text = o.variable.substring(0,18) + "...";
+		}else{
+			text = o.variable;
+		}
+	}else{
+		text = $lang['input'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.variable === "" ? $lang['input'] : o.variable
+		text: text
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -381,39 +467,43 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 		closed:true,
 		p1: {
 			type: 'line',
-			x1: x - width/2, y1: y - height,
-			x2: x + width, y2: y - height,
-			x3: x + width/2, y3: y + height,
-			x4: x - width, y4: y + height,
-			x5: x - width/2, y5: y - height,
+			x1: x - width, y1: y + height,
+			x2: x - width, y2: y - height/2 + 5,
+			x3: x + width, y3: y - height,
+			x4: x + width, y4: y + height,
+			x5: x - width, y5: y + height,
 		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_input(o,layer,canvas);
-			}
+			modal_input(o,layer,canvas,parent_arr,i);
+
 		}
 	})
 }
 
 function draw_output(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
+	let text = '';
+
+	if(o.buffer_out !== ''){
+		if(o.buffer_out.length > 18){
+			text = o.buffer_out.substring(0,18) + "...";
+		}else{
+			text = o.buffer_out;
+		}
+	}else{
+		text = $lang['output'];
+	}
+
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.buffer_out === ""? $lang['output']: o.buffer_out
+		text: text
 	});
 	let height = canvas.measureText(o.parent+'t'+i).height + 20;
 	let width = canvas.measureText(o.parent+'t'+i).width + 20;
@@ -426,46 +516,104 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 		closed:false,
 		p1: {
 			type: 'line',
-			x1: x - width, y1: y + height,
-			x2: x - width, y2: y - height,
-			x3: x + width, y3: y - height,
-			x4: x + width, y4: y + height
+			x1: x + width/2, y1: y + height,
+			x2: x - width/2, y2: y + height,
+			x3: x - ($y_desp + width/2), y3: y,
+			x4: x - width/2, y4: y - height,
+			x5: x + width/2, y5: y - height
 		},
 		p2:	{
-			type: 'quadratic',
-			x1: x + width, y1: y + height,
-			cx1: x + width/2, cy1: y + height - 20,
-			x2: x, y2: y + height,
-			cx2: x - width/2, cy2: y + height + 20,
-			x3: x - width, y3: y + height
+			type: 'arc',
+			x: x + width/2, y: y,
+			start: 0, end: 180,
+			radius: height
 		},
 		click: function(layer) {
 			//alert("Click on: escritura " + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete-msg'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_output(o,layer,canvas);
-			}
+			modal_output(o,layer,canvas,parent_arr,i);
+
 		}
 	})
 }
 
-function draw_while(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+function draw_function(x,y,i,canvas, o,parent_arr) {
+	y+=$y_desp;
+	let text = '';
+	if(o.name !== ''){
+		if(o.name.length > 18){
+			text = o.name.substring(0,18) + "...";
+		}else{
+			text = o.name;
+		}
+	}else{
+		text = $lang['function'];
+	}
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
-		text: o.condition === "" ? $lang['condition']: o.condition
+		text: text
+	});
+	let height = canvas.measureText(o.parent+'t'+i).height + 20;
+	let width = canvas.measureText(o.parent+'t'+i).width + 20;
+	canvas.drawRect({
+		layer:true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent+'o'+i,
+		fromCenter: true,
+		x: x  , y: y,
+		width: width*2,
+		height:  height*2,
+		click: function(layer) {
+			//alert("Click on: lectura " + layer.name);
+
+			modal_function(o,layer,canvas,parent_arr,i);
+
+		}
+	}).drawLine({
+		layer: true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent +i+'line1',
+		x1: x - width/2 - 10, y1: y - height,
+		x2: x - width/2 - 10, y2: y + height
+	}).drawLine({
+		layer: true,
+		strokeStyle: '#000',
+		strokeWidth: 2,
+		name: o.parent +i+'line2',
+		x1: x + width/2 + 10, y1: y - height,
+		x2: x + width/2 + 10, y2: y + height
+	})
+}
+
+
+function draw_while(x,y,i,canvas,o,parent_arr) {
+	y+=$y_desp;
+	let text = '';
+	if(o.condition !== ''){
+		if(o.condition.length > 18){
+			text = o.condition.substring(0,18) + "...";
+		}else{
+			text = o.condition;
+		}
+	}else{
+		text = $lang['condition'];
+	}
+	canvas.drawText({
+		layer: true,
+		name: o.parent+'t'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x, y: y,
+		fontSize: $textpx+'pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: text
 	})
 	.drawPath({
 		layer: true,
@@ -484,16 +632,9 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		},
 		click: function(layer) {
 			//alert("Click on: while " + layer.name);
-			if($active === 'delete'){
-				if(confirm($lang['delete-msg'])){
-					parent_arr.splice(i,1);
-					refrescar(canvas).then(function () {
-						dibujar(canvas);
-					});
-				}
-			}else{
-				modal_while(o,layer,canvas);
-			}
+
+			modal_while(o,layer,canvas,parent_arr,i);
+
 		}
 	})
 	.drawText({
@@ -502,7 +643,7 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['no']
 	});
@@ -557,14 +698,14 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 }
 
 function draw_for(x,y,i,canvas,o,parent_arr) {
-	y+=canvas.measureText('inicio').width;
+	y+=$y_desp;
 	canvas.drawText({
 		layer: true,
 		name: o.parent+'t'+i,
 		fillStyle: '#36c',
 		strokeWidth: 1,
 		x: x, y: y,
-		fontSize: '11pt',
+		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: o.variable +"="+o.initialization +"; " + o.condition + "; " + o.incremental
 	})
@@ -585,16 +726,8 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 			},
 			click: function(layer) {
 				//alert("Click on: for " + layer.name);
-				if($active === 'delete'){
-					if(confirm($lang['delete-msg'])){
-						parent_arr.splice(i,1);
-						refrescar(canvas).then(function () {
-							dibujar(canvas);
-						});
-					}
-				}else{
-					modal_for(o,layer,canvas);
-				}
+				modal_for(o,layer,canvas, parent_arr, i);
+
 			}
 		}).drawLine({
 			layer: true,
@@ -610,13 +743,14 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 			fillStyle: '#36c',
 			strokeWidth: 1,
 			x: x + 60 + canvas.measureText(o.parent+'t'+i).width, y: y - 20 ,
-			fontSize: '11pt',
+			fontSize: $textpx+'pt',
 			fontFamily: 'Verdana, sans-serif',
 			text: $lang['no']
 		});
 
 	let arr = o.loop;
 	let multp_width = get_mult_width_repeat(arr);
+	console.log(multp_width);
 	let yloop = y + canvas.measureText(o.parent+'t'+i).height*2;
 	let arrow = false;
 	if(arr.length>0)  arrow = true;
