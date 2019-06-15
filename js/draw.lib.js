@@ -262,8 +262,8 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 	y+=$y_desp;
 	let text = '';
 	if(o.condition !== ''){
-		if(o.condition.length > 16){
-			text = o.condition.substring(0,16) + "...";
+		if(o.condition.length > 18){
+			text = o.condition.substring(0,18) + "...";
 		}else{
 			text = o.condition;
 		}
@@ -399,8 +399,8 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 	text += o.variable + " <- " + o.value ;
 	
 	if(text !== " <- "){
-		if(text.length > 16){
-			text = text.substring(0,16) + "...";
+		if(text.length > 18){
+			text = text.substring(0,18) + "...";
 		}else{
 			text = text;
 		}
@@ -438,8 +438,8 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 
 	let text = '';
 	if(o.variable !== ''){
-		if(o.variable.length > 16){
-			text = o.variable.substring(0,16) + "...";
+		if(o.variable.length > 18){
+			text = o.variable.substring(0,18) + "...";
 		}else{
 			text = o.variable;
 		}
@@ -486,8 +486,8 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 	let text = '';
 
 	if(o.buffer_out !== ''){
-		if(o.buffer_out.length > 16){
-			text = o.buffer_out.substring(0,16) + "...";
+		if(o.buffer_out.length > 18){
+			text = o.buffer_out.substring(0,18) + "...";
 		}else{
 			text = o.buffer_out;
 		}
@@ -540,8 +540,8 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 	y+=$y_desp;
 	let text = '';
 	if(o.name !== ''){
-		if(o.name.length > 16){
-			text = o.name.substring(0,16) + "...";
+		if(o.name.length > 18){
+			text = o.name.substring(0,18) + "...";
 		}else{
 			text = o.name;
 		}
@@ -597,8 +597,8 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 	y+=$y_desp;
 	let text = '';
 	if(o.condition !== ''){
-		if(o.condition.length > 16){
-			text = o.condition.substring(0,16) + "...";
+		if(o.condition.length > 18){
+			text = o.condition.substring(0,18) + "...";
 		}else{
 			text = o.condition;
 		}

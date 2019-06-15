@@ -92,7 +92,7 @@ function run_arr(arr, res) {
         str += '});\n';
     }
     for (let i = 0; i < input_then; i++) {
-        str += '}));\n';
+        str += '}).catch((error) => { $(\'#outputShow p\').html($(\'#outputShow p\').html() + \'<span class="text-warning">Error: \' + error.message + \'<\\span><br>\'); }));\n';
     }
     return str;
 }
