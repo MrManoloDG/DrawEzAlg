@@ -9,7 +9,6 @@ function javascript_code() {
         }
     }
     str += javascript_arr($array_functions['main']['flow'],0) + '<br>';
-    alert(str);
     return str;
 }
 
@@ -25,7 +24,6 @@ function javascript_arr(arr, tab) {
     let str = '';
     let tabText = TabtoText(tab);
     arr.forEach(function (element) {
-        console.log(element);
         switch(element.type){
             case 'if':
                 str += tabText + javascript_if(element,tab,tabText) + '<br>';

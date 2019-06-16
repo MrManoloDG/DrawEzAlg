@@ -174,7 +174,6 @@ function debug_next_step(b) {
                 let bef_struct = bef_stack[1];
                 let bef_id = $debug_id_stack.peek();
                 let function_element = bef_struct[bef_id-1];
-                console.log(function_element);
 
                 let call_param_str = function_element.param.replace(/ /g, "");
                 let call_param = call_param_str.split(",");
@@ -184,7 +183,6 @@ function debug_next_step(b) {
                         let pos = param.indexOf(ioparam[i]);
                         let check_call_param = new RegExp("^[a-zA-Z]+.*");
                         if(check_call_param.test(call_param[pos])){
-                            console.log(call_param[pos] + ' = [\'' + ioparam[i] +'\'];\n');
                             iosvar[call_param[pos]] = eval(ioparam[i]);
                         } 
                     }
@@ -202,7 +200,6 @@ function debug_next_step(b) {
             }
             if($array_functions[$debug_function_name]['type'] === 'procedure' && ioparam_str !== ''){
                 for(let index in iosvar ){
-                    console.log(index + ' = ' + iosvar[index] + ';\n')
                     eval(index + ' = ' + iosvar[index] + ';\n');
                 }
             }
@@ -407,7 +404,6 @@ function debug_assign(e) {
     }else{
         str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
     }
-    console.log(str);
     return str;
 }
 
@@ -439,9 +435,6 @@ function debug_in(e) {
     str += 'Promise.all($promesas).then( () =>{ $promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
         'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);}));});';
 
-    
-
-    console.log(str);
     return str;
 }
 

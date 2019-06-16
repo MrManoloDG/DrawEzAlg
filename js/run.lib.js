@@ -20,7 +20,6 @@ function run_code() {
                     declarations += 'let '+ $run_let_function_assings[i] +';\n';	
         }
         run = run.replace("<-$declarations->", declarations);
-        console.log(run);
         eval(run);
     }
     catch(error) {
