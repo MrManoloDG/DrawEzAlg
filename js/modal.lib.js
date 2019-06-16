@@ -182,9 +182,13 @@ function modal_config_function(name){
 
         $('#delete').click(function () {
             if($('#oID').val() === check){
-                change_function('main');
-                $('.'+name).remove();
-                delete $array_functions[name];
+                if(confirm($lang['delete-msg'])){
+                    if(o !== undefined){
+                        change_function('main');
+                        $('.'+name).remove();
+                        delete $array_functions[name];
+                    }
+                }
             }
         });
 
