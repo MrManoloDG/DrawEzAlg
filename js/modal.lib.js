@@ -116,7 +116,6 @@ function modal_code() {
 function validate_form(){
     let validate = true;
     $('#id_form .needed').each(function(){
-        console.log($(this));
         if($(this).val() === '' || $(this).val() === null){
             validate = false;
             $(this).addClass("border border-danger");
@@ -182,15 +181,18 @@ function modal_config_function(name){
 
         $('#delete').click(function () {
             if($('#oID').val() === check){
-                change_function('main');
-                $('.'+name).remove();
-                delete $array_functions[name];
+                if(confirm($lang['delete-msg'])){
+                    if(o !== undefined){
+                        change_function('main');
+                        $('.'+name).remove();
+                        delete $array_functions[name];
+                    }
+                }
             }
         });
 
         $('#save').click(function () {
             if($('#oID').val() === check){
-                console.log(o);
                 let validate = validate_form();
                 if(validate){
                     if(o === undefined){

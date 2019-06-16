@@ -1,6 +1,36 @@
 var $run_let_function_assings = [];
 var $run_assing_function = false;
 
+function run_code() {
+	$('#outputShow p').html("");
+	debug_init();
+	
+	let $new_line = "\n";
+	let run = 'let $promesas = [];\n\n';
+
+	
+
+    try {
+        run += run_functions();
+
+        $run_let_function_assings = [];
+        run += '<-$declarations-> ' + run_arr($array_functions['main']['flow']);
+        let declarations = '';
+        for(let i = 0; i<$run_let_function_assings.length; i++){
+                    declarations += 'let '+ $run_let_function_assings[i] +';\n';	
+        }
+        run = run.replace("<-$declarations->", declarations);
+        eval(run);
+    }
+    catch(error) {
+		console.error(error);
+        $('#outputShow p').html($('#outputShow p').html()  +'<span class=\'text-warning\'>Error: ' + error.message + '</span><br>');
+        // expected output: ReferenceError: nonExistentFunction is not defined
+        // Note - error messages will vary depending on browser
+    }
+}
+
+
 function run_check_async(arr){
     let res = arr.filter( element => {
         switch(element.type){
@@ -35,6 +65,7 @@ function run_arr(arr, res) {
     let input_then = 0;
     let n_promiseAll= 0;
     arr.forEach(function (element) {
+        element.check_errors();
         switch(element.type){
             case 'if':
                 str += run_if(element) + '\n';
@@ -173,7 +204,7 @@ function run_function(e) {
     let str = '';
     let name_arrayBack = '$ioarr';
     let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', ' + name_arrayBack) : e.param;
-    str += e.name + '(' + parameters + ');\n';
+    str += e.name + '(' + math_lib_check( parameters ) + ');\n';
 
     if($array_functions[e.name]['type'] === 'procedure'){
         str = 'let '+ name_arrayBack +' = {};\n' + str;

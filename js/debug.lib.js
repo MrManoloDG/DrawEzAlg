@@ -10,6 +10,37 @@ var $debug_assign_back = ''; //save assign to step back before exe the function 
 var $debug_assign_back_stack = new Stack();
 var $debug_error = false; //save catch a exception 
 
+
+/**
+ * Debug the step when click the button
+ * @param {*} b 
+ */
+function debug_step(b) {
+
+    // Check if this is the first step of the algorithm to do the first config
+	if(($debug_id === 0 && $debug_function === 'main') || $debug_error){
+		
+		$('#outputShow p').html("");
+		$debug_struct = $array_main;
+		$debug_stack.push(['main', $array_main]);
+		$debug_error=false;
+		eval("$promesas = [];");
+		if(b){
+			$('#run_step').prop("disabled", true);
+		}else {
+			$('#run_step_inFunction').prop("disabled", true);
+		}
+	}
+	try {
+		debug_next_step(b);
+	}
+	catch(error) {
+		$('#outputShow p').html($('#outputShow p').html()  +'<span class=\'text-warning\'>Error: ' + error.message + '</span><br>');
+		// expected output: ReferenceError: nonExistentFunction is not defined
+		// Note - error messages will vary depending on browser
+	}
+}
+
 /**
  * This function reset the global variables of debug process
  */
@@ -143,7 +174,6 @@ function debug_next_step(b) {
                 let bef_struct = bef_stack[1];
                 let bef_id = $debug_id_stack.peek();
                 let function_element = bef_struct[bef_id-1];
-                console.log(function_element);
 
                 let call_param_str = function_element.param.replace(/ /g, "");
                 let call_param = call_param_str.split(",");
@@ -153,7 +183,6 @@ function debug_next_step(b) {
                         let pos = param.indexOf(ioparam[i]);
                         let check_call_param = new RegExp("^[a-zA-Z]+.*");
                         if(check_call_param.test(call_param[pos])){
-                            console.log(call_param[pos] + ' = [\'' + ioparam[i] +'\'];\n');
                             iosvar[call_param[pos]] = eval(ioparam[i]);
                         } 
                     }
@@ -171,7 +200,6 @@ function debug_next_step(b) {
             }
             if($array_functions[$debug_function_name]['type'] === 'procedure' && ioparam_str !== ''){
                 for(let index in iosvar ){
-                    console.log(index + ' = ' + iosvar[index] + ';\n')
                     eval(index + ' = ' + iosvar[index] + ';\n');
                 }
             }
@@ -202,6 +230,7 @@ function debug_next_step(b) {
  */
 function debug_struct(element,$b){
     let str = '';
+    element.check_errors();
     switch(element.type){
         case 'if':
             $debug_id += 1;
@@ -375,7 +404,6 @@ function debug_assign(e) {
     }else{
         str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
     }
-    console.log(str);
     return str;
 }
 
@@ -407,9 +435,6 @@ function debug_in(e) {
     str += 'Promise.all($promesas).then( () =>{ $promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
         'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);}));});';
 
-    
-
-    console.log(str);
     return str;
 }
 
@@ -427,7 +452,7 @@ function debug_exe_function(e) {
     }
 
     let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', $ioarr') : e.param;
-    str += e.name + '(' + parameters + ');\n';
+    str += e.name + '(' + math_lib_check(parameters) + ');\n';
     if($array_functions[e.name]['type'] === 'procedure'){
         let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
         let ioparam = ioparam_str.split(",");
@@ -486,7 +511,7 @@ function debug_function(e){
     let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
     let fun_params = param_str.split(",");
 
-    let call_pstr = e.param.replace(/ /g, "");
+    let call_pstr = math_lib_check(e.param.replace(/ /g, ""));
     let call_params = call_pstr.split(",");
 
     if(fun_params.length === call_params.length){
