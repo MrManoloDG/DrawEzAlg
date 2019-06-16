@@ -750,7 +750,6 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 
 	let arr = o.loop;
 	let multp_width = get_mult_width_repeat(arr);
-	console.log(multp_width);
 	let yloop = y + canvas.measureText(o.parent+'t'+i).height*2;
 	let arrow = false;
 	if(arr.length>0)  arrow = true;
