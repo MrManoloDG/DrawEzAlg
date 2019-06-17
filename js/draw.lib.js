@@ -295,6 +295,9 @@ function draw_if(x,y,i,canvas,o,parent_arr) {
 	    x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
 			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
 	  },
+	  mouseover: function(layer) {
+		$(this).css('cursor', 'pointer');
+		},
 	  click: function(layer) {
 	  	  //alert("Click on: if " + layer.name);
 
@@ -425,6 +428,9 @@ function draw_assign(x,y,i,canvas, o,parent_arr) {
 		x: x  , y: y - $y_desp/2,
 		width: (canvas.measureText(o.parent+'t'+i).width + 30),
 		height:  canvas.measureText(o.parent+'t'+i).height + 15 ,
+		mouseover: function(layer) {
+			$(this).css('cursor', 'pointer');
+		},
 		click: function(layer) {
 			//alert("Click on: Assing" + layer.name);
 			modal_assign(o,layer,canvas,parent_arr,i);
@@ -472,6 +478,9 @@ function draw_input(x,y,i,canvas, o,parent_arr) {
 			x3: x + width, y3: y - height,
 			x4: x + width, y4: y + height,
 			x5: x - width, y5: y + height,
+		},
+		mouseover: function(layer) {
+			$(this).css('cursor', 'pointer');
 		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
@@ -528,6 +537,9 @@ function draw_output(x,y,i,canvas,o,parent_arr) {
 			start: 0, end: 180,
 			radius: height
 		},
+		mouseover: function(layer) {
+			$(this).css('cursor', 'pointer');
+		},
 		click: function(layer) {
 			//alert("Click on: escritura " + layer.name);
 			modal_output(o,layer,canvas,parent_arr,i);
@@ -569,6 +581,9 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 		x: x  , y: y,
 		width: width*2,
 		height:  height*2,
+		mouseover: function(layer) {
+			$(this).css('cursor', 'pointer');
+		},
 		click: function(layer) {
 			//alert("Click on: lectura " + layer.name);
 
@@ -629,6 +644,9 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 			x3: x, y3: y + canvas.measureText(o.parent+'t'+i).height*2,
 			x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
 			x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
+		},
+		mouseover: function(layer) {
+			$(this).css('cursor', 'pointer');
 		},
 		click: function(layer) {
 			//alert("Click on: while " + layer.name);
@@ -723,6 +741,9 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 				x3: x, y3: y + canvas.measureText(o.parent+'t'+i).height*2,
 				x4: x - 30 - canvas.measureText(o.parent+'t'+i).width, y4: y,
 				x5: x, y5: y - canvas.measureText(o.parent+'t'+i).height*2,
+			},
+			mouseover: function(layer) {
+				$(this).css('cursor', 'pointer');
 			},
 			click: function(layer) {
 				//alert("Click on: for " + layer.name);
