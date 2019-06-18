@@ -348,7 +348,7 @@ function debug_for(e) {
         $debug_id_stack.push($debug_id);
         $debug_id = 0;
     }else {
-        eval("delete i;");
+        eval("delete " + e.variable + ";");
         $debug_id += 1;
     }
 }
