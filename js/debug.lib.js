@@ -332,9 +332,15 @@ function debug_for(e) {
     if(varundef){
         eval(e.variable + " = " + e.initialization);
     }else{
-        eval(e.variable + "++;");
+        eval(e.incremental + ";");
     }
-    let bFor = eval(e.variable + ' <= ' + e.condition);
+    let condition_signal = '';
+    if(e.way === 'increment'){
+        condition_signal = ' <= ';
+    }else if(e.way === 'decrement'){
+        condition_signal = ' >= ';
+    }
+    let bFor = eval(e.variable + condition_signal + e.condition);
     if(bFor){
         $debug_struct = e.loop;
         $debug_function = e.parent + 'o' + $debug_id;

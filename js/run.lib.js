@@ -145,8 +145,14 @@ function run_while(e) {
 }
 
 function run_for(e) {
+    let condition_signal = '';
+    if(e.way === 'increment'){
+        condition_signal = ' <= ';
+    }else if(e.way === 'decrement'){
+        condition_signal = ' >= ';
+    }
     let str = 'for( let ' + e.variable + '=' + e.initialization + '; ' +
-        e.variable + ' <= ' + e.condition + ';' +
+        e.variable + condition_signal + e.condition + ';' +
         ' ' + e.incremental + '){\n';
     str = math_lib_check(str);
     str +=  run_arr(e.loop);

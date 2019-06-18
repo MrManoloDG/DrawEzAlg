@@ -39,6 +39,8 @@
   "variable-placeholder": "Write a placeholder",
   "incremental": "Increment",
   "incremental-placeholder": "Write an increment",
+  "increment": "Increment",
+  "decrement": "Decrement",
   "initialization": "Initialization",
   "initialization-placeholder": "Write a initialization",
   "output-label": "Expression",
