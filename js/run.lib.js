@@ -20,6 +20,7 @@ function run_code() {
                     declarations += 'let '+ $run_let_function_assings[i] +';\n';	
         }
         run = run.replace("<-$declarations->", declarations);
+        console.log(run);
         eval(run);
     }
     catch(error) {
@@ -163,8 +164,11 @@ function run_for(e) {
 function run_assign(e) {
     let str = '';
     let functions = false;
+    let array_regexp = new RegExp("[a-zA-z]+\\[([a-zA-z]+\d*|\d+)\\]");
 
-    if($run_let_function_assings.indexOf(e.variable) === -1){
+    
+    if($run_let_function_assings.indexOf(e.variable) === -1 && !array_regexp.test(e.variable)){
+        console.log(array_regexp.test(e.variable));
         //str += 'let ';
         $run_let_function_assings.push(e.variable);
     }
@@ -197,7 +201,10 @@ function run_out(e) {
 
 
 function run_in(e) {
-    if($run_let_function_assings.indexOf(e.variable) === -1){
+    let array_regexp = new RegExp("[a-zA-z]+\\[([a-zA-z]+\d*|\d+)\\]");
+
+    
+    if($run_let_function_assings.indexOf(e.variable) === -1 && !array_regexp.test(e.variable)){
         //str += 'let ';
         $run_let_function_assings.push(e.variable);
     }
