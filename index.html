@@ -52,7 +52,7 @@
 			<div class="row">
 				<div class="btn-toolbar mt-1 col-12" role="toolbar" aria-label="Toolbar with button groups">
 					<div class="btn-group mr-2 my-1" role="group" aria-label="First group">
-						<button type="button" name="assign" id="assign" class="btn btn-primary" onclick="btn_struct('assign')"><img src="img/btn/assing.png" class="img-fluid btn-img mx-auto"></button>
+						<button type="button" name="assign" id="assign" title="assign" class="btn btn-primary" onclick="btn_struct('assign')"><img src="img/btn/assing.png" class="img-fluid btn-img mx-auto"></button>
 						<button type="button" name="if" id="if" class="btn btn-primary text-white" onclick="btn_struct('if')"><img src="img/btn/if.png" class="img-fluid btn-img"></button>
 						<button type="button" name="while" id="while" class="btn btn-primary text-white" onclick="btn_struct('while')"><img src="img/btn/while.png" class="img-fluid btn-img"></button>
 						<button type="button" name="for" id="for" class="btn btn-primary text-white" onclick="btn_struct('for')"><img src="img/btn/for.png" class="img-fluid btn-img"></button>
@@ -122,10 +122,11 @@
             </table>
         </div>
 		<div id="outputShow" class="bg-dark p-4">
+			<h6 class="text-white"><u>Console</u></h6>
 			<p class="text-white"></p>
 		</div>
 		<div id="contenedor" class="mx-auto">
-			<canvas id="canvas" width="3000" height="3000">Your navigator doesn't support canvas.</canvas>
+			<canvas id="canvas" title="" width="3000" height="3000">Your navigator doesn't support canvas.</canvas>
 		</div>
 
 	</body>

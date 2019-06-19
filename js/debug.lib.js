@@ -328,18 +328,23 @@ function debug_while(e) {
  * @param {*} e struct
  */
 function debug_for(e) {
+    let condition_signal = '';
+    let increment_signal = '';
+    if(e.way === 'increment'){
+        condition_signal = ' <= ';
+        increment_signal = '+';
+    }else if(e.way === 'decrement'){
+        condition_signal = ' >= ';
+        increment_signal = '-';
+    }
+
     let varundef = eval("typeof " + e.variable +" === 'undefined'");
     if(varundef){
         eval(e.variable + " = " + e.initialization);
     }else{
-        eval(e.incremental + ";");
+        eval(e.variable + '=' + e.variable + increment_signal +e.incremental + ";");
     }
-    let condition_signal = '';
-    if(e.way === 'increment'){
-        condition_signal = ' <= ';
-    }else if(e.way === 'decrement'){
-        condition_signal = ' >= ';
-    }
+    
     let bFor = eval(e.variable + condition_signal + e.condition);
     if(bFor){
         $debug_struct = e.loop;
@@ -400,7 +405,7 @@ function debug_assign(e) {
         $debug_vars.push(e.variable);
     }
     for(let nameFun in $array_functions){
-        if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
+        if(nameFun !== 'main' && $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
             functions = true;
         }
     }
@@ -421,7 +426,16 @@ function debug_out(e) {
     //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
     let str = '';
     let check_string = /".+"/;
-    if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
+    let functions = false;
+    for(let nameFun in $array_functions){
+        if(nameFun !== 'main' && $array_functions[nameFun]['type'] === 'function' && e.buffer_out.indexOf(nameFun+'(') >= 0){
+            functions = true;
+        }
+    }
+    if(functions){
+        str += run_functions();
+        str += math_lib_check(e.buffer_out) + '.then(($sol) => {$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval($sol) + \'<br>\');});\n';
+    }else if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
     else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + math_lib_check(e.buffer_out) +') + \'<br>\');';
     return str;
 }

@@ -51,7 +51,7 @@ class For_Struct extends While_Struct{
 		this.type = 'for';
 		this.variable = "i";
 		this.initialization = "0";
-		this.incremental = "i++";
+		this.incremental = "1";
 		this.way = "increment";
 	}
 

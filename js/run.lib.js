@@ -94,6 +94,10 @@ function run_arr(arr, res) {
 
             case 'out':
                 str += run_out(element) + '\n';
+                if($run_assing_function){
+                    input_then++;
+                    $run_assing_function=false;
+                }
                 break;
 
             case 'in':
@@ -147,14 +151,17 @@ function run_while(e) {
 
 function run_for(e) {
     let condition_signal = '';
+    let increment_signal = '';
     if(e.way === 'increment'){
         condition_signal = ' <= ';
+        increment_signal = '+'
     }else if(e.way === 'decrement'){
         condition_signal = ' >= ';
+        increment_signal = '-';
     }
     let str = 'for( let ' + e.variable + '=' + e.initialization + '; ' +
         e.variable + condition_signal + e.condition + ';' +
-        ' ' + e.incremental + '){\n';
+        ' '+e.variable+'='+e.variable+ increment_signal + e.incremental + '){\n';
     str = math_lib_check(str);
     str +=  run_arr(e.loop);
     str += '}\n';
@@ -181,7 +188,7 @@ function run_assign(e) {
 
     if(functions){
         $run_assing_function=true;
-        str += 'sol = undefined;\n $promesas.push(' + math_lib_check(e.value) + '.then(($sol) => {'+e.variable+' = $sol;';
+        str += '$promesas.push(' + math_lib_check(e.value) + '.then(($sol) => {'+e.variable+' = $sol;';
     }else{
         str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
     }
@@ -192,8 +199,18 @@ function run_out(e) {
     //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
     let str = '';
     let check_string = /".+"/;
+    let functions = false;
+    for(let nameFun in $array_functions){
+        if(nameFun !== 'main' && $array_functions[nameFun]['type'] === 'function' && e.buffer_out.indexOf(nameFun+'(') >= 0){
+            functions = true;
+        }
+    }
 
-    if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
+    if(functions){
+        $run_assing_function=true;
+        str += '$promesas.push(' + math_lib_check(e.buffer_out) + '.then(($sol) => {$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval($sol) + \'<br>\');';
+    }
+    else if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
     else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + math_lib_check(e.buffer_out) +') + \'<br>\');';
     return str;
 }

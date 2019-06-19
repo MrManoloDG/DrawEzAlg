@@ -175,7 +175,8 @@ function load_for(e,o) {
     o.condition = e.condition;
     o.variable = e.variable;
     o.initialization = e.initialization;
-    o.incremental = e.incremental;
+	o.incremental = e.incremental;
+	o.way = e.way;
     load_arr(e.loop, o.loop);
 }
 
