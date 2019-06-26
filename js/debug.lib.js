@@ -372,12 +372,16 @@ function debug_assign_fun_step(e) {
     let func;
     for(let nameFun in $array_functions){
         let posfun = e.value.indexOf(nameFun+'(');
-        if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && posfun >= 0){
+        if(e.variable !== 'main' && $array_functions[nameFun]['type'] === 'function' && posfun >= 0){
             func = new Function_Struct(e.parent);
             func.name = nameFun;
             let initc = posfun + (nameFun+'(').length;
             let longc  = e.value.indexOf(')', posfun) - initc ;
-            func.param = e.value.substr(initc, longc);
+            let call_params = e.value.substr(initc, longc);
+            if(count_param(call_params) !== count_param($array_functions[nameFun]['param'])){
+                throw new Error($lang['error-nparams'] + nameFun);
+            }
+            func.param = call_params;
             haveFunction = true;
             sum_ind = false;
             $debug_assign_back_stack.push($debug_assign_back);
@@ -406,6 +410,12 @@ function debug_assign(e) {
     }
     for(let nameFun in $array_functions){
         if(nameFun !== 'main' && $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
+            let initc = e.value.indexOf(nameFun+'(') + (nameFun+'(').length;
+            let longc = e.value.lastIndexOf(')') - initc;
+            let call_params = e.value.substr(initc, longc);
+            if(count_param(call_params) !== count_param($array_functions[nameFun]['param'])){
+                throw new Error($lang['error-nparams'] + nameFun);
+            }
             functions = true;
         }
     }
@@ -480,6 +490,11 @@ function debug_exe_function(e) {
         let param = param_str.split(",");
         let call_param_str = e.param.replace(/ /g, "");
         let call_param = call_param_str.split(",");
+
+        if(count_param(param_str) !== count_param(call_param_str)){
+            throw new Error($lang['error-nparams'] + e.name);
+        }
+
         if(ioparam_str !== ''){
             for(let i=0; i<ioparam.length; i++){
                 let index = param.indexOf(ioparam[i]);
@@ -533,6 +548,10 @@ function debug_function(e){
 
     let call_pstr = math_lib_check(e.param.replace(/ /g, ""));
     let call_params = call_pstr.split(",");
+    if(count_param(param_str) !== count_param(call_pstr)){
+        throw new Error($lang['error-nparams'] + e.name);
+    }
+
 
     if(fun_params.length === call_params.length){
         for (let i = 0; i < fun_params.length ; i++) {

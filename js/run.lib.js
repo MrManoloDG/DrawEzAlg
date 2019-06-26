@@ -172,8 +172,8 @@ function run_assign(e) {
     let str = '';
     let functions = false;
     let array_regexp = new RegExp("[a-zA-z]+\\[([a-zA-z]+\d*|\d+)\\]");
-
     
+
     if($run_let_function_assings.indexOf(e.variable) === -1 && !array_regexp.test(e.variable)){
         console.log(array_regexp.test(e.variable));
         //str += 'let ';
@@ -182,6 +182,12 @@ function run_assign(e) {
 
     for(let nameFun in $array_functions){
         if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
+            let initc = e.value.indexOf(nameFun+'(') + (nameFun+'(').length;
+            let longc = e.value.lastIndexOf(')') - initc;
+            let call_params = e.value.substr(initc, longc);
+            if(count_param(call_params) !== count_param($array_functions[nameFun]['param'])){
+                throw new Error($lang['error-nparams'] + nameFun);
+            }
             functions = true;
         }
     }
@@ -230,22 +236,34 @@ function run_in(e) {
     return str;
 }
 
+function count_param(str){
+    if(str === "")return 0;
+    else{
+        return str.split(",").length;
+    }
+}
+
 function run_function(e) {
     let str = '';
     let name_arrayBack = '$ioarr';
     let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', ' + name_arrayBack) : e.param;
     str += e.name + '(' + math_lib_check( parameters ) + ');\n';
 
+    let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
+    let param = param_str.split(",");
+    let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
+    let ioparam = ioparam_str.split(",");
+    let call_param_str = e.param.replace(/ /g, "");
+    let call_param = call_param_str.split(",");
+
+    if(count_param(param_str) !== count_param(call_param_str)){
+        throw new Error($lang['error-nparams'] + e.name);
+    }
+
     if($array_functions[e.name]['type'] === 'procedure'){
         str = 'let '+ name_arrayBack +' = {};\n' + str;
 
-        let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
-        let param = param_str.split(",");
-        let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
-        let ioparam = ioparam_str.split(",");
-        let call_param_str = e.param.replace(/ /g, "");
-        let call_param = call_param_str.split(",");
-
+        
         if(ioparam_str !== ''){
             for(let i=0; i<ioparam.length; i++){
                 let index = param.indexOf(ioparam[i]);

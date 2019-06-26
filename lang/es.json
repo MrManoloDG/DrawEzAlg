@@ -65,6 +65,7 @@
   "empty-input": "Campo Vacío",
   "empty-input-text": "Hay algunos campos necesarios vacios",
   "duplicate-funname": "Hay una función con el mismo nombre",
+  "error-nparams": "Número de parámetros no coincide en la función ",
   "info-table": {
     "operator-list": "Lista de operadores",
     "arithmetic-list": "Lista de operadores aritméticos",

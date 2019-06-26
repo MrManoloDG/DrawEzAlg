@@ -112,6 +112,9 @@ function change_language(lang){
 				refrescar($canvas).then(function () {
 					dibujar($canvas);
 				});
+			},
+			error: function (error){
+				change_language('en');
 			}
 		}
 	);

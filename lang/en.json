@@ -65,6 +65,7 @@
   "empty-input": "Empty Fields",
   "empty-input-text": "There are some empty necessary fields",
   "duplicate-funname": "There is a function with the same name",
+  "error-nparams": "Number of parameters does not match in the function ",
   "open-files": "Open Files",
   "info-table": {
     "operator-list": "List of operators",
