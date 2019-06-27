@@ -1,2 +1,2 @@
 # DrawEzCode
-TFG - Codificador de Diagrama de flujo a Codigo
+TFG - Codificador de Diagrama de flujo
