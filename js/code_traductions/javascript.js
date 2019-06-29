@@ -1,13 +1,7 @@
 
 function javascript_code() {
     let str = '';
-    for(let index in $array_functions){
-        if(index !== 'main'){
-            str += 'function '+ index +'(' + $array_functions[index]['param'] + '){<br>' +
-                javascript_arr($array_functions[index]['flow']) +
-                '}<br><br>';
-        }
-    }
+    str += javascript_functions();
     str += javascript_arr($array_functions['main']['flow'],0) + '<br>';
     return str;
 }
@@ -34,7 +28,7 @@ function javascript_arr(arr, tab) {
                 break;
 
             case 'assign':
-                str += javascript_assign(element, tabText) + '<br>';
+                str += tabText + javascript_assign(element, tabText) + '<br>';
                 break;
 
             case 'out':
@@ -102,9 +96,44 @@ function javascript_in(e) {
 
 function javascript_function(e) {
     let str = '';
-    if(e.solution !== "") str += e.solution + ' = ';
-    str += e.name + '(' + e.param + ');<br>';
+    str += e.name + '(' + e.param + ');';
     return str;
+}
+
+function javascript_functions(){
+    let run = '';
+    for(let index in $array_functions){
+	    if(index !== 'main'){
+			let param_str = $array_functions[index]['param'].replace(/ /g, "");
+			let params =  param_str.split(",");
+	    	$run_let_function_assings = [];
+			let ioparam_str = $array_functions[index]['ioparam'].replace(/ /g, "");
+			let ioparam = ioparam_str.split(",");
+			let parameters = $array_functions[index]['param'];
+			run += 'function '+ index +'(' + parameters + '){<br>';
+
+			if(($array_functions[index]['type'] === 'function')){
+				$run_let_function_assings.push('sol');
+				run += '<-$declarations-> ' + javascript_arr($array_functions[index]['flow'],0);
+			}else{
+				run += '<-$declarations-> ' + javascript_arr($array_functions[index]['flow'],0);
+			}
+				
+			
+			let declarations = '';
+			for(let i = 0; i<$run_let_function_assings.length; i++){
+				if(params.indexOf($run_let_function_assings[i]) === -1) declarations += 'let '+ $run_let_function_assings[i] +';<br>';	
+			}
+			run = run.replace("<-$declarations->", declarations);
+
+			if($array_functions[index]['type'] === 'function'){
+				run += '&nbsp&nbsp return sol;<br>';
+			}
+
+			run += '}<br><br>';
+        }
+    }
+    return run;
 }
 
 

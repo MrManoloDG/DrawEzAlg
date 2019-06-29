@@ -540,6 +540,11 @@ function modal_for(o, layer, canvas, parent_arr, i) {
         $('#variable').val(o.variable);
         $('#variable').attr("placeholder", $lang['var-cont']);
         $('#variable-label').text($lang['var-cont']);
+
+        $('#increment-check-lbl').text($lang['increment']);
+        $('#decrement-check-lbl').text($lang['decrement']);
+        $('#' + o.way + '-check').prop('checked', true);
+
         let check = layer.name + Date.now();
         $('#oID').val(check);
         $('#save').removeClass("d-none");
@@ -563,6 +568,7 @@ function modal_for(o, layer, canvas, parent_arr, i) {
                     o.incremental = $('#incremental').val();
                     o.initialization = $('#initialization').val();
                     o.variable = $('#variable').val();
+                    o.way = $('input:radio[name=way]:checked').val()
                     refrescar(canvas).then(function () {
                         dibujar(canvas);
                     });

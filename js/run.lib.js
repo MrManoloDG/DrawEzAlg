@@ -20,6 +20,7 @@ function run_code() {
                     declarations += 'let '+ $run_let_function_assings[i] +';\n';	
         }
         run = run.replace("<-$declarations->", declarations);
+        console.log(run);
         eval(run);
     }
     catch(error) {
@@ -93,6 +94,10 @@ function run_arr(arr, res) {
 
             case 'out':
                 str += run_out(element) + '\n';
+                if($run_assing_function){
+                    input_then++;
+                    $run_assing_function=false;
+                }
                 break;
 
             case 'in':
@@ -145,9 +150,18 @@ function run_while(e) {
 }
 
 function run_for(e) {
+    let condition_signal = '';
+    let increment_signal = '';
+    if(e.way === 'increment'){
+        condition_signal = ' <= ';
+        increment_signal = '+'
+    }else if(e.way === 'decrement'){
+        condition_signal = ' >= ';
+        increment_signal = '-';
+    }
     let str = 'for( let ' + e.variable + '=' + e.initialization + '; ' +
-        e.variable + ' <= ' + e.condition + ';' +
-        ' ' + e.incremental + '){\n';
+        e.variable + condition_signal + e.condition + ';' +
+        ' '+e.variable+'='+e.variable+ increment_signal + e.incremental + '){\n';
     str = math_lib_check(str);
     str +=  run_arr(e.loop);
     str += '}\n';
@@ -157,21 +171,30 @@ function run_for(e) {
 function run_assign(e) {
     let str = '';
     let functions = false;
+    let array_regexp = new RegExp("[a-zA-z]+\\[([a-zA-z]+\d*|\d+)\\]");
+    
 
-    if($run_let_function_assings.indexOf(e.variable) === -1){
+    if($run_let_function_assings.indexOf(e.variable) === -1 && !array_regexp.test(e.variable)){
+        console.log(array_regexp.test(e.variable));
         //str += 'let ';
         $run_let_function_assings.push(e.variable);
     }
 
     for(let nameFun in $array_functions){
         if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
+            let initc = e.value.indexOf(nameFun+'(') + (nameFun+'(').length;
+            let longc = e.value.lastIndexOf(')') - initc;
+            let call_params = e.value.substr(initc, longc);
+            if(count_param(call_params) !== count_param($array_functions[nameFun]['param'])){
+                throw new Error($lang['error-nparams'] + nameFun);
+            }
             functions = true;
         }
     }
 
     if(functions){
         $run_assing_function=true;
-        str += 'sol = undefined;\n $promesas.push(' + math_lib_check(e.value) + '.then(($sol) => {'+e.variable+' = $sol;';
+        str += '$promesas.push(' + math_lib_check(e.value) + '.then(($sol) => {'+e.variable+' = $sol;';
     }else{
         str += e.variable + ' = ' + math_lib_check(e.value) + ';\n';
     }
@@ -182,8 +205,18 @@ function run_out(e) {
     //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
     let str = '';
     let check_string = /".+"/;
+    let functions = false;
+    for(let nameFun in $array_functions){
+        if(nameFun !== 'main' && $array_functions[nameFun]['type'] === 'function' && e.buffer_out.indexOf(nameFun+'(') >= 0){
+            functions = true;
+        }
+    }
 
-    if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
+    if(functions){
+        $run_assing_function=true;
+        str += '$promesas.push(' + math_lib_check(e.buffer_out) + '.then(($sol) => {$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval($sol) + \'<br>\');';
+    }
+    else if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
     else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + math_lib_check(e.buffer_out) +') + \'<br>\');';
     return str;
 }
@@ -191,7 +224,10 @@ function run_out(e) {
 
 
 function run_in(e) {
-    if($run_let_function_assings.indexOf(e.variable) === -1){
+    let array_regexp = new RegExp("[a-zA-z]+\\[([a-zA-z]+\d*|\d+)\\]");
+
+    
+    if($run_let_function_assings.indexOf(e.variable) === -1 && !array_regexp.test(e.variable)){
         //str += 'let ';
         $run_let_function_assings.push(e.variable);
     }
@@ -200,22 +236,34 @@ function run_in(e) {
     return str;
 }
 
+function count_param(str){
+    if(str === "")return 0;
+    else{
+        return str.split(",").length;
+    }
+}
+
 function run_function(e) {
     let str = '';
     let name_arrayBack = '$ioarr';
     let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', ' + name_arrayBack) : e.param;
     str += e.name + '(' + math_lib_check( parameters ) + ');\n';
 
+    let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
+    let param = param_str.split(",");
+    let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
+    let ioparam = ioparam_str.split(",");
+    let call_param_str = e.param.replace(/ /g, "");
+    let call_param = call_param_str.split(",");
+
+    if(count_param(param_str) !== count_param(call_param_str)){
+        throw new Error($lang['error-nparams'] + e.name);
+    }
+
     if($array_functions[e.name]['type'] === 'procedure'){
         str = 'let '+ name_arrayBack +' = {};\n' + str;
 
-        let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
-        let param = param_str.split(",");
-        let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
-        let ioparam = ioparam_str.split(",");
-        let call_param_str = e.param.replace(/ /g, "");
-        let call_param = call_param_str.split(",");
-
+        
         if(ioparam_str !== ''){
             for(let i=0; i<ioparam.length; i++){
                 let index = param.indexOf(ioparam[i]);

@@ -63,6 +63,10 @@ function hidde_tabVar() {
     $("#sidebar-btn").removeClass("d-none");
 }
 
+function more_info(str){
+
+}
+
 
 
 function code() {
@@ -84,10 +88,33 @@ function change_language(lang){
 				$('#save').text($lang['save']);
 				$('#delete').text($lang['delete']);
 				$('#cancel').text($lang['cancel']);
+				$('#outputShow h6 u').text($lang['console']);
+
+
+				$('#run').prop("title", $lang['run']);
+				$('#run_step').prop("title", $lang['run-step']);
+				$('#run_step_inFunction').prop("title", $lang['run-step-inFunction']);
+				$('#code-file').prop("title", $lang['code-file'] );
+				$('#save-file').prop("title", $lang['save']);
+				$('#open').prop("title", $lang['open']);
+				$('#new-file').prop("title", $lang['new']);
+
+				$('#assign').prop("title", $lang['assign']);
+				$('#if').prop("title", $lang['if']);
+				$('#while').prop("title", $lang['while']);
+				$('#for').prop("title", $lang['for']);
+				$('#in').prop("title", $lang['input']);
+				$('#out').prop("title", $lang['output']);
+				$('#function').prop("title", $lang['function']);
+
+				
 
 				refrescar($canvas).then(function () {
 					dibujar($canvas);
 				});
+			},
+			error: function (error){
+				change_language('en');
 			}
 		}
 	);

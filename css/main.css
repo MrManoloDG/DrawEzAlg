@@ -109,7 +109,7 @@
 	left: 0;
 	z-index: 1;
 	background-color: #337ab7;
-	overflow-x: hidden;
+	overflow: auto;
 	transition: 0.4s;
 	padding: 1rem 0;
 	box-sizing:border-box;

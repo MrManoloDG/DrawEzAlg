@@ -328,13 +328,24 @@ function debug_while(e) {
  * @param {*} e struct
  */
 function debug_for(e) {
+    let condition_signal = '';
+    let increment_signal = '';
+    if(e.way === 'increment'){
+        condition_signal = ' <= ';
+        increment_signal = '+';
+    }else if(e.way === 'decrement'){
+        condition_signal = ' >= ';
+        increment_signal = '-';
+    }
+
     let varundef = eval("typeof " + e.variable +" === 'undefined'");
     if(varundef){
         eval(e.variable + " = " + e.initialization);
     }else{
-        eval(e.variable + "++;");
+        eval(e.variable + '=' + e.variable + increment_signal +e.incremental + ";");
     }
-    let bFor = eval(e.variable + ' <= ' + e.condition);
+    
+    let bFor = eval(e.variable + condition_signal + e.condition);
     if(bFor){
         $debug_struct = e.loop;
         $debug_function = e.parent + 'o' + $debug_id;
@@ -342,7 +353,7 @@ function debug_for(e) {
         $debug_id_stack.push($debug_id);
         $debug_id = 0;
     }else {
-        eval("delete i;");
+        eval("delete " + e.variable + ";");
         $debug_id += 1;
     }
 }
@@ -361,12 +372,16 @@ function debug_assign_fun_step(e) {
     let func;
     for(let nameFun in $array_functions){
         let posfun = e.value.indexOf(nameFun+'(');
-        if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && posfun >= 0){
+        if(e.variable !== 'main' && $array_functions[nameFun]['type'] === 'function' && posfun >= 0){
             func = new Function_Struct(e.parent);
             func.name = nameFun;
             let initc = posfun + (nameFun+'(').length;
             let longc  = e.value.indexOf(')', posfun) - initc ;
-            func.param = e.value.substr(initc, longc);
+            let call_params = e.value.substr(initc, longc);
+            if(count_param(call_params) !== count_param($array_functions[nameFun]['param'])){
+                throw new Error($lang['error-nparams'] + nameFun);
+            }
+            func.param = call_params;
             haveFunction = true;
             sum_ind = false;
             $debug_assign_back_stack.push($debug_assign_back);
@@ -394,7 +409,13 @@ function debug_assign(e) {
         $debug_vars.push(e.variable);
     }
     for(let nameFun in $array_functions){
-        if(e.variable !== 'main'&& $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
+        if(nameFun !== 'main' && $array_functions[nameFun]['type'] === 'function' && e.value.indexOf(nameFun+'(') >= 0){
+            let initc = e.value.indexOf(nameFun+'(') + (nameFun+'(').length;
+            let longc = e.value.lastIndexOf(')') - initc;
+            let call_params = e.value.substr(initc, longc);
+            if(count_param(call_params) !== count_param($array_functions[nameFun]['param'])){
+                throw new Error($lang['error-nparams'] + nameFun);
+            }
             functions = true;
         }
     }
@@ -415,7 +436,16 @@ function debug_out(e) {
     //let str = '$buffer_out += ' + e.buffer_out +' + $new_line;';
     let str = '';
     let check_string = /".+"/;
-    if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
+    let functions = false;
+    for(let nameFun in $array_functions){
+        if(nameFun !== 'main' && $array_functions[nameFun]['type'] === 'function' && e.buffer_out.indexOf(nameFun+'(') >= 0){
+            functions = true;
+        }
+    }
+    if(functions){
+        str += run_functions();
+        str += math_lib_check(e.buffer_out) + '.then(($sol) => {$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval($sol) + \'<br>\');});\n';
+    }else if(check_string.test(e.buffer_out)) str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + ' + e.buffer_out +' + \'<br>\');';
     else str += '$(\'#outputShow p\').html($(\'#outputShow p\').html() + eval(' + math_lib_check(e.buffer_out) +') + \'<br>\');';
     return str;
 }
@@ -460,6 +490,11 @@ function debug_exe_function(e) {
         let param = param_str.split(",");
         let call_param_str = e.param.replace(/ /g, "");
         let call_param = call_param_str.split(",");
+
+        if(count_param(param_str) !== count_param(call_param_str)){
+            throw new Error($lang['error-nparams'] + e.name);
+        }
+
         if(ioparam_str !== ''){
             for(let i=0; i<ioparam.length; i++){
                 let index = param.indexOf(ioparam[i]);
@@ -513,6 +548,10 @@ function debug_function(e){
 
     let call_pstr = math_lib_check(e.param.replace(/ /g, ""));
     let call_params = call_pstr.split(",");
+    if(count_param(param_str) !== count_param(call_pstr)){
+        throw new Error($lang['error-nparams'] + e.name);
+    }
+
 
     if(fun_params.length === call_params.length){
         for (let i = 0; i < fun_params.length ; i++) {
