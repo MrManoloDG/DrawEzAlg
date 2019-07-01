@@ -105,7 +105,7 @@ function change_language(lang){
 				$('#for').prop("title", $lang['for']);
 				$('#in').prop("title", $lang['input']);
 				$('#out').prop("title", $lang['output']);
-				$('#function').prop("title", $lang['function']);
+				$('#function').prop("title", $lang['procedure']);
 
 				
 

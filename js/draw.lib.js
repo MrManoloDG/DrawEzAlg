@@ -574,7 +574,7 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 			text = o.name;
 		}
 	}else{
-		text = $lang['function'];
+		text = $lang['procedure'];
 	}
 	canvas.drawText({
 		layer: true,

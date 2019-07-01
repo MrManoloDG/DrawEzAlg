@@ -383,7 +383,7 @@ function modal_output(o, layer, canvas,parent_arr,i) {
 }
 
 function modal_function(o, layer, canvas, parent_arr, i) {
-    $('.modal-title').text($lang['function']);
+    $('.modal-title').text($lang['procedure']);
     $('.modal-body').load('modals/function_modal.html',function(){
         for(let index  in  $array_functions){
             if(index !== 'main'){
