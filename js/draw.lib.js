@@ -750,7 +750,9 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 		str_condition = '>=';
 		str_increment = '-';
 	}
-	let text = o.variable +"="+o.initialization +"; "+ o.variable + str_condition + o.condition + "; "+ o.variable + str_increment + o.incremental;
+	let text = '      ; ;      ';
+	if(o.variable !== '' && o.initialization !== '' && o.incremental !== '' && o.condition !== '')
+	text = o.variable +"="+o.initialization +"; "+ o.variable + str_condition + o.condition + "; "+ o.variable + str_increment + o.incremental;
 	if(text.length > 18){
 		text = text.substring(0,18) + "...";
 	}else{
