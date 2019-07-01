@@ -9,7 +9,7 @@ var $debug_var_stack = new Stack();
 var $debug_assign_back = ''; //save assign to step back before exe the function in the assign struct.
 var $debug_assign_back_stack = new Stack();
 var $debug_error = false; //save catch a exception 
-
+var $debug_promises = [];
 
 /**
  * Debug the step when click the button
@@ -55,6 +55,7 @@ function debug_init() {
     $debug_assign_back = '';
     $debug_error = false;
     $debug_function_change = false;
+    var $debug_promises = [];
 
     eval("delete $promesas;");
     //clean the variables table and put it on the buttons of debug
@@ -117,7 +118,7 @@ function debug_getFunctionName(e) {
  * This function debug the next element in the algorithm
  * @param {*} b type of debug (True - debug functions too)
  */
-function debug_next_step(b) {
+function debug_next_step($b) {
     //console.log($debug_id, $debug_function, $debug_struct);
     //if the id of the debug functios is minor of array struct length debug
     if($debug_id < $debug_struct.length){
@@ -125,7 +126,7 @@ function debug_next_step(b) {
             change_function($debug_function_name).then(function () {
                 debug_col_element(element).then(function () {
                     try {
-                        debug_struct(element,b);
+                        debug_struct(element,$b);
                     }
                     catch(error) {
                         //Show the error in the term, stop and restart the debug variables
@@ -142,83 +143,85 @@ function debug_next_step(b) {
     else {
         //if the name of the function not in name of function and the function
         
+            let expresionOfFunction = new RegExp($debug_function_name + "o\\d+");
+            if($debug_function !== $debug_function_name){
+                //this code exec when is going out of control struct
+                $debug_stack.pop();
+                $debug_id = $debug_id_stack.pop();
+                let stack_peek = $debug_stack.peek();
+                $debug_function = stack_peek[0];
+                $debug_struct = stack_peek[1];
+                //next step to debug of before struct
+                debug_next_step($b);
+            } else if($debug_function_name !== 'main'){
+                //this code exec when is going out of function
+                $debug_stack.pop();
 
-        let expresionOfFunction = new RegExp($debug_function_name + "o\\d+");
-        if($debug_function !== $debug_function_name){
-            //this code exec when is going out of control struct
-            $debug_stack.pop();
-            $debug_id = $debug_id_stack.pop();
-            let stack_peek = $debug_stack.peek();
-            $debug_function = stack_peek[0];
-            $debug_struct = stack_peek[1];
-            //next step to debug of before struct
-            debug_next_step(b);
-        } else if($debug_function_name !== 'main'){
-            //this code exec when is going out of function
-            $debug_stack.pop();
+                let param_str = $array_functions[$debug_function_name]['param'].replace(/ /g, "");
+                let param = param_str.split(",");
+                let ioparam_str = $array_functions[$debug_function_name]['ioparam'].replace(/ /g, "");
+                let ioparam = ioparam_str.split(",");
+        
+                let iosvar = {};
+                if($array_functions[$debug_function_name]['type'] === 'function' && $debug_assign_back !== ''){
+                    let variable_back = $debug_assign_back.replace(/ /g, "");
+                    variable_back = variable_back.split("=");
+                    iosvar[variable_back[0]] = eval('sol');
+                }
 
-            let param_str = $array_functions[$debug_function_name]['param'].replace(/ /g, "");
-            let param = param_str.split(",");
-            let ioparam_str = $array_functions[$debug_function_name]['ioparam'].replace(/ /g, "");
-            let ioparam = ioparam_str.split(",");
-    
-            let iosvar = {};
-            if($array_functions[$debug_function_name]['type'] === 'function' && $debug_assign_back !== ''){
-                let variable_back = $debug_assign_back.replace(/ /g, "");
-                variable_back = variable_back.split("=");
-                iosvar[variable_back[0]] = eval('sol');
-            }
+                if($array_functions[$debug_function_name]['type'] === 'procedure'){
+                    let bef_stack = $debug_stack.peek();
+                    let bef_struct = bef_stack[1];
+                    let bef_id = $debug_id_stack.peek();
+                    let function_element = bef_struct[bef_id-1];
 
-            if($array_functions[$debug_function_name]['type'] === 'procedure'){
-                let bef_stack = $debug_stack.peek();
-                let bef_struct = bef_stack[1];
-                let bef_id = $debug_id_stack.peek();
-                let function_element = bef_struct[bef_id-1];
+                    let call_param_str = function_element.param.replace(/ /g, "");
+                    let call_param = call_param_str.split(",");
 
-                let call_param_str = function_element.param.replace(/ /g, "");
-                let call_param = call_param_str.split(",");
-
-                if(ioparam_str !== ''){
-                    for(let i=0; i<ioparam.length; i++){
-                        let pos = param.indexOf(ioparam[i]);
-                        let check_call_param = new RegExp("^[a-zA-Z]+.*");
-                        if(check_call_param.test(call_param[pos])){
-                            iosvar[call_param[pos]] = eval(ioparam[i]);
-                        } 
+                    if(ioparam_str !== ''){
+                        for(let i=0; i<ioparam.length; i++){
+                            let pos = param.indexOf(ioparam[i]);
+                            let check_call_param = new RegExp("^[a-zA-Z]+.*");
+                            if(check_call_param.test(call_param[pos])){
+                                console.log(ioparam[i]);
+                                iosvar[call_param[pos]] = eval(ioparam[i]);
+                            } 
+                        }
+                    }
+                    console.log(iosvar);
+                }
+                for (let i = 0; i < $debug_vars.length; i++) {
+                    eval('delete ' + $debug_vars[i] + ';');
+                }
+                debug_popVarStack();
+                if($array_functions[$debug_function_name]['type'] === 'function' && $debug_assign_back !== ''){
+                    for(let index in iosvar ){
+                        eval(index + ' = ' + iosvar[index] + ';\n');
+                    }
+                    $debug_assign_back = $debug_assign_back_stack.pop();
+                }
+                if($array_functions[$debug_function_name]['type'] === 'procedure' && ioparam_str !== ''){
+                    console.log(iosvar);
+                    for(let index in iosvar ){
+                        eval(index + ' = ' + iosvar[index] + ';\n');
                     }
                 }
-            }
-            for (let i = 0; i < $debug_vars.length; i++) {
-                eval('delete ' + $debug_vars[i] + ';');
-            }
-            debug_popVarStack();
-            if($array_functions[$debug_function_name]['type'] === 'function' && $debug_assign_back !== ''){
-                for(let index in iosvar ){
-                    eval(index + ' = ' + iosvar[index] + ';\n');
-                }
-                $debug_assign_back = $debug_assign_back_stack.pop();
-            }
-            if($array_functions[$debug_function_name]['type'] === 'procedure' && ioparam_str !== ''){
-                for(let index in iosvar ){
-                    eval(index + ' = ' + iosvar[index] + ';\n');
-                }
-            }
 
-            
-            $debug_id = $debug_id_stack.pop();
-            let stack_peek = $debug_stack.peek();
-            $debug_function = stack_peek[0];
-            $debug_function_name = debug_getFunctionName(stack_peek[0]);
-            $debug_struct = stack_peek[1];
-            //next step to debug of before struct
-            change_function($debug_function_name).then(function () {
-                debug_next_step(b);
-            });  
-        }else{
-            //this exec when end the debug
-            debug_init();
-        }
-        debug_show_vars();
+                
+                $debug_id = $debug_id_stack.pop();
+                let stack_peek = $debug_stack.peek();
+                $debug_function = stack_peek[0];
+                $debug_function_name = debug_getFunctionName(stack_peek[0]);
+                $debug_struct = stack_peek[1];
+                //next step to debug of before struct
+                change_function($debug_function_name).then(function () {
+                    debug_next_step($b);
+                });  
+            }else{
+                //this exec when end the debug
+                debug_init();
+            }
+            debug_show_vars();
     }
     
 }
@@ -262,7 +265,7 @@ function debug_struct(element,$b){
         case 'in':
             $debug_id += 1;
             str += debug_in(element);
-            eval(str);
+            $debug_promises.push(eval(str).then(() =>{debug_show_vars();}));
             break;
 
         case 'for':
@@ -278,6 +281,7 @@ function debug_struct(element,$b){
             }
             break;
     }
+    
     debug_show_vars();
 }
 
@@ -390,7 +394,6 @@ function debug_assign_fun_step(e) {
     }
     if(!haveFunction) eval(e.variable + ' = ' + math_lib_check(e.value) + ';\n');
     else{
-        eval(e.variable + ' = undefined' );
         debug_show_vars().then( () => {
             debug_function(func);
         });
@@ -462,8 +465,8 @@ function debug_in(e) {
         str += e.variable + ' = undefined;\n';
     }
 
-    str += 'Promise.all($promesas).then( () =>{ $promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
-        'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);}));});';
+    str += 'smalltalk.prompt("", "", "").then((value) => {\n' +
+        'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);});';
 
     return str;
 }
@@ -482,7 +485,7 @@ function debug_exe_function(e) {
     }
 
     let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', $ioarr') : e.param;
-    str += e.name + '(' + math_lib_check(parameters) + ');\n';
+    str += e.name + '(' + math_lib_check(parameters) + ').then(($sol) => {\n';
     if($array_functions[e.name]['type'] === 'procedure'){
         let ioparam_str = $array_functions[e.name]['ioparam'].replace(/ /g, "");
         let ioparam = ioparam_str.split(",");
@@ -505,7 +508,7 @@ function debug_exe_function(e) {
             }
         }
     }
-
+    str += '}).catch((error) => { $(\'#outputShow p\').html($(\'#outputShow p\').html() + \'<span class="text-warning">Error: \' + error.message + \'<\\span><br>\'); });\n';
     str += 'delete $ioarr;\n';
     return str;
 }
