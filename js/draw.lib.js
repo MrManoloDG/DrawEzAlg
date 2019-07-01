@@ -688,6 +688,16 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['no']
+	})
+	.drawText({
+		layer: true,
+		name: o.parent+'t-yes'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x + canvas.measureText(o.parent+'t'+i).width/3, y: y + canvas.measureText(o.parent+'t'+i).height*2 + 15,
+		fontSize: $textpx+'pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: $lang['yes']
 	});
 
 	let arr = o.loop;
@@ -812,6 +822,15 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 			fontSize: $textpx+'pt',
 			fontFamily: 'Verdana, sans-serif',
 			text: $lang['no']
+		}).drawText({
+			layer: true,
+			name: o.parent+'t-yes'+i,
+			fillStyle: '#36c',
+			strokeWidth: 1,
+			x: x + canvas.measureText(o.parent+'t'+i).width/3, y: y + canvas.measureText(o.parent+'t'+i).height*2 + 15,
+			fontSize: $textpx+'pt',
+			fontFamily: 'Verdana, sans-serif',
+			text: $lang['yes']
 		});
 
 	let arr = o.loop;
