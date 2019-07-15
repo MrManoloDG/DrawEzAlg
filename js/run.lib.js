@@ -51,6 +51,8 @@ function run_check_async(arr){
                 }else return false;
             case 'in':
                 return true;
+            case 'function':
+                return true;
             default:
                 return false;
 
@@ -114,22 +116,22 @@ function run_arr(arr, res) {
                 break;
             case 'function':
                 str += run_function(element) + '\n';
-                if(run_check_async($array_functions[element.name]['flow'])){
-                    str += 'Promise.all($promesas).then( () =>{\n';
-                    n_promiseAll++;
-                }
+                input_then++
                 break;
         }
     });
     if(res !== undefined){
-        str += 'resolve(sol);\n';
+        str += '<$-ENDFUNCTION-$>';
     }
+
     for (let i = 0; i < n_promiseAll; i++) {
         str += '});\n';
     }
     for (let i = 0; i < input_then; i++) {
         str += '}).catch((error) => { $(\'#outputShow p\').html($(\'#outputShow p\').html() + \'<span class="text-warning">Error: \' + error.message + \'<\\span><br>\'); }));\n';
     }
+    
+    
     return str;
 }
 
@@ -231,7 +233,7 @@ function run_in(e) {
         //str += 'let ';
         $run_let_function_assings.push(e.variable);
     }
-    let str = '$promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
+    let str = '$promesas.push( smalltalk.prompt("'+e.variable+'", "", "").then((value) => {\n' +
         'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);';
     return str;
 }
@@ -247,7 +249,7 @@ function run_function(e) {
     let str = '';
     let name_arrayBack = '$ioarr';
     let parameters = ($array_functions[e.name]['type'] === 'procedure')? (e.param + ', ' + name_arrayBack) : e.param;
-    str += e.name + '(' + math_lib_check( parameters ) + ');\n';
+    str += e.name + '(' + math_lib_check( parameters ) + ')';
 
     let param_str = $array_functions[e.name]['param'].replace(/ /g, "");
     let param = param_str.split(",");
@@ -261,6 +263,7 @@ function run_function(e) {
     }
 
     if($array_functions[e.name]['type'] === 'procedure'){
+        str = '$promesas.push(' + str + '.then(($sol) => {';
         str = 'let '+ name_arrayBack +' = {};\n' + str;
 
         
@@ -291,30 +294,33 @@ function run_functions(){
 			let parameters = ($array_functions[index]['type'] === 'procedure')? $array_functions[index]['param'] + ', $ioarr' : $array_functions[index]['param'];
 			run += 'function '+ index +'(' + parameters + '){\n';
 
-			if(($array_functions[index]['type'] === 'function')){
-				$run_let_function_assings.push('sol');
-				run += 'return new Promise(function (resolve) {\n';
-				run += '<-$declarations-> ' + run_arr($array_functions[index]['flow'],index);
-			}else{
-				run += '<-$declarations-> ' + run_arr($array_functions[index]['flow']);
-			}
-				
 			
+            $run_let_function_assings.push('sol');
+            run += 'return new Promise(function (resolve) {\n';
+            run += '<-$declarations-> ' + run_arr($array_functions[index]['flow'],index);
+            
+            if($array_functions[index]['type'] === 'function'){
+                run = run.replace("<$-ENDFUNCTION-$>", "resolve(sol);\n");
+            }else{
+                let iosparamret = '';
+                if($array_functions[index]['type'] === 'procedure' && ioparam_str !== ''){
+                    for(let i = 0; i < ioparam.length; i++){
+                        iosparamret += '$ioarr[\'' + ioparam[i] + '\'] = ' + ioparam[i] + ';\n';
+                    }
+                }
+                run = run.replace("<$-ENDFUNCTION-$>", "resolve(sol);\n" + iosparamret);
+            }
+            
 			let declarations = '';
 			for(let i = 0; i<$run_let_function_assings.length; i++){
 				if(params.indexOf($run_let_function_assings[i]) === -1) declarations += 'let '+ $run_let_function_assings[i] +';\n';	
 			}
 			run = run.replace("<-$declarations->", declarations);
 
-			if($array_functions[index]['type'] === 'procedure' && ioparam_str !== ''){
-				for(let i = 0; i < ioparam.length; i++){
-					run += '$ioarr[\'' + ioparam[i] + '\'] = ' + ioparam[i] + ';\n';
-				}
-			}
-			if($array_functions[index]['type'] === 'function'){
-				run += '\n});\n';
-			}
-
+			
+			
+			run += '\n});\n';
+			
 			run += '}\n\n';
         }
     }

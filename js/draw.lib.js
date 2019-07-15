@@ -574,7 +574,7 @@ function draw_function(x,y,i,canvas, o,parent_arr) {
 			text = o.name;
 		}
 	}else{
-		text = $lang['function'];
+		text = $lang['procedure'];
 	}
 	canvas.drawText({
 		layer: true,
@@ -688,6 +688,16 @@ function draw_while(x,y,i,canvas,o,parent_arr) {
 		fontSize: $textpx+'pt',
 		fontFamily: 'Verdana, sans-serif',
 		text: $lang['no']
+	})
+	.drawText({
+		layer: true,
+		name: o.parent+'t-yes'+i,
+		fillStyle: '#36c',
+		strokeWidth: 1,
+		x: x + canvas.measureText(o.parent+'t'+i).width/3, y: y + canvas.measureText(o.parent+'t'+i).height*2 + 15,
+		fontSize: $textpx+'pt',
+		fontFamily: 'Verdana, sans-serif',
+		text: $lang['yes']
 	});
 
 	let arr = o.loop;
@@ -750,7 +760,9 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 		str_condition = '>=';
 		str_increment = '-';
 	}
-	let text = o.variable +"="+o.initialization +"; "+ o.variable + str_condition + o.condition + "; "+ o.variable + str_increment + o.incremental;
+	let text = '      ; ;      ';
+	if(o.variable !== '' && o.initialization !== '' && o.incremental !== '' && o.condition !== '')
+	text = o.variable +"="+o.initialization +"; "+ o.variable + str_condition + o.condition + "; "+ o.variable + str_increment + o.incremental;
 	if(text.length > 18){
 		text = text.substring(0,18) + "...";
 	}else{
@@ -810,6 +822,15 @@ function draw_for(x,y,i,canvas,o,parent_arr) {
 			fontSize: $textpx+'pt',
 			fontFamily: 'Verdana, sans-serif',
 			text: $lang['no']
+		}).drawText({
+			layer: true,
+			name: o.parent+'t-yes'+i,
+			fillStyle: '#36c',
+			strokeWidth: 1,
+			x: x + canvas.measureText(o.parent+'t'+i).width/3, y: y + canvas.measureText(o.parent+'t'+i).height*2 + 15,
+			fontSize: $textpx+'pt',
+			fontFamily: 'Verdana, sans-serif',
+			text: $lang['yes']
 		});
 
 	let arr = o.loop;
