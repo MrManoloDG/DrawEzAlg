@@ -233,7 +233,7 @@ function run_in(e) {
         //str += 'let ';
         $run_let_function_assings.push(e.variable);
     }
-    let str = '$promesas.push( smalltalk.prompt("", "", "").then((value) => {\n' +
+    let str = '$promesas.push( smalltalk.prompt("'+e.variable+'", "", "").then((value) => {\n' +
         'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);';
     return str;
 }

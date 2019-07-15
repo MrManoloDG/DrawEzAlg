@@ -465,7 +465,7 @@ function debug_in(e) {
         str += e.variable + ' = undefined;\n';
     }
 
-    str += 'smalltalk.prompt("", "", "").then((value) => {\n' +
+    str += 'smalltalk.prompt("'+ e.variable +'", "", "").then((value) => {\n' +
         'isNaN(value)?' +e.variable + ' = value : ' + e.variable + '= Number(value);});';
 
     return str;
